@@ -100,20 +100,25 @@ export default function Home() {
       <section className="caseStudy shell" id="ornek">
         <div className="caseIntro">
           <p className="eyebrow"><span /> Kanıtlanmış pilot çalışma</p>
-          <h2>Daha önce yaptığımız basit bir örnek</h2>
-          <p>Çorlu’daki diş kliniklerini Google Haritalar üzerinden inceledik. Yanlış bilgileri ayırdık, klinikleri karşılaştırdık ve üç klinik için nerelerin geliştirilebileceğini gösteren rapor hazırladık.</p>
+          <h2>Dağınık işletme verisini, anlaşılır bir yol haritasına çevirdik.</h2>
+          <p>Çorlu’daki diş kliniklerini Google Haritalar üzerinden inceledik. Hatalı ve eksik bilgileri ayırdık, gerçek rakipleri karşılaştırdık ve üç işletme için uygulanabilir dijital durum raporları hazırladık.</p>
+          <div className="caseTags" aria-label="Pilot çalışma özellikleri">
+            <span>Gerçek işletme verisi</span>
+            <span>Kanıta dayalı inceleme</span>
+            <span>Uygulanabilir 30 günlük plan</span>
+          </div>
           <p className="caseNote">İşletme isimleri ve rapor ayrıntıları izinsiz pazarlama amacıyla kullanılmaz. Sonuçlar gelir veya sıralama garantisi değildir.</p>
         </div>
         <div className="outcomeGrid">
           {outcomes.map((item) => <div key={item.value + item.label}><strong>{item.value}</strong><span>{item.label}</span></div>)}
-          <article>
-            <small>TESLİM ÖRNEĞİ</small>
-            <h3>İşletmeye verdiğimiz tek sayfalık raporda</h3>
-            <ul>
-              <li>Rakiplerine göre mevcut durumu</li>
-              <li>İyi yaptığı ve geliştirebileceği yerler</li>
-              <li>Sonraki 30 günde atabileceği adımlar</li>
-            </ul>
+          <article className="caseResult">
+            <small>ÇALIŞMANIN SONUCU</small>
+            <h3>İşletme, ne durumda olduğunu ve sonraki adımını tek bakışta görebiliyor.</h3>
+            <div className="caseSteps">
+              <p><b>01 · Sorun</b><span>Dağınık bilgiler ve belirsiz rakip görünümü</span></p>
+              <p><b>02 · Yaptığımız</b><span>Verileri doğruladık ve gerçek rakiplerle karşılaştırdık</span></p>
+              <p><b>03 · Teslim</b><span>Önceliklendirilmiş 30 günlük iyileştirme planı</span></p>
+            </div>
           </article>
         </div>
       </section>
