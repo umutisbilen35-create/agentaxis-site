@@ -1,3 +1,5 @@
+import NeedFinder from "./NeedFinder";
+
 const services = [
   {
     no: "01",
@@ -29,13 +31,18 @@ export default function Home() {
 
       <section className="hero shell" id="top">
         <div className="heroCopy">
-          <p className="eyebrow"><span /> Yerel işletmeler için AI sistemleri</p>
-          <h1>İşletmenizi ileri taşıyan <em>yapay zekâ sistemleri.</em></h1>
+          <p className="eyebrow"><span /> Daha az iş yükü, daha çok müşteri</p>
+          <h1>Müşteriyi kaçırmayın. <em>İş yükünü yapay zekâya bırakın.</em></h1>
           <p className="lead">
-            Müşteri kazanma süreçlerinizi analiz ediyor, tekrarlanan işleri otomatikleştiriyor ve uygulanabilir bir büyüme planına dönüştürüyoruz.
+            Hangi sektörde olursanız olun; geç cevaplanan talepler, unutulan takipler ve her gün tekrarlanan işler hem müşterilerinizi hem zamanınızı kaybettirir. AgentAxis Labs darboğazları bulur, doğru yapay zekâ sistemini kurar ve işletmenizin daha düzenli büyümesini sağlar.
           </p>
+          <div className="painRow" aria-label="Çözdüğümüz ortak işletme sorunları">
+            <span>Kaçan müşteri talepleri</span>
+            <span>Unutulan geri dönüşler</span>
+            <span>Zaman alan rutin işler</span>
+          </div>
           <div className="heroActions">
-            <a className="primary" href="#iletisim">Ücretsiz durum raporu al <span>→</span></a>
+            <a className="primary" href="#iletisim">İşletmemdeki fırsatları göster <span>→</span></a>
             <a className="secondary" href="#nasil">Nasıl çalışıyoruz?</a>
           </div>
           <div className="trustRow">
@@ -47,10 +54,10 @@ export default function Home() {
 
         <div className="axisCard" aria-label="Analizden uygulamaya süreç şeması">
           <div className="axisLine" />
-          <div className="axisNode active"><small>01</small><strong>Analiz</strong><span>Mevcut durum</span></div>
-          <div className="axisNode"><small>02</small><strong>Strateji</strong><span>Doğru öncelikler</span></div>
-          <div className="axisNode"><small>03</small><strong>Otomasyon</strong><span>Ölçülebilir sistem</span></div>
-          <div className="metric"><b>30</b><span>günlük net<br />uygulama planı</span></div>
+          <div className="axisNode active"><small>01</small><strong>Fırsatı bul</strong><span>Müşterinin nerede kaybolduğunu görün</span></div>
+          <div className="axisNode"><small>02</small><strong>Sistemi kur</strong><span>Takip ve tekrarlanan işleri otomatikleştirin</span></div>
+          <div className="axisNode"><small>03</small><strong>Kontrolü koru</strong><span>Her önemli adım sizin onayınızda</span></div>
+          <div className="metric"><b>7/24</b><span>çalışan düzen,<br />insanda kalan kontrol</span></div>
         </div>
       </section>
 
@@ -91,6 +98,15 @@ export default function Home() {
           <li><i>03</i> Hesap erişimi gerektirmeyen öneriler</li>
           <li><i>04</i> 30 günlük uygulanabilir yol haritası</li>
         </ul>
+      </section>
+
+      <section className="finderSection shell" id="ihtiyac">
+        <div className="finderCopy">
+          <p className="eyebrow"><span /> Nereden başlayacağınızı bilmiyor musunuz?</p>
+          <h2>İşletmenize hazır bir paket dayatmıyoruz.</h2>
+          <p>Önce ihtiyacınızı anlıyor, sonra yalnız gerçekten işinize yarayacak çözümü öneriyoruz.</p>
+        </div>
+        <NeedFinder />
       </section>
 
       <section className="contact shell" id="iletisim">
