@@ -24,11 +24,13 @@ test("AgentAxis ana sayfasi guclu giris metniyle sunulur", async () => {
   assert.match(html, /Hangi sektörde olursanız olun/);
   assert.match(html, /İşletmemdeki fırsatları göster/);
   assert.match(html, /Her önemli adım sizin onayınızda/);
-  assert.match(html, /AgentAxis İhtiyaç Asistanı/);
+  assert.match(html, /Jarvis İşletme Danışmanı/);
   assert.match(html, /İşletmenize hazır bir paket dayatmıyoruz/);
   assert.match(html, /10<\/b><span>GÜNLÜK/);
   assert.match(html, /Bu deneme her işletmeye bir kez sunulur/);
   assert.match(html, /tek çözümlük kısıt değil/);
+  assert.match(html, /İhtiyaç uydurmam ve kesin sonuç sözü vermem/);
+  assert.match(html, /Web sitesi veya Google Haritalar bağlantısı/);
   assert.doesNotMatch(html, /codex-preview|Building your site|react-loading-skeleton/i);
 });
 

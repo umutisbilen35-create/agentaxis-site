@@ -2,101 +2,147 @@
 
 import { useMemo, useState } from "react";
 
-const goals = [
-  { id: "customer", label: "Daha fazla müşteri kazanmak" },
-  { id: "follow", label: "Talepleri ve geri dönüşleri kaçırmamak" },
-  { id: "time", label: "Tekrarlanan işleri azaltmak" },
-  { id: "unknown", label: "Neye ihtiyacım olduğunu bilmiyorum" },
+type NeedId = "visibility" | "follow" | "automation" | "reactivation";
+type ChatItem = { role: "jarvis" | "user"; text: string };
+
+const needs: Array<{ id: NeedId; label: string }> = [
+  { id: "visibility", label: "Daha fazla müşteriye ulaşmak" },
+  { id: "follow", label: "Talepleri ve geri dönüşleri düzenlemek" },
+  { id: "automation", label: "Tekrarlanan işleri azaltmak" },
+  { id: "reactivation", label: "Eski müşterileri yeniden kazanmak" },
 ];
 
-const packages = {
-  customer: {
-    name: "Görünürlük Başlangıç Paketi",
-    text: "10 günlük denemede müşteri kaybettiğiniz noktaları bulur, ihtiyacınıza uygun görünürlük ve müşteri kazanma çalışmalarını birlikte yürütürüz.",
-    items: ["Dijital durum ve rakip analizi", "Müşteri kazanma fırsatları", "İhtiyaca göre 10 günlük uygulama"],
-  },
-  follow: {
-    name: "Müşteri Takip Paketi",
-    text: "10 günlük denemede gelen talepleri, geri dönüşleri ve müşteri takibini işletmenizin ihtiyacına göre düzenler ve çalıştırırız.",
-    items: ["Talep akışı analizi", "CRM ve takip düzeni", "Canlı kullanım, iyileştirme ve sonuç raporu"],
-  },
-  time: {
-    name: "Özel Otomasyon Paketi",
-    text: "Ekibinizin tekrar eden işlerini belirler, 10 gün içinde uygulanabilecek yararlı otomasyonları ihtiyacınıza göre kurup gerçek ortamda deneriz.",
-    items: ["İş akışı haritası", "Uygun otomasyonların kurulumu", "Test, ölçüm ve kullanım eğitimi"],
-  },
-  unknown: {
-    name: "Ücretsiz İhtiyaç Analizi",
-    text: "Kısa bir görüşmeyle mevcut düzeninizi inceler, 10 günlük denemede size gerçekten fayda sağlayacak hizmet kapsamını birlikte belirleriz.",
-    items: ["Kısa ihtiyaç görüşmesi", "Fayda ve öncelik tespiti", "Size özel deneme kapsamı"],
-  },
+const serviceMap: Record<NeedId, string[]> = {
+  visibility: ["Dijital durum ve rakip analizi", "Müşteri kazanma fırsatları", "Yerel görünürlük önerileri"],
+  follow: ["Talep ve geri dönüş düzeni", "Müşteri takip çalışma alanı", "Hatırlatma akışı"],
+  automation: ["Tekrarlanan işlerin haritası", "Uygun otomasyonların hazırlanması", "10 günlük kullanım ve iyileştirme"],
+  reactivation: ["Eski müşteri listesinin güvenli segmentasyonu", "İzin durumuna uygun geri kazanım planı", "Sonuç takibi"],
 };
+
+function jarvisReply(question: string) {
+  const q = question.toLocaleLowerCase("tr-TR");
+  if (/sms|whatsapp|mesaj/.test(q)) {
+    return "SMS veya WhatsApp zorunlu değildir. İsterseniz kendi sağlayıcınızı bağlayabilirsiniz. Bağlantı öncesinde kapsam, maliyet ve izinler açıkça gösterilir; şifrenizi istemeyiz.";
+  }
+  if (/fiyat|ücret|para|paket/.test(q)) {
+    return "10 günlük deneme ücretsizdir ve kendiliğinden ücretliye dönüşmez. Deneme sonunda yalnız kullandığınız hizmetlere göre açık bir aylık hizmet önerisi hazırlanır; kabul etmek zorunda değilsiniz.";
+  }
+  if (/güven|veri|şifre|kvkk|gizli/.test(q)) {
+    return "Önce herkese açık veriler ve sizin paylaştığınız bilgiler kullanılır. Gerekli olmayan erişim istenmez; parola alınmaz. Kişisel veri içeren bir çalışma varsa izin ve saklama koşulları başlamadan önce netleştirilir.";
+  }
+  if (/ne yap|nasıl|otomasyon|hizmet/.test(q)) {
+    return "Kesin öneri vermeden önce doğrulanmış işletme analizinizi ve sizin önceliklerinizi birlikte değerlendiririm. Gerçek ihtiyaç görmediğim bir hizmeti önermem; uygun olanları 10 günlük deneme kapsamına ekleriz.";
+  }
+  return "Bu konuda doğrulanmış işletme verisi olmadan kesin konuşmam doğru olmaz. Sorunuzu ön görüşme notuna ekleyebilirim; analiz tamamlandığında kanıta dayalı cevap ve uygun hizmet seçenekleri sunulur.";
+}
 
 export default function NeedFinder() {
   const [business, setBusiness] = useState("");
-  const [goal, setGoal] = useState<keyof typeof packages | "">("");
-  const [shown, setShown] = useState(false);
-  const result = goal ? packages[goal] : null;
+  const [website, setWebsite] = useState("");
+  const [selected, setSelected] = useState<NeedId[]>([]);
+  const [question, setQuestion] = useState("");
+  const [started, setStarted] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [chat, setChat] = useState<ChatItem[]>([
+    { role: "jarvis", text: "Merhaba, ben Jarvis. Önceden doğrulanmış bir analiz varsa onu; yoksa yalnız sizin verdiğiniz bilgileri temel alırım. İhtiyaç uydurmam ve kesin sonuç sözü vermem." },
+  ]);
+
+  const services = useMemo(
+    () => Array.from(new Set(selected.flatMap((need) => serviceMap[need]))),
+    [selected],
+  );
+
   const mailHref = useMemo(() => {
-    const subject = encodeURIComponent("AgentAxis Labs ihtiyaç analizi");
+    const subject = encodeURIComponent("AgentAxis Labs — 10 günlük deneme görüşmesi");
+    const needsText = selected.map((id) => needs.find((item) => item.id === id)?.label).filter(Boolean).join(", ");
+    const questions = chat.filter((item) => item.role === "user").map((item) => item.text).join(" | ");
     const body = encodeURIComponent(
-      `Merhaba, işletme türüm: ${business || "Belirtilmedi"}. Önceliğim: ${goals.find((item) => item.id === goal)?.label || "Belirtilmedi"}. Kısa bir ihtiyaç analizi rica ediyorum.`,
+      `İşletme: ${business}\nWeb sitesi/harita: ${website || "Belirtilmedi"}\nİlgilenilen alanlar: ${needsText || "Görüşmede belirlenecek"}\nSorular/notlar: ${questions || "Yok"}\n\n10 günlük ücretsiz deneme için doğrulanmış analiz ve görüşme rica ediyorum.`,
     );
     return `mailto:umutisbilen35@gmail.com?subject=${subject}&body=${body}`;
-  }, [business, goal]);
+  }, [business, website, selected, chat]);
 
-  function submit(event: React.FormEvent) {
+  function start(event: React.FormEvent) {
     event.preventDefault();
-    if (goal) setShown(true);
+    if (!business.trim()) return;
+    setStarted(true);
+    setChat((items) => [
+      ...items,
+      { role: "user", text: `${business.trim()} için görüşmek istiyorum.${website.trim() ? ` Bağlantı: ${website.trim()}` : ""}` },
+      { role: "jarvis", text: "Teşekkür ederim. Birden fazla alan seçebilirsiniz. Seçimleriniz yalnız ön görüşme içindir; gerçek öneri doğrulanmış analizden sonra netleşir." },
+    ]);
+  }
+
+  function toggleNeed(id: NeedId) {
+    setSelected((items) => items.includes(id) ? items.filter((item) => item !== id) : [...items, id]);
+    setReady(false);
+  }
+
+  function buildScope() {
+    if (!selected.length) return;
+    setReady(true);
+    const labels = selected.map((id) => needs.find((item) => item.id === id)?.label).filter(Boolean).join(", ");
+    setChat((items) => [...items, { role: "user", text: labels }, { role: "jarvis", text: "Bu alanları birlikte değerlendirebiliriz. Aşağıda bir ön kapsam oluşturdum; işletme analizi bir ihtiyacı doğrulamazsa o hizmet çıkarılır, gerçek bir ihtiyaç bulunursa eklenebilir." }]);
+  }
+
+  function ask(event: React.FormEvent) {
+    event.preventDefault();
+    const clean = question.trim();
+    if (!clean) return;
+    setChat((items) => [...items, { role: "user", text: clean }, { role: "jarvis", text: jarvisReply(clean) }]);
+    setQuestion("");
   }
 
   return (
     <div className="needAssistant">
       <div className="chatIntro">
-        <span className="botDot" aria-hidden="true">A</span>
-        <div>
-          <strong>AgentAxis İhtiyaç Asistanı</strong>
-          <p>Size neyin fayda sağlayacağını birlikte bulalım. İki kısa cevap yeterli.</p>
-        </div>
+        <span className="botDot" aria-hidden="true">J</span>
+        <div><strong>Jarvis İşletme Danışmanı</strong><p>Doğrulanmış bulgular + sizin ihtiyaçlarınız → birlikte belirlenen deneme kapsamı</p></div>
+        <i>Çevrimiçi</i>
       </div>
 
-      <form onSubmit={submit}>
-        <label htmlFor="business">İşletmeniz hangi alanda hizmet veriyor?</label>
-        <input
-          id="business"
-          value={business}
-          onChange={(event) => setBusiness(event.target.value)}
-          placeholder="Örn. özel okul, market, danışmanlık..."
-        />
+      <div className="chatStream" aria-live="polite">
+        {chat.map((item, index) => <p className={item.role} key={`${item.role}-${index}`}>{item.text}</p>)}
+      </div>
 
-        <fieldset>
-          <legend>Şu anda en çok hangi konuda zorlanıyorsunuz?</legend>
-          <div className="goalGrid">
-            {goals.map((item) => (
-              <label className={goal === item.id ? "selected" : ""} key={item.id}>
-                <input
-                  type="radio"
-                  name="goal"
-                  value={item.id}
-                  checked={goal === item.id}
-                  onChange={() => { setGoal(item.id as keyof typeof packages); setShown(false); }}
-                />
-                {item.label}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-        <button className="primary finderButton" type="submit" disabled={!goal}>Bana uygun yolu göster <span>→</span></button>
-      </form>
+      {!started ? (
+        <form className="businessForm" onSubmit={start}>
+          <label htmlFor="business">İşletmenizin adı veya faaliyet alanı</label>
+          <input id="business" value={business} onChange={(e) => setBusiness(e.target.value)} placeholder="Örn. ABC Özel Eğitim Kurumu" required />
+          <label htmlFor="website">Web sitesi veya Google Haritalar bağlantısı <span>(isteğe bağlı)</span></label>
+          <input id="website" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://..." />
+          <button className="primary finderButton" type="submit">Görüşmeyi başlat <span>→</span></button>
+        </form>
+      ) : (
+        <>
+          <fieldset className="needChoices">
+            <legend>Görüşmek istediğiniz alanlar</legend>
+            <div className="goalGrid">
+              {needs.map((item) => (
+                <label className={selected.includes(item.id) ? "selected" : ""} key={item.id}>
+                  <input type="checkbox" checked={selected.includes(item.id)} onChange={() => toggleNeed(item.id)} />
+                  {item.label}
+                </label>
+              ))}
+            </div>
+            <button className="primary finderButton" type="button" disabled={!selected.length} onClick={buildScope}>Ön kapsamı oluştur <span>→</span></button>
+          </fieldset>
 
-      {shown && result && (
+          <form className="askForm" onSubmit={ask}>
+            <label htmlFor="question">Jarvis’e hizmetler, güvenlik veya deneme hakkında sorun</label>
+            <div><input id="question" value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Örn. SMS kullanmak zorunda mıyım?" /><button type="submit" disabled={!question.trim()} aria-label="Soruyu gönder">↑</button></div>
+          </form>
+        </>
+      )}
+
+      {ready && (
         <div className="recommendation" aria-live="polite">
-          <small>SİZE UYGUN BAŞLANGIÇ</small>
-          <h3>{result.name}</h3>
-          <p>{result.text}</p>
-          <ul>{result.items.map((item) => <li key={item}>✓ {item}</li>)}</ul>
-          <a className="primary" href={mailHref}>Ücretsiz görüşme iste <span>→</span></a>
-          <em>Pilot otomatik olarak ücretliye dönüşmez. 10. günün sonunda sonuçlar birlikte değerlendirilir; devam kararı size aittir.</em>
+          <small>10 GÜNLÜK DENEME — ÖN KAPSAM</small>
+          <h3>{business} için birlikte değerlendirilecek hizmetler</h3>
+          <ul>{services.map((item) => <li key={item}>✓ {item}</li>)}</ul>
+          <p className="scopeRule">Bu liste kesin satış teklifi değildir. Jarvis önce gerçek analiz bulgularını sizin söylediklerinizle uzlaştırır; gereksiz hizmeti çıkarır, doğrulanan ihtiyaca uygun hizmeti ekler.</p>
+          <a className="primary" href={mailHref}>Ücretsiz görüşme talebi gönder <span>→</span></a>
+          <em>Deneme her işletmeye bir kez sunulur, otomatik ücretliye dönüşmez ve SMS tamamen isteğe bağlıdır.</em>
         </div>
       )}
     </div>
