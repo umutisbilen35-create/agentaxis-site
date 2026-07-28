@@ -111,5 +111,5 @@ footer { border-top:1px solid var(--line); min-height:130px; display:flex; align
 .serviceGrid article:hover { transform:translateY(-6px); border-color:#a9bfff; box-shadow:0 24px 54px rgba(11,18,32,.12); }
 .serviceNo { width:52px; height:52px; display:grid; place-items:center; color:#fff; background:var(--blue); border-radius:15px; font:750 14px var(--font-geist-mono); box-shadow:0 10px 22px rgba(47,107,255,.22); }
 .serviceGrid h3 { font-size:clamp(27px,2.2vw,33px); line-height:1.15; margin:70px 0 21px; letter-spacing:-1.25px; }
-.serviceGrid p { color:#445164; line-height:1.75; font-size:17px; }
-@media(max-width:850px){.serviceGrid article{min-height:285px;padding:30px}.serviceGrid h3{margin-top:44px;font-size:29px}.serviceGrid p{font-size:16px}}
+.serviceGrid p { color:#263143; line-height:1.72; font-size:19px; font-weight:520; }
+@media(max-width:850px){.serviceGrid article{min-height:285px;padding:30px}.serviceGrid h3{margin-top:44px;font-size:29px}.serviceGrid p{font-size:18px}}
