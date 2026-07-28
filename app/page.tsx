@@ -90,15 +90,15 @@ export default function Home() {
         <div className="pilotBadge"><b>10</b><span>GÜNLÜK<br />PİLOT</span></div>
         <div className="pilotCopy">
           <p className="eyebrow light"><span /> Önce görün, sonra karar verin</p>
-          <h2>En önemli sorununuz için çalışan bir sistemi gerçek ortamda deneyin.</h2>
-          <p>Hazır bir sunum değil; ihtiyacınıza göre kurulan, 10 gün çalışan ve sonucu ölçülen kontrollü bir pilot sunuyoruz.</p>
+          <h2>İşletmenize özel hizmeti 10 gün boyunca gerçek ortamda deneyin.</h2>
+          <p>Hazır bir sunum veya tek çözümlük kısıt değil; ihtiyaçlarınızı birlikte belirliyor, 10 gün boyunca uygun analizleri, takip düzenini ve otomasyonları kurup iyileştiriyoruz.</p>
           <div className="pilotSteps">
-            <span><b>01</b> Sorunu belirle</span>
-            <span><b>02</b> Sistemi kur</span>
-            <span><b>03</b> 10 gün çalıştır</span>
-            <span><b>04</b> Sonucu ölç</span>
+            <span><b>01</b> İhtiyaçları öğren</span>
+            <span><b>02</b> Uygun hizmetleri kur</span>
+            <span><b>03</b> 10 gün çalıştır ve iyileştir</span>
+            <span><b>04</b> Sonuçları birlikte değerlendir</span>
           </div>
-          <p className="pilotNote">SMS isteğe bağlıdır ve işletme kendi sağlayıcısını bağlar. Pilot kendiliğinden ücretliye dönüşmez; devam için açık onay gerekir.</p>
+          <p className="pilotNote">Bu deneme her işletmeye bir kez sunulur. SMS tamamen müşterinin tercihidir; isterse kendi sağlayıcısını bağlar. Deneme kendiliğinden ücretliye dönüşmez.</p>
         </div>
       </section>
 
@@ -120,7 +120,7 @@ export default function Home() {
         <div className="finderCopy">
           <p className="eyebrow"><span /> Nereden başlayacağınızı bilmiyor musunuz?</p>
           <h2>İşletmenize hazır bir paket dayatmıyoruz.</h2>
-          <p>Önce ihtiyacınızı anlıyor, sonra 10 günlük pilotta yalnız gerçekten işinize yarayacak tek sürece odaklanıyoruz.</p>
+          <p>Önce ihtiyaçlarınızı anlıyor, sonra 10 günlük denemeyi işletmenize gerçekten fayda sağlayacak hizmetlerle şekillendiriyoruz.</p>
         </div>
         <NeedFinder />
       </section>

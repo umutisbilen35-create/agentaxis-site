@@ -27,7 +27,8 @@ test("AgentAxis ana sayfasi guclu giris metniyle sunulur", async () => {
   assert.match(html, /AgentAxis İhtiyaç Asistanı/);
   assert.match(html, /İşletmenize hazır bir paket dayatmıyoruz/);
   assert.match(html, /10<\/b><span>GÜNLÜK/);
-  assert.match(html, /Pilot kendiliğinden ücretliye dönüşmez/);
+  assert.match(html, /Bu deneme her işletmeye bir kez sunulur/);
+  assert.match(html, /tek çözümlük kısıt değil/);
   assert.doesNotMatch(html, /codex-preview|Building your site|react-loading-skeleton/i);
 });
 

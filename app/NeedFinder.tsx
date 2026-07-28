@@ -12,23 +12,23 @@ const goals = [
 const packages = {
   customer: {
     name: "Görünürlük Başlangıç Paketi",
-    text: "10 günlük pilotta müşteri kaybettiğiniz noktayı bulur, görünürlüğünüz için çalışan bir başlangıç sistemi kurarız.",
-    items: ["Dijital durum analizi", "Rakip karşılaştırması", "Tek gerçek süreçte 10 günlük pilot"],
+    text: "10 günlük denemede müşteri kaybettiğiniz noktaları bulur, ihtiyacınıza uygun görünürlük ve müşteri kazanma çalışmalarını birlikte yürütürüz.",
+    items: ["Dijital durum ve rakip analizi", "Müşteri kazanma fırsatları", "İhtiyaca göre 10 günlük uygulama"],
   },
   follow: {
     name: "Müşteri Takip Paketi",
-    text: "10 günlük pilotta gelen taleplerin kaydedildiği, unutulmadığı ve doğru zamanda takip edildiği çalışan bir düzen kurarız.",
-    items: ["Talep akışı analizi", "CRM ve takip düzeni", "10 günlük canlı kullanım ve sonuç raporu"],
+    text: "10 günlük denemede gelen talepleri, geri dönüşleri ve müşteri takibini işletmenizin ihtiyacına göre düzenler ve çalıştırırız.",
+    items: ["Talep akışı analizi", "CRM ve takip düzeni", "Canlı kullanım, iyileştirme ve sonuç raporu"],
   },
   time: {
     name: "Özel Otomasyon Paketi",
-    text: "Ekibinizin her gün tekrar ettiği işleri belirler, en çok zaman kazandıracak tek süreci 10 gün boyunca gerçek ortamda deneriz.",
-    items: ["İş akışı haritası", "Tek çalışan otomasyon pilotu", "Test, ölçüm ve kullanım eğitimi"],
+    text: "Ekibinizin tekrar eden işlerini belirler, 10 gün içinde uygulanabilecek yararlı otomasyonları ihtiyacınıza göre kurup gerçek ortamda deneriz.",
+    items: ["İş akışı haritası", "Uygun otomasyonların kurulumu", "Test, ölçüm ve kullanım eğitimi"],
   },
   unknown: {
     name: "Ücretsiz İhtiyaç Analizi",
-    text: "Kısa bir görüşmeyle mevcut düzeninizi inceler, 10 günlük pilotta hangi sorunun çözülmesinin en çok fayda sağlayacağını birlikte belirleriz.",
-    items: ["Kısa ihtiyaç görüşmesi", "Öncelik tespiti", "Size uygun pilot önerisi"],
+    text: "Kısa bir görüşmeyle mevcut düzeninizi inceler, 10 günlük denemede size gerçekten fayda sağlayacak hizmet kapsamını birlikte belirleriz.",
+    items: ["Kısa ihtiyaç görüşmesi", "Fayda ve öncelik tespiti", "Size özel deneme kapsamı"],
   },
 };
 
