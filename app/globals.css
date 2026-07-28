@@ -60,17 +60,26 @@ footer { border-top:1px solid var(--line); min-height:130px; display:flex; align
 @media(max-width:850px){.shell{width:min(100% - 30px,680px)}.nav{height:72px}.navCta{display:none}.hero{grid-template-columns:1fr;gap:45px;padding-block:58px}.axisCard{min-height:420px}.proofGrid{grid-template-columns:1fr 1fr;padding-block:32px}.proofGrid p{grid-column:1/-1}.sectionHead{display:block}.serviceGrid{grid-template-columns:1fr}.serviceGrid article{min-height:220px}.serviceGrid h3{margin-top:55px}.pilot{grid-template-columns:1fr;padding:42px 30px;gap:30px}.pilotBadge{width:120px;height:120px}.pilotBadge b{font-size:48px}.pilotSteps{grid-template-columns:1fr 1fr}.report{grid-template-columns:1fr;padding:38px 28px;gap:38px}.finderSection{grid-template-columns:1fr;gap:35px;padding-top:90px}.finderCopy{position:static}.contact{display:block;padding-block:90px}.contact .primary{margin-top:35px}.trustRow{gap:12px}footer{flex-direction:column;align-items:flex-start;justify-content:center;padding-block:30px}h1{letter-spacing:-2.6px}}
 @media(max-width:520px){.heroActions{align-items:flex-start;flex-direction:column}.proofGrid{grid-template-columns:1fr}.proofGrid p{grid-column:auto}.section{padding-block:80px}.axisCard{padding:34px 25px}.axisLine{left:44px}.metric{left:25px;right:25px}.pilotSteps{grid-template-columns:1fr}.goalGrid{grid-template-columns:1fr}.needAssistant{padding:22px 18px}.contact h2{font-size:36px}}
 
-.caseStudy { margin-bottom:120px; padding:78px; border:1px solid #cedaee; border-radius:28px; display:grid; grid-template-columns:.88fr 1.12fr; gap:74px; background:radial-gradient(circle at 4% 5%,rgba(47,107,255,.1),transparent 30%),linear-gradient(145deg,#fff,#f4f7fc); box-shadow:0 28px 75px rgba(11,18,32,.09); position:relative; overflow:hidden; }
-.caseStudy:before { content:"GERÇEK ÇALIŞMA"; position:absolute; top:22px; right:28px; color:#8a97aa; font:700 10px var(--font-geist-mono); letter-spacing:1.5px; }
+.caseStudy { margin-bottom:120px; padding:76px; border:1px solid #263750; border-radius:30px; background:radial-gradient(circle at 90% 0,rgba(47,107,255,.24),transparent 35%),linear-gradient(145deg,#111d31,#080f1c); color:#fff; box-shadow:0 34px 90px rgba(11,18,32,.22); position:relative; overflow:hidden; }
+.caseStudy:before { content:""; position:absolute; width:400px; height:400px; border:1px solid rgba(111,148,255,.16); border-radius:50%; right:-210px; bottom:-255px; box-shadow:0 0 0 60px rgba(111,148,255,.035),0 0 0 120px rgba(111,148,255,.02); }
+.caseTop { display:flex; justify-content:space-between; align-items:start; gap:60px; margin-bottom:54px; position:relative; z-index:1; }
+.caseTop h2 { margin:0; font-size:clamp(42px,5vw,66px); line-height:1.01; letter-spacing:-3px; }
+.caseTop h2 em { color:var(--blue2); font-style:normal; }
 .caseIntro h2,.about h2,.pilotTerms h2 { font-size:clamp(34px,3.7vw,50px); line-height:1.08; letter-spacing:-2.2px; margin:0 0 22px; }
 .caseIntro>p:not(.eyebrow,.caseNote) { color:#445164; font-size:17px; line-height:1.75; }
 .caseTags { display:flex; flex-wrap:wrap; gap:9px; margin:28px 0 32px; }
 .caseTags span { padding:9px 12px; border:1px solid #cdd9ed; border-radius:999px; background:rgba(255,255,255,.78); color:#344154; font-size:12px; font-weight:700; }
 .caseNote { color:#697587; font-size:11px; line-height:1.6; border-left:3px solid var(--blue); padding-left:14px; margin-bottom:0; }
-.outcomeGrid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-.outcomeGrid>div { min-height:138px; border:1px solid #d6dfed; border-radius:18px; padding:25px 20px; background:#fff; box-shadow:0 10px 24px rgba(11,18,32,.045); }
-.outcomeGrid strong { display:block; color:var(--blue); font-size:44px; line-height:1; margin-bottom:13px; letter-spacing:-1.5px; }
-.outcomeGrid span { display:block; color:#515e70; font-size:13px; line-height:1.45; font-weight:600; }
+.outcomeGrid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; position:relative; z-index:1; }
+.outcomeGrid>div { min-height:176px; border:1px solid #34445d; border-radius:20px; padding:30px 26px; background:rgba(255,255,255,.045); backdrop-filter:blur(8px); }
+.outcomeGrid strong { display:block; color:#fff; font-size:60px; line-height:1; margin-bottom:22px; letter-spacing:-2.5px; }
+.outcomeGrid span { display:block; max-width:160px; color:#aeb9ca; font-size:13px; line-height:1.5; font-weight:650; }
+.caseFlow { display:grid; grid-template-columns:1fr auto 1fr auto 1fr; align-items:center; gap:24px; margin-top:24px; padding:25px 28px; border:1px solid #34445d; border-radius:18px; background:#0a1322; position:relative; z-index:1; }
+.caseFlow div { display:flex; align-items:center; gap:14px; }
+.caseFlow i { width:34px; height:34px; border-radius:50%; display:grid; place-items:center; background:var(--blue); color:#fff; font:normal 700 10px var(--font-geist-mono); }
+.caseFlow b { font:750 13px var(--font-geist-mono); letter-spacing:1.2px; }
+.caseFlow>span { color:#63738b; font-size:20px; }
+.caseLegal { display:block; margin-top:22px; color:#77869a; font-size:10px; letter-spacing:.35px; position:relative; z-index:1; }
 .outcomeGrid article { grid-column:1/-1; padding:34px; background:linear-gradient(135deg,#111c30,#0b1220); color:#fff; border-radius:20px; box-shadow:0 22px 46px rgba(11,18,32,.18); }
 .outcomeGrid small { color:var(--blue2); font:700 10px var(--font-geist-mono); letter-spacing:1px; }
 .outcomeGrid h3 { margin:10px 0 25px; font-size:clamp(23px,2.2vw,30px); line-height:1.22; letter-spacing:-.8px; }
@@ -99,10 +108,10 @@ footer { border-top:1px solid var(--line); min-height:130px; display:flex; align
   .navLinks>a:not(.navCta){display:none}.navCta{display:block;font-size:12px}
   .caseStudy,.about,.pilotTerms{grid-template-columns:1fr;padding:42px 30px;gap:38px}
   .outcomeGrid{grid-template-columns:1fr 1fr}
-  .caseSteps{grid-template-columns:1fr}
+  .caseTop{display:block}.caseTop h2{margin-top:20px}.caseFlow{grid-template-columns:1fr}.caseFlow>span{transform:rotate(90deg);justify-self:start;margin-left:7px}
   .footerLinks{flex-wrap:wrap}
 }
-@media(max-width:520px){.outcomeGrid{grid-template-columns:1fr}.caseStudy{padding:48px 24px}.caseStudy:before{display:none}.outcomeGrid>div{min-height:120px}.caseIntro>p:not(.eyebrow,.caseNote){font-size:16px}}
+@media(max-width:520px){.outcomeGrid{grid-template-columns:1fr}.caseStudy{padding:48px 24px}.caseStudy:before{display:none}.outcomeGrid>div{min-height:138px}.outcomeGrid strong{font-size:52px}.caseFlow{padding:22px}}
 
 /* Hizmetler: ilk bakışta okunabilen, sonuç odaklı kartlar */
 .serviceGrid { gap:22px; }

@@ -98,29 +98,21 @@ export default function Home() {
       </section>
 
       <section className="caseStudy shell" id="ornek">
-        <div className="caseIntro">
-          <p className="eyebrow"><span /> Kanıtlanmış pilot çalışma</p>
-          <h2>Dağınık işletme verisini, anlaşılır bir yol haritasına çevirdik.</h2>
-          <p>Çorlu’daki diş kliniklerini Google Haritalar üzerinden inceledik. Hatalı ve eksik bilgileri ayırdık, gerçek rakipleri karşılaştırdık ve üç işletme için uygulanabilir dijital durum raporları hazırladık.</p>
-          <div className="caseTags" aria-label="Pilot çalışma özellikleri">
-            <span>Gerçek işletme verisi</span>
-            <span>Kanıta dayalı inceleme</span>
-            <span>Uygulanabilir 30 günlük plan</span>
-          </div>
-          <p className="caseNote">İşletme isimleri ve rapor ayrıntıları izinsiz pazarlama amacıyla kullanılmaz. Sonuçlar gelir veya sıralama garantisi değildir.</p>
+        <div className="caseTop">
+          <p className="eyebrow light"><span /> Kanıtlanmış pilot çalışma</p>
+          <h2>Gerçek veriden<br /><em>net yol haritasına.</em></h2>
         </div>
-        <div className="outcomeGrid">
+        <div className="outcomeGrid" aria-label="Pilot çalışma sonuçları">
           {outcomes.map((item) => <div key={item.value + item.label}><strong>{item.value}</strong><span>{item.label}</span></div>)}
-          <article className="caseResult">
-            <small>ÇALIŞMANIN SONUCU</small>
-            <h3>İşletme, ne durumda olduğunu ve sonraki adımını tek bakışta görebiliyor.</h3>
-            <div className="caseSteps">
-              <p><b>01 · Sorun</b><span>Dağınık bilgiler ve belirsiz rakip görünümü</span></p>
-              <p><b>02 · Yaptığımız</b><span>Verileri doğruladık ve gerçek rakiplerle karşılaştırdık</span></p>
-              <p><b>03 · Teslim</b><span>Önceliklendirilmiş 30 günlük iyileştirme planı</span></p>
-            </div>
-          </article>
         </div>
+        <div className="caseFlow" aria-label="Çalışma akışı">
+          <div><i>01</i><b>VERİ</b></div>
+          <span aria-hidden="true">→</span>
+          <div><i>02</i><b>ANALİZ</b></div>
+          <span aria-hidden="true">→</span>
+          <div><i>03</i><b>YOL HARİTASI</b></div>
+        </div>
+        <small className="caseLegal">Kanıta dayalı çalışma · Abartılı sonuç garantisi yok</small>
       </section>
 
       <section className="pilot shell" id="pilot">
