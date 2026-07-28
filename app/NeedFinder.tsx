@@ -97,7 +97,7 @@ export default function NeedFinder() {
     <div className="needAssistant">
       <div className="chatIntro">
         <span className="botDot" aria-hidden="true">J</span>
-        <div><strong>Jarvis İşletme Danışmanı</strong><p>Doğrulanmış bulgular + sizin ihtiyaçlarınız → birlikte belirlenen deneme kapsamı</p></div>
+        <div><strong>Jarvis İşletme Yardımcısı</strong><p>İşletmenizi anlatın; nereden başlayabileceğinizi birlikte bulalım.</p></div>
         <i>Çevrimiçi</i>
       </div>
 
@@ -107,7 +107,7 @@ export default function NeedFinder() {
 
       {!started ? (
         <form className="businessForm" onSubmit={start}>
-          <label htmlFor="business">İşletmenizin adı veya faaliyet alanı</label>
+          <label htmlFor="business">İşletmenizin adı veya ne iş yaptığınız</label>
           <input id="business" value={business} onChange={(e) => setBusiness(e.target.value)} placeholder="Örn. ABC Özel Eğitim Kurumu" required />
           <label htmlFor="website">Web sitesi veya Google Haritalar bağlantısı <span>(isteğe bağlı)</span></label>
           <input id="website" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://..." />
@@ -116,7 +116,7 @@ export default function NeedFinder() {
       ) : (
         <>
           <fieldset className="needChoices">
-            <legend>Görüşmek istediğiniz alanlar</legend>
+            <legend>En çok hangi konularda zorlanıyorsunuz?</legend>
             <div className="goalGrid">
               {needs.map((item) => (
                 <label className={selected.includes(item.id) ? "selected" : ""} key={item.id}>
@@ -125,11 +125,11 @@ export default function NeedFinder() {
                 </label>
               ))}
             </div>
-            <button className="primary finderButton" type="button" disabled={!selected.length} onClick={buildScope}>Ön kapsamı oluştur <span>→</span></button>
+            <button className="primary finderButton" type="button" disabled={!selected.length} onClick={buildScope}>Bana uygun başlangıcı göster <span>→</span></button>
           </fieldset>
 
           <form className="askForm" onSubmit={ask}>
-            <label htmlFor="question">Jarvis’e hizmetler, güvenlik veya deneme hakkında sorun</label>
+            <label htmlFor="question">Aklınıza takılan şeyi Jarvis’e sorun</label>
             <div><input id="question" value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Örn. SMS kullanmak zorunda mıyım?" /><button type="submit" disabled={!question.trim()} aria-label="Soruyu gönder">↑</button></div>
           </form>
         </>
@@ -137,8 +137,8 @@ export default function NeedFinder() {
 
       {ready && (
         <div className="recommendation" aria-live="polite">
-          <small>10 GÜNLÜK DENEME — ÖN KAPSAM</small>
-          <h3>{business} için birlikte değerlendirilecek hizmetler</h3>
+          <small>10 GÜNLÜK ÜCRETSİZ DENEME</small>
+          <h3>{business} için düşünülebilecek başlangıç hizmetleri</h3>
           <ul>{services.map((item) => <li key={item}>✓ {item}</li>)}</ul>
           <p className="scopeRule">Bu liste kesin satış teklifi değildir. Jarvis önce gerçek analiz bulgularını sizin söylediklerinizle uzlaştırır; gereksiz hizmeti çıkarır, doğrulanan ihtiyaca uygun hizmeti ekler.</p>
           <a className="primary" href={mailHref}>Ücretsiz görüşme talebi gönder <span>→</span></a>
