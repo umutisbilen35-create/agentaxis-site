@@ -31,6 +31,12 @@ test("AgentAxis ana sayfasi guclu giris metniyle sunulur", async () => {
   assert.match(html, /tek çözümlük kısıt değil/);
   assert.match(html, /İhtiyaç uydurmam ve kesin sonuç sözü vermem/);
   assert.match(html, /Web sitesi veya Google Haritalar bağlantısı/);
+  assert.match(html, /Kanıtlanmış pilot çalışma/);
+  assert.match(html, /17/);
+  assert.match(html, /Yalnız öneri vermiyoruz/);
+  assert.match(html, /Şeffaf pilot şartları/);
+  assert.match(html, /href="\/gizlilik"/);
+  assert.match(html, /href="\/kullanim-kosullari"/);
   assert.doesNotMatch(html, /codex-preview|Building your site|react-loading-skeleton/i);
 });
 

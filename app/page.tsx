@@ -18,6 +18,12 @@ const services = [
   },
 ];
 
+const outcomes = [
+  { value: "17", label: "yerel işletme kaydı uzlaştırıldı" },
+  { value: "3", label: "pilot dijital durum raporu hazırlandı" },
+  { value: "0", label: "kullanıcı onayı olmadan dış işlem" },
+];
+
 export default function Home() {
   return (
     <main>
@@ -26,7 +32,12 @@ export default function Home() {
           <span className="brandMark" aria-hidden="true"><i /></span>
           <span>AgentAxis <b>Labs</b></span>
         </a>
-        <a className="navCta" href="#iletisim">Ücretsiz rapor iste</a>
+        <div className="navLinks">
+          <a href="#hizmetler">Hizmetler</a>
+          <a href="#ornek">Örnek çalışma</a>
+          <a href="#hakkimizda">Hakkımızda</a>
+          <a className="navCta" href="#iletisim">Ücretsiz rapor iste</a>
+        </div>
       </nav>
 
       <section className="hero shell" id="top">
@@ -70,7 +81,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section shell" id="nasil">
+      <section className="section shell" id="hizmetler">
         <div className="sectionHead">
           <p className="eyebrow"><span /> Çalışma modeli</p>
           <h2>Karmaşayı üç net adıma indiriyoruz.</h2>
@@ -83,6 +94,27 @@ export default function Home() {
               <p>{service.text}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="caseStudy shell" id="ornek">
+        <div className="caseIntro">
+          <p className="eyebrow"><span /> Kanıtlanmış pilot çalışma</p>
+          <h2>Varsayım değil, doğrulanmış işletme verisiyle başladık.</h2>
+          <p>Çorlu’daki diş klinikleri için herkese açık Google Haritalar verileri uzlaştırıldı; hatalı ve eksik kayıtlar ayrıldı, üç işletmeye özel rapor taslağı hazırlandı.</p>
+          <p className="caseNote">İşletme isimleri ve rapor ayrıntıları izinsiz pazarlama amacıyla kullanılmaz. Sonuçlar gelir veya sıralama garantisi değildir.</p>
+        </div>
+        <div className="outcomeGrid">
+          {outcomes.map((item) => <div key={item.value + item.label}><strong>{item.value}</strong><span>{item.label}</span></div>)}
+          <article>
+            <small>TESLİM ÖRNEĞİ</small>
+            <h3>Tek sayfalık dijital durum raporu</h3>
+            <ul>
+              <li>Doğrulanmış rakip karşılaştırması</li>
+              <li>Güçlü yönler ve gerçek fırsatlar</li>
+              <li>30 günlük uygulanabilir yol haritası</li>
+            </ul>
+          </article>
         </div>
       </section>
 
@@ -125,6 +157,29 @@ export default function Home() {
         <NeedFinder />
       </section>
 
+      <section className="about shell" id="hakkimizda">
+        <div>
+          <p className="eyebrow light"><span /> AgentAxis yaklaşımı</p>
+          <h2>Yalnız öneri vermiyoruz; çalışan sistemi kuruyor ve bakımını üstleniyoruz.</h2>
+        </div>
+        <div className="aboutPoints">
+          <p><b>İşletmeye özel</b>Hazır paket dayatmak yerine gerçek iş akışınızı ve önceliklerinizi inceleriz.</p>
+          <p><b>Kontrollü ve şeffaf</b>CRM, mesaj, kampanya ve ödeme gibi önemli işlemler açık onayınız olmadan yapılmaz.</p>
+          <p><b>Sorumluluğu olan hizmet</b>Sistemi kurmakla bırakmaz; pilot boyunca izler, düzeltir ve anlaşılır biçimde raporlarız.</p>
+        </div>
+      </section>
+
+      <section className="pilotTerms shell" aria-labelledby="pilot-terms-title">
+        <div><p className="eyebrow"><span /> Şeffaf pilot şartları</p><h2 id="pilot-terms-title">10 gün boyunca ne olacak?</h2></div>
+        <ul>
+          <li><b>Ücretsiz ve tek kullanımlık:</b> Her işletmeye bir kez sunulur.</li>
+          <li><b>Otomatik ödeme yok:</b> Süre sonunda kendiliğinden ücretli pakete dönüşmez.</li>
+          <li><b>Kapsam birlikte belirlenir:</b> Yalnız doğrulanan ihtiyaçlara uygun hizmetler uygulanır.</li>
+          <li><b>Harici maliyetler önceden açıklanır:</b> Reklam, SMS veya üçüncü taraf uygulama gerekirse onayınız alınır.</li>
+          <li><b>Veri erişimi sınırlıdır:</b> Gereksiz parola veya hesap yetkisi istenmez.</li>
+        </ul>
+      </section>
+
       <section className="contact shell" id="iletisim">
         <div>
           <p className="eyebrow"><span /> İlk adımı atalım</p>
@@ -136,7 +191,7 @@ export default function Home() {
       <footer className="shell">
         <a className="brand" href="#top"><span className="brandMark" aria-hidden="true"><i /></span><span>AgentAxis <b>Labs</b></span></a>
         <p>Yerel işletmeler için güvenilir yapay zekâ sistemleri.</p>
-        <span>© 2026 AgentAxis Labs</span>
+        <div className="footerLinks"><a href="/gizlilik">Gizlilik</a><a href="/kullanim-kosullari">Kullanım koşulları</a><span>© 2026 AgentAxis Labs</span></div>
       </footer>
     </main>
   );
