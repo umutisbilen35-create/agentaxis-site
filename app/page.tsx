@@ -86,6 +86,22 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="pilot shell" id="pilot">
+        <div className="pilotBadge"><b>10</b><span>GÜNLÜK<br />PİLOT</span></div>
+        <div className="pilotCopy">
+          <p className="eyebrow light"><span /> Önce görün, sonra karar verin</p>
+          <h2>En önemli sorununuz için çalışan bir sistemi gerçek ortamda deneyin.</h2>
+          <p>Hazır bir sunum değil; ihtiyacınıza göre kurulan, 10 gün çalışan ve sonucu ölçülen kontrollü bir pilot sunuyoruz.</p>
+          <div className="pilotSteps">
+            <span><b>01</b> Sorunu belirle</span>
+            <span><b>02</b> Sistemi kur</span>
+            <span><b>03</b> 10 gün çalıştır</span>
+            <span><b>04</b> Sonucu ölç</span>
+          </div>
+          <p className="pilotNote">SMS isteğe bağlıdır ve işletme kendi sağlayıcısını bağlar. Pilot kendiliğinden ücretliye dönüşmez; devam için açık onay gerekir.</p>
+        </div>
+      </section>
+
       <section className="report shell">
         <div>
           <p className="eyebrow light"><span /> Başlangıç hizmeti</p>
@@ -104,7 +120,7 @@ export default function Home() {
         <div className="finderCopy">
           <p className="eyebrow"><span /> Nereden başlayacağınızı bilmiyor musunuz?</p>
           <h2>İşletmenize hazır bir paket dayatmıyoruz.</h2>
-          <p>Önce ihtiyacınızı anlıyor, sonra yalnız gerçekten işinize yarayacak çözümü öneriyoruz.</p>
+          <p>Önce ihtiyacınızı anlıyor, sonra 10 günlük pilotta yalnız gerçekten işinize yarayacak tek sürece odaklanıyoruz.</p>
         </div>
         <NeedFinder />
       </section>

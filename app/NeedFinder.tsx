@@ -12,23 +12,23 @@ const goals = [
 const packages = {
   customer: {
     name: "Görünürlük Başlangıç Paketi",
-    text: "Dijital görünürlüğünüzü, rakiplerinizi ve müşteri kaybettiğiniz noktaları analiz eder; uygulanabilir bir başlangıç planı hazırlarız.",
-    items: ["Dijital durum analizi", "Rakip karşılaştırması", "30 günlük öncelik planı"],
+    text: "10 günlük pilotta müşteri kaybettiğiniz noktayı bulur, görünürlüğünüz için çalışan bir başlangıç sistemi kurarız.",
+    items: ["Dijital durum analizi", "Rakip karşılaştırması", "Tek gerçek süreçte 10 günlük pilot"],
   },
   follow: {
     name: "Müşteri Takip Paketi",
-    text: "Gelen taleplerin düzenli kaydedildiği, unutulmadığı ve doğru zamanda takip edildiği onaylı bir sistem kurarız.",
-    items: ["Talep akışı analizi", "CRM ve takip düzeni", "Onaylı mesaj taslakları"],
+    text: "10 günlük pilotta gelen taleplerin kaydedildiği, unutulmadığı ve doğru zamanda takip edildiği çalışan bir düzen kurarız.",
+    items: ["Talep akışı analizi", "CRM ve takip düzeni", "10 günlük canlı kullanım ve sonuç raporu"],
   },
   time: {
     name: "Özel Otomasyon Paketi",
-    text: "Ekibinizin her gün tekrar ettiği işleri belirler, en çok zaman kazandıracak süreci güvenli biçimde otomatikleştiririz.",
-    items: ["İş akışı haritası", "Tek otomasyon pilotu", "Test ve kullanım eğitimi"],
+    text: "Ekibinizin her gün tekrar ettiği işleri belirler, en çok zaman kazandıracak tek süreci 10 gün boyunca gerçek ortamda deneriz.",
+    items: ["İş akışı haritası", "Tek çalışan otomasyon pilotu", "Test, ölçüm ve kullanım eğitimi"],
   },
   unknown: {
     name: "Ücretsiz İhtiyaç Analizi",
-    text: "Kısa bir görüşmeyle mevcut düzeninizi inceler, önce hangi sorunun çözülmesinin en çok fayda sağlayacağını birlikte belirleriz.",
-    items: ["Kısa ihtiyaç görüşmesi", "Öncelik tespiti", "Size uygun paket önerisi"],
+    text: "Kısa bir görüşmeyle mevcut düzeninizi inceler, 10 günlük pilotta hangi sorunun çözülmesinin en çok fayda sağlayacağını birlikte belirleriz.",
+    items: ["Kısa ihtiyaç görüşmesi", "Öncelik tespiti", "Size uygun pilot önerisi"],
   },
 };
 
@@ -96,7 +96,7 @@ export default function NeedFinder() {
           <p>{result.text}</p>
           <ul>{result.items.map((item) => <li key={item}>✓ {item}</li>)}</ul>
           <a className="primary" href={mailHref}>Ücretsiz görüşme iste <span>→</span></a>
-          <em>Bu yalnızca ilk öneridir; kısa görüşmeden sonra ihtiyaçlarınıza göre kapsam netleştirilir.</em>
+          <em>Pilot otomatik olarak ücretliye dönüşmez. 10. günün sonunda sonuçlar birlikte değerlendirilir; devam kararı size aittir.</em>
         </div>
       )}
     </div>
