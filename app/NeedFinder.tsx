@@ -2,13 +2,14 @@
 
 import { useMemo, useState } from "react";
 
-type NeedId = "visibility" | "follow" | "automation" | "reactivation";
+type NeedId = "visibility" | "follow" | "automation" | "website" | "reactivation";
 type ChatItem = { role: "jarvis" | "user"; text: string };
 
 const needs: Array<{ id: NeedId; label: string }> = [
   { id: "visibility", label: "Daha fazla müşteriye ulaşmak" },
   { id: "follow", label: "Talepleri ve geri dönüşleri düzenlemek" },
   { id: "automation", label: "Tekrarlanan işleri azaltmak" },
+  { id: "website", label: "Web sitemi yenilemek veya kurmak" },
   { id: "reactivation", label: "Eski müşterileri yeniden kazanmak" },
 ];
 
@@ -16,6 +17,7 @@ const serviceMap: Record<NeedId, string[]> = {
   visibility: ["Dijital durum ve rakip analizi", "Müşteri kazanma fırsatları", "Yerel görünürlük önerileri"],
   follow: ["Talep ve geri dönüş düzeni", "Müşteri takip çalışma alanı", "Hatırlatma akışı"],
   automation: ["Tekrarlanan işlerin haritası", "Uygun otomasyonların hazırlanması", "10 günlük kullanım ve iyileştirme"],
+  website: ["Mevcut site ve rakip incelemesi", "Mobil uyumlu konsept sayfa", "Açık onaydan sonra yayınlama planı"],
   reactivation: ["Eski müşteri listesinin güvenli segmentasyonu", "İzin durumuna uygun geri kazanım planı", "Sonuç takibi"],
 };
 
@@ -98,7 +100,7 @@ export default function NeedFinder() {
       <div className="chatIntro">
         <span className="botDot" aria-hidden="true">J</span>
         <div><strong>Jarvis İşletme Yardımcısı</strong><p>İşletmenizi anlatın; nereden başlayabileceğinizi birlikte bulalım.</p></div>
-        <i>Çevrimiçi</i>
+        <i>Ön görüşme modu</i>
       </div>
 
       <div className="chatStream" aria-live="polite">
