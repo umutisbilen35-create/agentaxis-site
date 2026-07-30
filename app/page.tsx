@@ -129,6 +129,11 @@ export default function Home() {
           <div className="homeServiceGrid">
             {services.map((service) => <button type="button" key={service.no} onClick={() => tabAc("hizmetler")}><i>{service.icon}</i><strong>{service.title}</strong><small>{service.result}</small></button>)}
           </div>
+          <div className="exampleOutcome" aria-label="Klinikler için örnek otomasyon hedefi">
+            <div><small>KLİNİKLER İÇİN ÖRNEK OTOMASYON HEDEFİ</small><strong><b>%30</b> daha az randevuya gelmeme</strong></div>
+            <p>Hatırlatma, onay ve takip akışlarıyla boş kalan randevuları azaltmaya yönelik sistem kurabiliriz.</p>
+            <span>Hedef, mevcut veriler incelendikten sonra işletmeye özel belirlenir.</span>
+          </div>
           <div className="controlPromise">
             <strong>Güven sözümüz:</strong>
             <span>Şeffaf kapsam</span><span>Sizin açık onayınız</span><span>Ölçülebilir çalışma</span><span>Otomatik ödeme yok</span>

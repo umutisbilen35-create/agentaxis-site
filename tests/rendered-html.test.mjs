@@ -27,6 +27,9 @@ test("AgentAxis ana sayfasi guclu giris metniyle sunulur", async () => {
   assert.match(html, /Müşteri kazanma/);
   assert.match(html, /Eski müşterileri kazanma/);
   assert.match(html, /Güven sözümüz/);
+  assert.match(html, /%30/);
+  assert.match(html, /daha az randevuya gelmeme/);
+  assert.match(html, /ÖRNEK OTOMASYON HEDEFİ/);
   assert.match(html, /Sektörünüzü söyleyin, size nasıl yardımcı olabileceğimizi gösterelim/);
   assert.match(html, /Hangi sektörde hizmet veriyorsunuz/);
   assert.match(html, /Önemli işleri siz onaylarsınız/);
