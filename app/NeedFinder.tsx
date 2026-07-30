@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type NeedId = "visibility" | "follow" | "automation" | "website" | "reactivation";
 type ChatItem = { role: "jarvis" | "user"; text: string };
@@ -38,7 +38,7 @@ function jarvisReply(question: string) {
   return "Bu konuda doğrulanmış işletme verisi olmadan kesin konuşmam doğru olmaz. Sorunuzu ön görüşme notuna ekleyebilirim; analiz tamamlandığında kanıta dayalı cevap ve uygun hizmet seçenekleri sunulur.";
 }
 
-export default function NeedFinder() {
+export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?: string }) {
   const [business, setBusiness] = useState("");
   const [website, setWebsite] = useState("");
   const [selected, setSelected] = useState<NeedId[]>([]);
@@ -48,6 +48,10 @@ export default function NeedFinder() {
   const [chat, setChat] = useState<ChatItem[]>([
     { role: "jarvis", text: "Merhaba, ben Jarvis. İşletmenizin ihtiyaçlarını anlamanıza, en değerli fırsatı seçmenize ve uygulanabilir bir çalışma planı oluşturmanıza yardımcı olan dijital iş asistanıyım." },
   ]);
+
+  useEffect(() => {
+    if (initialBusiness.trim() && !started) setBusiness(initialBusiness.trim());
+  }, [initialBusiness, started]);
 
   const services = useMemo(
     () => Array.from(new Set(selected.flatMap((need) => serviceMap[need]))),

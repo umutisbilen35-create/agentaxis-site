@@ -41,29 +41,32 @@ a { color:inherit; text-decoration:none; }
 .hero { min-height:580px; display:grid; grid-template-columns:1.06fr .94fr; gap:64px; align-items:center; padding-block:48px 58px; }
 h1 { font-size:clamp(49px,5.6vw,75px); line-height:1; letter-spacing:-3.8px; margin:0; max-width:760px; font-weight:710; }
 h1 em { color:var(--blue); font-style:normal; }
-.lead { color:#445064; max-width:680px; font-size:19px; line-height:1.65; margin:28px 0 32px; }
+.lead { color:#27354b; max-width:680px; font-size:20px; line-height:1.58; font-weight:620; margin:28px 0 32px; }
 .heroActions { display:flex; gap:28px; align-items:center; }
 .primary { display:inline-flex; align-items:center; justify-content:center; gap:30px; background:var(--blue); color:white; padding:16px 22px; border-radius:10px; font-weight:720; border:0; box-shadow:0 12px 28px rgba(39,93,245,.2); transition:.2s; }
 .primary:hover { background:var(--blue-dark); transform:translateY(-1px); }
 .trustRow { display:flex; gap:20px; flex-wrap:wrap; color:#687488; font-size:12px; margin-top:34px; }
-.heroPanel { border-radius:26px; background:var(--navy); color:#fff; padding:42px; box-shadow:0 28px 70px rgba(11,19,36,.18); position:relative; overflow:hidden; }
-.heroPanel:after { content:""; position:absolute; width:260px; height:260px; border-radius:50%; border:1px solid rgba(132,165,255,.2); right:-130px; top:-150px; box-shadow:0 0 0 45px rgba(132,165,255,.04),0 0 0 90px rgba(132,165,255,.025); }
+.heroPanel { border:1px solid #cbd8ff; border-radius:26px; background:linear-gradient(145deg,#f7f9ff 0%,#e8efff 58%,#fff 100%); color:var(--ink); padding:38px; box-shadow:0 26px 65px rgba(39,93,245,.14); position:relative; overflow:hidden; }
+.heroPanel:after { content:""; position:absolute; width:250px; height:250px; border-radius:50%; border:1px solid rgba(39,93,245,.12); right:-145px; top:-145px; box-shadow:0 0 0 45px rgba(39,93,245,.025),0 0 0 90px rgba(39,93,245,.018); }
 .heroPanel>p { color:#84a5ff; font:750 10px var(--font-geist-mono); letter-spacing:1.4px; margin:0 0 12px; }
 .jarvisBadge { display:flex; align-items:center; gap:12px; margin-bottom:24px; position:relative; z-index:1; }
 .jarvisBadge>span { width:42px; height:42px; display:grid; place-items:center; border-radius:13px; background:var(--blue); color:#fff; font-weight:800; }
 .jarvisBadge small,.jarvisBadge strong { display:block; }
-.jarvisBadge small { color:#84a5ff; font:750 9px var(--font-geist-mono); letter-spacing:1px; margin-bottom:3px; }
+.jarvisBadge small { color:var(--blue); font:750 9px var(--font-geist-mono); letter-spacing:1px; margin-bottom:3px; }
 .jarvisBadge strong { font-size:18px; }
-.jarvisBadge i { margin-left:auto; color:#b7f5ce; background:rgba(52,211,110,.12); border:1px solid rgba(91,224,143,.25); border-radius:999px; padding:7px 10px; font-size:10px; font-weight:750; font-style:normal; }
-.heroPanel h2 { font-size:34px; line-height:1.1; letter-spacing:-1.5px; margin:0 0 22px; max-width:390px; }
-.heroPanel ul { list-style:none; padding:0; margin:0; display:grid; gap:8px; position:relative; z-index:1; }
-.heroPanel li { display:flex; gap:15px; align-items:center; border-bottom:1px solid #2b3a54; padding:15px 0; }
-.heroPanel li>span { width:35px; height:35px; display:grid; place-items:center; border-radius:50%; background:#22304a; color:#84a5ff; font:700 10px var(--font-geist-mono); flex:0 0 auto; }
-.heroPanel li b,.heroPanel li small { display:block; }
-.heroPanel li b { font-size:14px; margin-bottom:4px; }
-.heroPanel li small { color:#9ba8bc; font-size:12px; }
-.panelNote { margin-top:24px; padding:16px; border-radius:12px; background:#172741; color:#bdc8d8; font-size:12px; line-height:1.55; }
-.panelNote strong { color:#fff; }
+.jarvisBadge i { margin-left:auto; color:#157a3d; background:#e5f8ec; border:1px solid #b9e8ca; border-radius:999px; padding:7px 10px; font-size:10px; font-weight:750; font-style:normal; }
+.heroPanel h2 { font-size:29px; line-height:1.14; letter-spacing:-1.2px; margin:0 0 20px; max-width:430px; position:relative; z-index:1; }
+.jarvisServices { display:grid; grid-template-columns:1fr 1fr; gap:8px; position:relative; z-index:1; }
+.jarvisServices>span { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.8); border:1px solid #d8e1f6; border-radius:11px; padding:10px; font-size:11px; font-weight:700; }
+.jarvisServices>span:last-child { grid-column:1/-1; }
+.jarvisServices i { width:24px; height:24px; display:grid; place-items:center; border-radius:7px; background:var(--sky); color:var(--blue); font-size:13px; font-style:normal; }
+.heroJarvisForm { margin-top:20px; position:relative; z-index:1; }
+.heroJarvisForm label { display:block; font-size:12px; font-weight:750; margin-bottom:8px; }
+.heroJarvisForm>div { display:flex; padding:5px; background:#fff; border:1px solid #bdcae4; border-radius:12px; box-shadow:0 8px 24px rgba(39,93,245,.08); }
+.heroJarvisForm input { min-width:0; flex:1; border:0; padding:11px 10px; outline:none; font:inherit; background:transparent; }
+.heroJarvisForm button { border:0; border-radius:8px; background:var(--blue); color:#fff; padding:0 14px; font:700 11px inherit; cursor:pointer; white-space:nowrap; }
+.heroJarvisForm button:disabled { opacity:.45; cursor:not-allowed; }
+.panelControls { display:flex; gap:14px; flex-wrap:wrap; margin-top:15px; color:#46546a; font-size:10px; font-weight:700; }
 
 .homeServices { background:var(--cream); border-block:1px solid #e8e3d7; padding:44px 0 40px; }
 .homeServicesHead { display:flex; align-items:end; justify-content:space-between; gap:30px; margin-bottom:25px; }
@@ -242,6 +245,10 @@ footer .brandMark i { width:8px; height:8px; border-width:2px; }
   .trustRow { display:grid; gap:9px; }
   .heroPanel { padding:30px 22px; }
   .heroPanel h2 { font-size:29px; }
+  .jarvisServices { grid-template-columns:1fr; }
+  .jarvisServices>span:last-child { grid-column:auto; }
+  .heroJarvisForm>div { align-items:stretch; flex-direction:column; }
+  .heroJarvisForm button { min-height:42px; }
   .homeServicesHead { align-items:flex-start; flex-direction:column; }
   .homeServiceGrid { grid-template-columns:1fr; }
   .homeServiceGrid button:last-child { grid-column:auto; }

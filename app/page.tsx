@@ -62,9 +62,16 @@ const faqs = [
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<TabId>("anasayfa");
+  const [sector, setSector] = useState("");
 
   function tabAc(tab: TabId) {
     setActiveTab(tab);
+  }
+
+  function sektoruJarviseGonder(event: React.FormEvent) {
+    event.preventDefault();
+    if (!sector.trim()) return;
+    setActiveTab("iletisim");
   }
 
   return (
@@ -104,13 +111,15 @@ export default function Home() {
 
         <aside className="heroPanel" aria-label="Jarvis güven ve kontrol özeti">
           <div className="jarvisBadge"><span>J</span><div><small>DİJİTAL İŞ ASİSTANINIZ</small><strong>Jarvis</strong></div><i>Kontrol sizde</i></div>
-          <h2>Ne yapıldığını her adımda bilirsiniz.</h2>
-          <ul>
-            <li><span>✓</span><div><b>Önce inceler, sonra öneririz</b><small>İhtiyacınıza göre kişisel çalışma planı</small></div></li>
-            <li><span>✓</span><div><b>Önemli işlemleri siz onaylarsınız</b><small>Mesaj, yayın ve hesap değişiklikleri kontrolünüzde</small></div></li>
-            <li><span>✓</span><div><b>Yapılan işi açıkça görürsünüz</b><small>Kaynak, işlem ve ölçüm bilgileri paylaşılır</small></div></li>
-          </ul>
-          <div className="panelNote"><strong>10 gün ücretsiz deneyin.</strong> Otomatik ödeme yok; devam kararını yalnız siz verirsiniz.</div>
+          <h2>Sektörünüzü söyleyin, size nasıl yardımcı olabileceğimizi gösterelim.</h2>
+          <div className="jarvisServices" aria-label="Jarvis hizmetleri">
+            {services.map((service) => <span key={service.no}><i>{service.icon}</i>{service.title}</span>)}
+          </div>
+          <form className="heroJarvisForm" onSubmit={sektoruJarviseGonder}>
+            <label htmlFor="sector">Hangi sektörde hizmet veriyorsunuz?</label>
+            <div><input id="sector" value={sector} onChange={(event) => setSector(event.target.value)} placeholder="Örn. emlak, klinik, restoran…" /><button type="submit" disabled={!sector.trim()}>Jarvis’e anlat <span>→</span></button></div>
+          </form>
+          <div className="panelControls"><span>✓ Önemli işleri siz onaylarsınız</span><span>✓ Yapılan işi açıkça görürsünüz</span></div>
         </aside>
       </div>
 
@@ -199,7 +208,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-        <NeedFinder />
+        <NeedFinder initialBusiness={sector} />
       </div>
       <footer className="shell compactFooter">
         <span>© 2026 AgentAxis Labs</span><a href="mailto:umutisbilen35@gmail.com">umutisbilen35@gmail.com</a><a href="/gizlilik">Gizlilik</a><a href="/kullanim-kosullari">Kullanım koşulları</a>
