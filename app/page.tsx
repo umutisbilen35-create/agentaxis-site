@@ -8,21 +8,38 @@ type TabId = "anasayfa" | "hizmetler" | "surec" | "kanit" | "iletisim";
 const services = [
   {
     no: "01",
+    icon: "↗",
+    title: "Müşteri kazanma",
+    text: "Dijital görünürlüğünüzü ve rakiplerinizi inceler, daha fazla doğru müşteriye ulaşabileceğiniz fırsatları belirleriz.",
+    result: "Daha doğru fırsatlar",
+  },
+  {
+    no: "02",
+    icon: "◎",
     title: "Müşteri takibi",
     text: "Yeni talepleri, geri dönüşleri ve hatırlatmaları tek düzende toplarız. Hangi müşteriye ne zaman dönüleceği unutulmaz.",
     result: "Daha düzenli takip",
   },
   {
-    no: "02",
+    no: "03",
+    icon: "⚡",
     title: "İş otomasyonu",
     text: "Her gün tekrar ettiğiniz uygun işleri belirler, insan kontrolünü koruyan basit otomasyonlar kurarız.",
     result: "Daha az tekrar işi",
   },
   {
-    no: "03",
+    no: "04",
+    icon: "◇",
     title: "Web sitesi",
     text: "Ne yaptığınızı ilk bakışta anlatan, mobilde düzgün çalışan ve müşteriyi doğru adıma yönlendiren siteler hazırlarız.",
     result: "Daha anlaşılır dijital vitrin",
+  },
+  {
+    no: "05",
+    icon: "↺",
+    title: "Eski müşterileri kazanma",
+    text: "Uygun izinlere sahip eski müşteri listeniz için düzenli, kontrollü ve ölçülebilir bir yeniden iletişim planı hazırlarız.",
+    result: "Değerli ilişkileri canlandırma",
   },
 ];
 
@@ -70,9 +87,9 @@ export default function Home() {
       <div className="hero shell">
         <div className="heroCopy">
           <p className="eyebrow"><span /> Yerel işletmeler için uygulamalı yapay zekâ</p>
-          <h1>Kaçan müşterileri ve tekrar eden işleri <em>düzene koyuyoruz.</em></h1>
+          <h1>İşletmenizi büyüten dijital sistemi <em>birlikte kuruyoruz.</em></h1>
           <p className="lead">
-            İşletmenizi inceliyor; müşteri takibi, iş otomasyonu veya web sitesi tarafında gerçekten ihtiyaç duyduğunuz sistemi kuruyoruz.
+            Jarvis işletmenizi inceler; müşteri kazanma, takip, otomasyon ve web sitesi alanlarında en değerli fırsatı bulur. Uygulama sizin bilginiz ve kontrolünüz altında ilerler.
           </p>
           <div className="heroActions">
             <button className="primary" type="button" onClick={() => tabAc("iletisim")}>Ücretsiz ön inceleme iste <span>→</span></button>
@@ -85,22 +102,28 @@ export default function Home() {
           </div>
         </div>
 
-        <aside className="heroPanel" aria-label="AgentAxis çalışma özeti">
-          <p>İLK GÖRÜŞMEDE</p>
-          <h2>Önce sorunu netleştiririz.</h2>
+        <aside className="heroPanel" aria-label="Jarvis güven ve kontrol özeti">
+          <div className="jarvisBadge"><span>J</span><div><small>DİJİTAL İŞ ASİSTANINIZ</small><strong>Jarvis</strong></div><i>Kontrol sizde</i></div>
+          <h2>Ne yapıldığını her adımda bilirsiniz.</h2>
           <ul>
-            <li><span>01</span><div><b>Mevcut durumu görürüz</b><small>Google, web sitesi ve iş akışı</small></div></li>
-            <li><span>02</span><div><b>En önemli fırsatı seçeriz</b><small>Gereksiz hizmet eklemeyiz</small></div></li>
-            <li><span>03</span><div><b>Deneme planını açıklarız</b><small>Kapsam, izin ve olası maliyetler</small></div></li>
+            <li><span>✓</span><div><b>Önce inceler, sonra öneririz</b><small>İhtiyacınıza göre kişisel çalışma planı</small></div></li>
+            <li><span>✓</span><div><b>Önemli işlemleri siz onaylarsınız</b><small>Mesaj, yayın ve hesap değişiklikleri kontrolünüzde</small></div></li>
+            <li><span>✓</span><div><b>Yapılan işi açıkça görürsünüz</b><small>Kaynak, işlem ve ölçüm bilgileri paylaşılır</small></div></li>
           </ul>
-          <div className="panelNote"><strong>Sonuç:</strong> Ne yapılacağı, neden yapılacağı ve nasıl ölçüleceği belli bir başlangıç planı.</div>
+          <div className="panelNote"><strong>10 gün ücretsiz deneyin.</strong> Otomatik ödeme yok; devam kararını yalnız siz verirsiniz.</div>
         </aside>
       </div>
 
-      <section className="clarityBar">
+      <section className="homeServices" aria-label="Tüm hizmetlerimiz">
         <div className="shell">
-          <strong>Fikir veya sunum değil.</strong>
-          <span>Çalışan, ölçülen ve önemli adımları sizin kontrolünüzde kalan sistemler.</span>
+          <div className="homeServicesHead"><div><small>İHTİYACINIZ OLABİLECEK HİZMETLER</small><h2>Jarvis işletmeniz için doğru başlangıcı bulur.</h2></div><button type="button" onClick={() => tabAc("hizmetler")}>Tüm detayları gör <span>→</span></button></div>
+          <div className="homeServiceGrid">
+            {services.map((service) => <button type="button" key={service.no} onClick={() => tabAc("hizmetler")}><i>{service.icon}</i><strong>{service.title}</strong><small>{service.result}</small></button>)}
+          </div>
+          <div className="controlPromise">
+            <strong>Güven sözümüz:</strong>
+            <span>Şeffaf kapsam</span><span>Sizin açık onayınız</span><span>Ölçülebilir çalışma</span><span>Otomatik ödeme yok</span>
+          </div>
         </div>
       </section>
       </section>
@@ -117,7 +140,7 @@ export default function Home() {
         <div className="serviceGrid">
           {services.map((service) => (
             <article key={service.no}>
-              <div className="serviceTop"><span>{service.no}</span><small>{service.result}</small></div>
+              <div className="serviceTop"><span>{service.icon}</span><small>{service.result}</small></div>
               <h3>{service.title}</h3>
               <p>{service.text}</p>
             </article>

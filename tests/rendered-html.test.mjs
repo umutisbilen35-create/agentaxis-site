@@ -20,10 +20,14 @@ test("AgentAxis ana sayfasi guclu giris metniyle sunulur", async () => {
 
   const html = await response.text();
   assert.match(html, /<title>AgentAxis Labs \| İşletmeler için AI Sistemleri<\/title>/i);
-  assert.match(html, /Kaçan müşterileri ve tekrar eden işleri/);
-  assert.match(html, /müşteri takibi, iş otomasyonu veya web sitesi/);
+  assert.match(html, /İşletmenizi büyüten dijital sistemi/);
+  assert.match(html, /Uygulama sizin bilginiz ve kontrolünüz altında ilerler/);
   assert.match(html, /Ücretsiz ön inceleme iste/);
   assert.match(html, /Önemli işlemler sizin onayınızda/);
+  assert.match(html, /Müşteri kazanma/);
+  assert.match(html, /Eski müşterileri kazanma/);
+  assert.match(html, /Güven sözümüz/);
+  assert.match(html, /Ne yapıldığını her adımda bilirsiniz/);
   assert.match(html, /Jarvis — Dijital İş Asistanınız/);
   assert.match(html, /İşletmenizi anlatın, uygun başlangıcı/);
   assert.match(html, /10 günlük ücretsiz Jarvis denemesi/);
