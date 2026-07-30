@@ -20,9 +20,9 @@ a { color:inherit; text-decoration:none; }
 
 .nav { height:82px; display:flex; align-items:center; justify-content:space-between; }
 .navLinks { display:flex; align-items:center; gap:28px; font-size:13px; font-weight:650; }
-.navLinks button { border:0; background:none; color:var(--muted); padding:9px 0; font:inherit; cursor:pointer; }
-.navLinks button:not(.navCta):hover,.navLinks button.active { color:var(--ink); }
-.navLinks button.active { box-shadow:inset 0 -2px var(--blue); }
+.navLinks button { border:0; background:none; color:var(--muted); padding:10px 12px; border-radius:10px; font:inherit; cursor:pointer; transition:transform .2s ease,background .2s ease,color .2s ease,box-shadow .2s ease; }
+.navLinks button:not(.active):hover { color:var(--ink); background:var(--soft); }
+.navLinks button.active { color:#fff; background:var(--blue); transform:scale(1.08); box-shadow:0 8px 20px rgba(39,93,245,.24); }
 .brand { display:flex; align-items:center; gap:11px; font-size:19px; font-weight:690; letter-spacing:-.4px; }
 .brandButton { border:0; background:none; padding:0; color:inherit; cursor:pointer; font-family:inherit; }
 .brand b { color:var(--blue); }
@@ -101,6 +101,7 @@ h1 em { color:var(--blue); font-style:normal; }
 .finderCopy { position:sticky; top:40px; }
 .finderCopy>p:last-child { color:var(--muted); font-size:16px; line-height:1.7; max-width:500px; }
 .compactFaq { margin-top:35px; border-top:1px solid var(--line); }
+.compactFaq h3 { margin:24px 0 5px; font-size:18px; }
 .compactFaq details { border-bottom:1px solid var(--line); padding:17px 0; }
 .compactFaq summary { list-style:none; cursor:pointer; display:flex; justify-content:space-between; gap:12px; font-size:13px; font-weight:700; }
 .compactFaq summary::-webkit-details-marker { display:none; }

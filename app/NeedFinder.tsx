@@ -30,7 +30,7 @@ function jarvisReply(question: string) {
     return "10 günlük deneme ücretsizdir ve kendiliğinden ücretliye dönüşmez. Deneme sonunda yalnız kullandığınız hizmetlere göre açık bir aylık hizmet önerisi hazırlanır; kabul etmek zorunda değilsiniz.";
   }
   if (/güven|veri|şifre|kvkk|gizli/.test(q)) {
-    return "Önce herkese açık veriler ve sizin paylaştığınız bilgiler kullanılır. Gerekli olmayan erişim istenmez; parola alınmaz. Kişisel veri içeren bir çalışma varsa izin ve saklama koşulları başlamadan önce netleştirilir.";
+    return "Jarvis her önemli adımı görünür tutar. Yalnız gerekli olan en düşük erişim kullanılır; yetkiler önceden belirlenir ve önemli işlemler sizin onayınızla yapılır. Analiz kaynakları, yapılan işler ve ölçülen değişim açıkça paylaşılır.";
   }
   if (/ne yap|nasıl|otomasyon|hizmet/.test(q)) {
     return "Kesin öneri vermeden önce doğrulanmış işletme analizinizi ve sizin önceliklerinizi birlikte değerlendiririm. Gerçek ihtiyaç görmediğim bir hizmeti önermem; uygun olanları 10 günlük deneme kapsamına ekleriz.";
@@ -46,7 +46,7 @@ export default function NeedFinder() {
   const [started, setStarted] = useState(false);
   const [ready, setReady] = useState(false);
   const [chat, setChat] = useState<ChatItem[]>([
-    { role: "jarvis", text: "Merhaba, ben Jarvis. Önceden doğrulanmış bir analiz varsa onu; yoksa yalnız sizin verdiğiniz bilgileri temel alırım. İhtiyaç uydurmam ve kesin sonuç sözü vermem." },
+    { role: "jarvis", text: "Merhaba, ben Jarvis. İşletmenizin ihtiyaçlarını anlamanıza, en değerli fırsatı seçmenize ve uygulanabilir bir çalışma planı oluşturmanıza yardımcı olan dijital iş asistanıyım." },
   ]);
 
   const services = useMemo(
@@ -71,7 +71,7 @@ export default function NeedFinder() {
     setChat((items) => [
       ...items,
       { role: "user", text: `${business.trim()} için görüşmek istiyorum.${website.trim() ? ` Bağlantı: ${website.trim()}` : ""}` },
-      { role: "jarvis", text: "Teşekkür ederim. Birden fazla alan seçebilirsiniz. Seçimleriniz yalnız ön görüşme içindir; gerçek öneri doğrulanmış analizden sonra netleşir." },
+      { role: "jarvis", text: "Teşekkür ederim. Şimdi önceliklerinizi seçin; size uygulanabilir bir başlangıç planı hazırlayayım." },
     ]);
   }
 
@@ -84,7 +84,7 @@ export default function NeedFinder() {
     if (!selected.length) return;
     setReady(true);
     const labels = selected.map((id) => needs.find((item) => item.id === id)?.label).filter(Boolean).join(", ");
-    setChat((items) => [...items, { role: "user", text: labels }, { role: "jarvis", text: "Bu alanları birlikte değerlendirebiliriz. Aşağıda bir ön kapsam oluşturdum; işletme analizi bir ihtiyacı doğrulamazsa o hizmet çıkarılır, gerçek bir ihtiyaç bulunursa eklenebilir." }]);
+    setChat((items) => [...items, { role: "user", text: labels }, { role: "jarvis", text: "Önceliklerinize göre ilk çalışma planını hazırladım. İnceleme sırasında en çok fayda sağlayacak adımları netleştirip birlikte uygulayabiliriz." }]);
   }
 
   function ask(event: React.FormEvent) {
@@ -99,7 +99,7 @@ export default function NeedFinder() {
     <div className="needAssistant">
       <div className="chatIntro">
         <span className="botDot" aria-hidden="true">J</span>
-        <div><strong>Jarvis İşletme Yardımcısı</strong><p>İşletmenizi anlatın; nereden başlayabileceğinizi birlikte bulalım.</p></div>
+        <div><strong>Jarvis — Dijital İş Asistanınız</strong><p>İşletmenizi inceler, doğru başlangıcı bulur ve işleri anlaşılır bir plana dönüştürür.</p></div>
         <i>Ön görüşme modu</i>
       </div>
 
@@ -142,7 +142,7 @@ export default function NeedFinder() {
           <small>10 GÜNLÜK ÜCRETSİZ DENEME</small>
           <h3>{business} için düşünülebilecek başlangıç hizmetleri</h3>
           <ul>{services.map((item) => <li key={item}>✓ {item}</li>)}</ul>
-          <p className="scopeRule">Bu liste kesin satış teklifi değildir. Jarvis önce gerçek analiz bulgularını sizin söylediklerinizle uzlaştırır; gereksiz hizmeti çıkarır, doğrulanan ihtiyaca uygun hizmeti ekler.</p>
+          <p className="scopeRule">Jarvis bu başlangıç planını verdiğiniz bilgiler ve analiz bulgularıyla oluşturur; işletmenize en çok fayda sağlayacak adımları plana dahil eder.</p>
           <a className="primary" href={mailHref}>Ücretsiz görüşme talebi gönder <span>→</span></a>
           <em>Deneme her işletmeye bir kez sunulur, otomatik ücretliye dönüşmez ve SMS tamamen isteğe bağlıdır.</em>
         </div>
