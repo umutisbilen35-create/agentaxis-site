@@ -30,9 +30,8 @@ test("AgentAxis ana sayfasi guclu giris metniyle sunulur", async () => {
   assert.match(html, /İhtiyaç uydurmam ve kesin sonuç sözü vermem/);
   assert.match(html, /Web sitesi veya Google Haritalar bağlantısı/);
   assert.match(html, /Şeffaf çalışma kanıtı/);
-  assert.match(html, /Herkese açık verilerle hazırlanmış örnek işletme analizi/);
-  assert.match(html, /Henüz büyük sonuçlar uydurmuyoruz/);
-  assert.match(html, /Sık sorulanlar/);
+  assert.match(html, /Örnek analizleri gerçek müşteri sonucu gibi sunmayız/);
+  assert.doesNotMatch(html, /Henüz büyük sonuçlar uydurmuyoruz|büyük sonuçlar uydurmuyoruz/i);
   assert.match(html, /href="\/gizlilik"/);
   assert.match(html, /href="\/kullanim-kosullari"/);
   assert.doesNotMatch(html, /codex-preview|Building your site|react-loading-skeleton/i);
@@ -41,11 +40,14 @@ test("AgentAxis ana sayfasi guclu giris metniyle sunulur", async () => {
 test("ana donusum ve guvenlik unsurlari korunur", async () => {
   const response = await render();
   const html = await response.text();
-  assert.match(html, /href="#iletisim"/);
+  assert.match(html, /role="tab"/);
+  assert.doesNotMatch(html, /href="#(?:hizmetler|surec|kanit|iletisim)"/);
   assert.match(html, /Şeffaf çalışma kanıtı/);
-  assert.match(html, /Kesin müşteri veya gelir garantisi/);
+  assert.match(html, /Otomatik ödeme yok/);
   assert.match(html, /Müşteri takibi/);
   assert.match(html, /İş otomasyonu/);
   assert.match(html, /Web sitesi/);
   assert.match(html, /mailto:umutisbilen35@gmail.com/);
+  assert.match(html, /Yaptığımız işi açık ve doğrulanabilir biçimde gösteriyoruz/);
+  assert.doesNotMatch(html, /<strong>3<\/strong>|<strong>0<\/strong>/);
 });

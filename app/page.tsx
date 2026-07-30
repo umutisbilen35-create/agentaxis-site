@@ -1,4 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import NeedFinder from "./NeedFinder";
+
+type TabId = "anasayfa" | "hizmetler" | "surec" | "kanit" | "iletisim";
 
 const services = [
   {
@@ -36,22 +41,30 @@ const faqs = [
 ];
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<TabId>("anasayfa");
+
+  function tabAc(tab: TabId) {
+    setActiveTab(tab);
+  }
+
   return (
     <main>
       <nav className="nav shell" aria-label="Ana menü">
-        <a className="brand" href="#top" aria-label="AgentAxis Labs ana sayfa">
+        <button className="brand brandButton" type="button" onClick={() => tabAc("anasayfa")} aria-label="AgentAxis Labs ana sayfa">
           <span className="brandMark" aria-hidden="true"><i /></span>
           <span>AgentAxis <b>Labs</b></span>
-        </a>
-        <div className="navLinks">
-          <a href="#hizmetler">Hizmetler</a>
-          <a href="#surec">Nasıl çalışır?</a>
-          <a href="#kanit">Çalışma kanıtı</a>
-          <a className="navCta" href="#iletisim">Ücretsiz inceleme iste</a>
+        </button>
+        <div className="navLinks" role="tablist" aria-label="Site bölümleri">
+          <button className={activeTab === "hizmetler" ? "active" : ""} type="button" onClick={() => tabAc("hizmetler")} role="tab" aria-selected={activeTab === "hizmetler"}>Hizmetler</button>
+          <button className={activeTab === "surec" ? "active" : ""} type="button" onClick={() => tabAc("surec")} role="tab" aria-selected={activeTab === "surec"}>Nasıl çalışır?</button>
+          <button className={activeTab === "kanit" ? "active" : ""} type="button" onClick={() => tabAc("kanit")} role="tab" aria-selected={activeTab === "kanit"}>Çalışma kanıtı</button>
+          <button className="navCta" type="button" onClick={() => tabAc("iletisim")} role="tab" aria-selected={activeTab === "iletisim"}>Ücretsiz inceleme iste</button>
         </div>
       </nav>
 
-      <section className="hero shell" id="top">
+      <div className="tabStage">
+      <section className="tabPanel homePanel" hidden={activeTab !== "anasayfa"} aria-label="Ana sayfa">
+      <div className="hero shell">
         <div className="heroCopy">
           <p className="eyebrow"><span /> Yerel işletmeler için uygulamalı yapay zekâ</p>
           <h1>Kaçan müşterileri ve tekrar eden işleri <em>düzene koyuyoruz.</em></h1>
@@ -59,8 +72,8 @@ export default function Home() {
             İşletmenizi inceliyor; müşteri takibi, iş otomasyonu veya web sitesi tarafında gerçekten ihtiyaç duyduğunuz sistemi kuruyoruz.
           </p>
           <div className="heroActions">
-            <a className="primary" href="#iletisim">Ücretsiz ön inceleme iste <span>→</span></a>
-            <a className="secondary" href="#surec">Süreç nasıl işliyor?</a>
+            <button className="primary" type="button" onClick={() => tabAc("iletisim")}>Ücretsiz ön inceleme iste <span>→</span></button>
+            <button className="secondary linkButton" type="button" onClick={() => tabAc("surec")}>Süreç nasıl işliyor?</button>
           </div>
           <div className="trustRow" aria-label="Güven ilkelerimiz">
             <span>✓ 10 günlük ücretsiz pilot</span>
@@ -79,7 +92,7 @@ export default function Home() {
           </ul>
           <div className="panelNote"><strong>Sonuç:</strong> Ne yapılacağı, neden yapılacağı ve nasıl ölçüleceği belli bir başlangıç planı.</div>
         </aside>
-      </section>
+      </div>
 
       <section className="clarityBar">
         <div className="shell">
@@ -87,8 +100,10 @@ export default function Home() {
           <span>Çalışan, ölçülen ve önemli adımları sizin kontrolünüzde kalan sistemler.</span>
         </div>
       </section>
+      </section>
 
-      <section className="section shell" id="hizmetler">
+      <section className="tabPanel" hidden={activeTab !== "hizmetler"} aria-label="Hizmetler">
+      <div className="section shell">
         <div className="sectionHead">
           <div>
             <p className="eyebrow"><span /> Hizmetler</p>
@@ -105,9 +120,10 @@ export default function Home() {
             </article>
           ))}
         </div>
+      </div>
       </section>
 
-      <section className="processSection" id="surec">
+      <section className="tabPanel processSection" hidden={activeTab !== "surec"} aria-label="Nasıl çalışır?">
         <div className="shell">
           <div className="processIntro">
             <p className="eyebrow light"><span /> Basit ve kontrollü süreç</p>
@@ -122,64 +138,47 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="evidence shell" id="kanit">
+      <section className="tabPanel" hidden={activeTab !== "kanit"} aria-label="Çalışma kanıtı">
+      <div className="evidence shell">
         <div className="evidenceCopy">
           <p className="eyebrow"><span /> Şeffaf çalışma kanıtı</p>
-          <h2>Henüz büyük sonuçlar uydurmuyoruz. Yaptığımız işi olduğu gibi gösteriyoruz.</h2>
-          <p>AgentAxis erken aşamada bir uygulamalı yapay zekâ stüdyosudur. Bu nedenle müşteri sonucu gibi sunulan yapay rakamlar veya sahte yorumlar kullanmıyoruz.</p>
+          <h2>Yaptığımız işi açık ve doğrulanabilir biçimde gösteriyoruz.</h2>
+          <p>Örnek analizleri gerçek müşteri sonucu gibi sunmayız. Bir çalışmayı ancak kaynağı, çalışan sistemi ve ölçülen sonucu görülebiliyorsa kanıt kabul ederiz.</p>
         </div>
-        <div className="evidenceGrid">
-          <article><strong>3</strong><span>Herkese açık verilerle hazırlanmış örnek işletme analizi</span></article>
-          <article><strong>10 gün</strong><span>Gerçek kullanımda ölçülen, ücretsiz ve tek kullanımlık pilot</span></article>
-          <article><strong>0</strong><span>Kullanıcı onayı olmadan yapılan dış işlem</span></article>
+        <div className="evidenceChecklist">
+          <article><span>01</span><div><strong>Kaynaklı analiz</strong><p>Her bulgunun nereden geldiği açıkça gösterilir.</p></div></article>
+          <article><span>02</span><div><strong>Çalışan sistem</strong><p>Sunum değil, gerçek kullanımda çalışan pilot hazırlanır.</p></div></article>
+          <article><span>03</span><div><strong>Ölçülebilir sonuç</strong><p>10 günlük denemede yalnız gerçekten ölçülen değişim raporlanır.</p></div></article>
+          <article><span>04</span><div><strong>Sizin kontrolünüz</strong><p>Mesaj, yayın ve hesap işlemleri açık onayınız olmadan yapılmaz.</p></div></article>
         </div>
         <div className="evidenceRule">
           <b>Neyi kanıt sayıyoruz?</b>
           <span>Kaynağı görülebilen analiz, çalışan sistem, açık onay kaydı ve pilot sonunda ölçülen gerçek sonuç.</span>
         </div>
+      </div>
       </section>
 
-      <section className="finderSection shell" id="ihtiyac">
-        <div className="finderCopy">
-          <p className="eyebrow"><span /> Nereden başlayacağınızı bilmiyor musunuz?</p>
-          <h2>İşletmenizi anlatın, uygun başlangıcı birlikte bulalım.</h2>
-          <p>Jarvis yalnız verdiğiniz bilgilere göre ön seçenekleri gösterir. Kesin öneri, gerçek incelemeden sonra hazırlanır.</p>
+      <section className="tabPanel" hidden={activeTab !== "iletisim"} aria-label="Ücretsiz inceleme">
+      <div className="finderSection shell">
+        <div>
+          <div className="finderCopy">
+            <p className="eyebrow"><span /> Ücretsiz ön inceleme</p>
+            <h2>İşletmenizi anlatın, uygun başlangıcı birlikte bulalım.</h2>
+            <p>Jarvis yalnız verdiğiniz bilgilere göre ön seçenekleri gösterir. Kesin öneri, gerçek incelemeden sonra hazırlanır.</p>
+          </div>
+          <div className="compactFaq">
+            {faqs.slice(0, 2).map(([question, answer]) => (
+              <details key={question}><summary>{question}<span>+</span></summary><p>{answer}</p></details>
+            ))}
+          </div>
         </div>
         <NeedFinder />
-      </section>
-
-      <section className="faq shell" id="sss">
-        <div>
-          <p className="eyebrow"><span /> Sık sorulanlar</p>
-          <h2>Başlamadan önce bilmeniz gerekenler.</h2>
-        </div>
-        <div className="faqList">
-          {faqs.map(([question, answer]) => (
-            <details key={question}>
-              <summary>{question}<span>+</span></summary>
-              <p>{answer}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      <section className="contact shell" id="iletisim">
-        <div>
-          <p className="eyebrow light"><span /> İlk adım</p>
-          <h2>İşletmenizdeki en değerli fırsatı birlikte bulalım.</h2>
-          <p>İlk görüşme satış baskısı içermez. Mevcut durumunuzu dinler, uygun başlangıç olup olmadığını açıkça söyleriz.</p>
-        </div>
-        <a className="primary lightButton" href="mailto:umutisbilen35@gmail.com?subject=AgentAxis%20Ücretsiz%20Ön%20İnceleme">Ücretsiz inceleme iste <span>→</span></a>
-      </section>
-
-      <footer className="shell">
-        <div>
-          <a className="brand" href="#top"><span className="brandMark" aria-hidden="true"><i /></span><span>AgentAxis <b>Labs</b></span></a>
-          <p>Yerel işletmeler için anlaşılır ve kontrollü yapay zekâ sistemleri.</p>
-        </div>
-        <div className="footerContact"><small>İletişim</small><a href="mailto:umutisbilen35@gmail.com">umutisbilen35@gmail.com</a></div>
-        <div className="footerLinks"><a href="/gizlilik">Gizlilik</a><a href="/kullanim-kosullari">Kullanım koşulları</a><span>© 2026 AgentAxis Labs</span></div>
+      </div>
+      <footer className="shell compactFooter">
+        <span>© 2026 AgentAxis Labs</span><a href="mailto:umutisbilen35@gmail.com">umutisbilen35@gmail.com</a><a href="/gizlilik">Gizlilik</a><a href="/kullanim-kosullari">Kullanım koşulları</a>
       </footer>
+      </section>
+      </div>
     </main>
   );
 }
