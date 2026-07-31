@@ -59,7 +59,7 @@ test("ana donusum ve guvenlik unsurlari korunur", async () => {
   assert.match(html, /Müşteri takibi/);
   assert.match(html, /İş otomasyonu/);
   assert.match(html, /Web sitesi/);
-  assert.match(html, /mailto:umutisbilen35@gmail.com/);
+  assert.match(html, /mailto:agentaxislabs@gmail.com/);
   assert.match(html, /Yaptığımız işi açık ve doğrulanabilir biçimde gösteriyoruz/);
   assert.doesNotMatch(html, /<strong>3<\/strong>|<strong>0<\/strong>/);
 });

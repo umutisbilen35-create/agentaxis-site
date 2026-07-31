@@ -65,7 +65,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
     const body = encodeURIComponent(
       `İşletme: ${business}\nWeb sitesi/harita: ${website || "Belirtilmedi"}\nİlgilenilen alanlar: ${needsText || "Görüşmede belirlenecek"}\nSorular/notlar: ${questions || "Yok"}\n\n10 günlük ücretsiz deneme için doğrulanmış analiz ve görüşme rica ediyorum.`,
     );
-    return `mailto:umutisbilen35@gmail.com?subject=${subject}&body=${body}`;
+    return `mailto:agentaxislabs@gmail.com?subject=${subject}&body=${body}`;
   }, [business, website, selected, chat]);
 
   function start(event: React.FormEvent) {

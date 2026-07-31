@@ -23,7 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         "@type": "Organization",
         name: "AgentAxis Labs",
         url: "https://agentaxislabs.com/",
-        email: "umutisbilen35@gmail.com",
+        email: "agentaxislabs@gmail.com",
         description: "Yerel işletmeler için Jarvis destekli müşteri takibi, iş otomasyonu ve web sitesi hizmetleri.",
       },
     ],

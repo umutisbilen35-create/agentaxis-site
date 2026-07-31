@@ -216,7 +216,7 @@ export default function Home() {
         <NeedFinder initialBusiness={sector} />
       </div>
       <footer className="shell compactFooter">
-        <span>© 2026 AgentAxis Labs</span><a href="mailto:umutisbilen35@gmail.com">umutisbilen35@gmail.com</a><a href="/gizlilik">Gizlilik</a><a href="/kullanim-kosullari">Kullanım koşulları</a>
+        <span>© 2026 AgentAxis Labs</span><a href="mailto:agentaxislabs@gmail.com">agentaxislabs@gmail.com</a><a href="/gizlilik">Gizlilik</a><a href="/kullanim-kosullari">Kullanım koşulları</a>
       </footer>
       </section>
       </div>

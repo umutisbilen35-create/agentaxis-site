@@ -8,6 +8,6 @@ export default function PrivacyPage() {
     <h2>Kullanım amacı</h2><p>Ücretsiz durum raporu hazırlamak, ihtiyaç görüşmesini yürütmek ve açık onay verdiğiniz hizmetleri sunmak.</p>
     <h2>Paylaşım ve güvenlik</h2><p>Bilgileriniz satılmaz. Harici bir hizmete aktarım gerekirse amacı ve maliyeti önceden açıklanır. Gereksiz parola veya hesap erişimi talep edilmez.</p>
     <h2>Haklarınız</h2><p>Bilgilerinizin silinmesini veya düzeltilmesini iletişim adresimiz üzerinden isteyebilirsiniz.</p>
-    <a className="primary" href="mailto:umutisbilen35@gmail.com?subject=Gizlilik%20Talebi">Bize ulaşın <span>→</span></a>
+    <a className="primary" href="mailto:agentaxislabs@gmail.com?subject=Gizlilik%20Talebi">Bize ulaşın <span>→</span></a>
   </main>;
 }
