@@ -34,11 +34,12 @@ test("AgentAxis ana sayfasi guclu giris metniyle sunulur", async () => {
   assert.match(html, /Hangi sektörde hizmet veriyorsunuz/);
   assert.match(html, /Önemli işleri siz onaylarsınız/);
   assert.match(html, /Yapılan işi açıkça görürsünüz/);
-  assert.match(html, /Jarvis — Dijital İş Asistanınız/);
+  assert.match(html, /Akıllı İşletme Asistanı/);
   assert.match(html, /İşletmenizi anlatın, uygun başlangıcı/);
-  assert.match(html, /10 günlük ücretsiz Jarvis denemesi/);
-  assert.match(html, /işletmenizin dijital iş asistanıdır/i);
-  assert.match(html, /Neden AgentAxis ve Jarvis’e güvenebilirim/);
+  assert.match(html, /10 günlük ücretsiz Akıllı İşletme Asistanı denemesi/);
+  assert.match(html, /İşletmenizin ihtiyaçlarını analiz eden/i);
+  assert.match(html, /Neden AgentAxis’e güvenebilirim/);
+  assert.doesNotMatch(html, /Jarvis/i);
   assert.doesNotMatch(html, /pilot|kesin sonuç sözü|sonuç garantisi/i);
   assert.match(html, /Web sitesi veya Google Haritalar bağlantısı/);
   assert.match(html, /Şeffaf çalışma kanıtı/);

@@ -7,11 +7,11 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata: Metadata = {
   title: "AgentAxis Labs | İşletmeler için AI Sistemleri",
-  description: "Yerel işletmeler için Jarvis destekli müşteri takibi, iş otomasyonu ve anlaşılır web siteleri kuruyoruz. 10 günlük ücretsiz Jarvis denemesiyle tanışın.",
+  description: "Yerel işletmeler için Akıllı İşletme Asistanı destekli müşteri takibi, iş otomasyonu ve anlaşılır web siteleri kuruyoruz. 10 günlük ücretsiz denemeyle tanışın.",
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
   metadataBase: new URL("https://agentaxislabs.com"),
-  openGraph: { title: "AgentAxis Labs | İşletmeler için çalışan sistemler", description: "Müşteri takibi, iş otomasyonu ve web sitesi. 10 günlük ücretsiz Jarvis denemesi.", type: "website", locale: "tr_TR", images: [{ url: "/og.png", width: 1536, height: 1024, alt: "AgentAxis Labs — İşletmeler için çalışan sistemler" }] },
-  twitter: { card: "summary_large_image", title: "AgentAxis Labs | İşletmeler için çalışan sistemler", description: "Müşteri takibi, iş otomasyonu ve web sitesi. 10 günlük ücretsiz Jarvis denemesi.", images: ["/og.png"] },
+  openGraph: { title: "AgentAxis Labs | İşletmeler için çalışan sistemler", description: "Müşteri takibi, iş otomasyonu ve web sitesi. 10 günlük ücretsiz Akıllı İşletme Asistanı denemesi.", type: "website", locale: "tr_TR", images: [{ url: "/og.png", width: 1536, height: 1024, alt: "AgentAxis Labs — İşletmeler için çalışan sistemler" }] },
+  twitter: { card: "summary_large_image", title: "AgentAxis Labs | İşletmeler için çalışan sistemler", description: "Müşteri takibi, iş otomasyonu ve web sitesi. 10 günlük ücretsiz Akıllı İşletme Asistanı denemesi.", images: ["/og.png"] },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -24,7 +24,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         name: "AgentAxis Labs",
         url: "https://agentaxislabs.com/",
         email: "agentaxislabs@gmail.com",
-        description: "Yerel işletmeler için Jarvis destekli müşteri takibi, iş otomasyonu ve web sitesi hizmetleri.",
+        description: "Yerel işletmeler için Akıllı İşletme Asistanı destekli müşteri takibi, iş otomasyonu ve web sitesi hizmetleri.",
       },
     ],
   };

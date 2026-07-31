@@ -46,18 +46,18 @@ const services = [
 const steps = [
   ["01", "Dinleriz", "İşletmenizi, müşterilerinizi ve yaşadığınız sorunu öğreniriz."],
   ["02", "Doğrularız", "Herkese açık veriler ve sizin verdiğiniz bilgilerle gerçek ihtiyacı buluruz."],
-  ["03", "Kurarız", "Uygun sistemi 10 günlük ücretsiz Jarvis denemesi olarak hazırlarız."],
+  ["03", "Kurarız", "Uygun sistemi 10 günlük ücretsiz Akıllı İşletme Asistanı denemesi olarak hazırlarız."],
   ["04", "Birlikte ölçeriz", "10 gün sonunda neyin işe yaradığını açık bir raporla gösteririz."],
 ];
 
 const faqs = [
-  ["Jarvis nedir?", "Jarvis, işletmenizin dijital iş asistanıdır. İhtiyaçları analiz eder, en faydalı işleri sıraya koyar ve uygulanacak sistemi anlaşılır bir plana dönüştürür."],
-  ["Jarvis işletmeme nasıl yardımcı olur?", "Müşteri takibi, tekrar eden işler ve web sitesi gibi alanları inceler. İşletmeniz için en değerli başlangıç noktasını bulup uygulanabilir adımları hazırlar."],
-  ["10 günlük Jarvis denemesi nasıl çalışır?", "Bir hedef seçer, sınırlı kapsamda çalışan sistemi kurar ve 10 gün boyunca birlikte ölçeriz. Deneme ücretsizdir ve otomatik olarak ücretli hizmete dönüşmez."],
-  ["Neden AgentAxis ve Jarvis’e güvenebilirim?", "Her önemli adımı size gösteririz. Analiz kaynaklarını, verilen izinleri, yapılan işleri ve ölçülen değişimi açık biçimde paylaşırız; kontrol her zaman sizde kalır."],
+  ["Akıllı İşletme Asistanı nedir?", "İşletmenizin ihtiyaçlarını analiz eden, en faydalı işleri sıraya koyan ve uygulanacak sistemi anlaşılır bir plana dönüştüren dijital iş asistanıdır."],
+  ["İşletmeme nasıl yardımcı olur?", "Müşteri takibi, tekrar eden işler ve web sitesi gibi alanları inceler. İşletmeniz için en değerli başlangıç noktasını bulup uygulanabilir adımları hazırlar."],
+  ["10 günlük ücretsiz deneme nasıl çalışır?", "Bir hedef seçer, sınırlı kapsamda çalışan sistemi kurar ve 10 gün boyunca birlikte ölçeriz. Deneme ücretsizdir ve otomatik olarak ücretli hizmete dönüşmez."],
+  ["Neden AgentAxis’e güvenebilirim?", "Her önemli adımı size gösteririz. Analiz kaynaklarını, verilen izinleri, yapılan işleri ve ölçülen değişimi açık biçimde paylaşırız; kontrol her zaman sizde kalır."],
   ["Verilerim ve hesaplarım güvende mi?", "Yalnız gerekli olan en düşük erişimi kullanırız. Yetki sınırlarını önceden birlikte belirler, önemli hesap işlemlerini sizin açık onayınızla yaparız."],
   ["10 günün sonunda ne olur?", "Ortaya çıkan sistemi ve ölçüm sonuçlarını birlikte inceleriz. Size fayda sağlıyorsa devam seçeneğini konuşuruz; otomatik ödeme veya zorunlu geçiş olmaz."],
-  ["Jarvis her şeyi benim yerime mi yapar?", "Jarvis uygun rutin işleri düzenler ve hızlandırır. Önemli kararlar, mesajlar ve hesap işlemleri sizin kontrolünüzde kalır."],
+  ["Akıllı İşletme Asistanı her şeyi benim yerime mi yapar?", "Uygun rutin işleri düzenler ve hızlandırır. Önemli kararlar, mesajlar ve hesap işlemleri sizin kontrolünüzde kalır."],
 ];
 
 export default function Home() {
@@ -68,7 +68,7 @@ export default function Home() {
     setActiveTab(tab);
   }
 
-  function sektoruJarviseGonder(event: React.FormEvent) {
+  function sektoruAsistanaGonder(event: React.FormEvent) {
     event.preventDefault();
     if (!sector.trim()) return;
     setActiveTab("iletisim");
@@ -96,28 +96,28 @@ export default function Home() {
           <p className="eyebrow"><span /> Yerel işletmeler için uygulamalı yapay zekâ</p>
           <h1>İşletmenizi büyüten dijital sistemi <em>birlikte kuruyoruz.</em></h1>
           <p className="lead">
-            Jarvis işletmenizi inceler; müşteri kazanma, takip, otomasyon ve web sitesi alanlarında en değerli fırsatı bulur. Uygulama sizin bilginiz ve kontrolünüz altında ilerler.
+            Akıllı İşletme Asistanı işletmenizi inceler; müşteri kazanma, takip, otomasyon ve web sitesi alanlarında en değerli fırsatı bulur. Uygulama sizin bilginiz ve kontrolünüz altında ilerler.
           </p>
           <div className="heroActions">
             <button className="primary" type="button" onClick={() => tabAc("iletisim")}>Ücretsiz ön inceleme iste <span>→</span></button>
             <button className="secondary linkButton" type="button" onClick={() => tabAc("surec")}>Süreç nasıl işliyor?</button>
           </div>
           <div className="trustRow" aria-label="Güven ilkelerimiz">
-            <span>✓ 10 günlük ücretsiz Jarvis denemesi</span>
+            <span>✓ 10 günlük ücretsiz Akıllı İşletme Asistanı denemesi</span>
             <span>✓ Otomatik ödeme yok</span>
             <span>✓ Önemli işlemler sizin onayınızda</span>
           </div>
         </div>
 
-        <aside className="heroPanel" aria-label="Jarvis güven ve kontrol özeti">
-          <div className="jarvisBadge"><span>J</span><div><small>DİJİTAL İŞ ASİSTANINIZ</small><strong>Jarvis</strong></div><i>Kontrol sizde</i></div>
+        <aside className="heroPanel" aria-label="Akıllı İşletme Asistanı güven ve kontrol özeti">
+          <div className="assistantBadge"><span>Aİ</span><div><small>DİJİTAL İŞ ASİSTANINIZ</small><strong>Akıllı İşletme Asistanı</strong></div><i>Kontrol sizde</i></div>
           <h2>Sektörünüzü söyleyin, size nasıl yardımcı olabileceğimizi gösterelim.</h2>
-          <div className="jarvisServices" aria-label="Jarvis hizmetleri">
+          <div className="assistantServices" aria-label="Akıllı İşletme Asistanı hizmetleri">
             {services.map((service) => <span key={service.no}><i>{service.icon}</i>{service.title}</span>)}
           </div>
-          <form className="heroJarvisForm" onSubmit={sektoruJarviseGonder}>
+          <form className="heroAssistantForm" onSubmit={sektoruAsistanaGonder}>
             <label htmlFor="sector">Hangi sektörde hizmet veriyorsunuz?</label>
-            <div><input id="sector" value={sector} onChange={(event) => setSector(event.target.value)} placeholder="Örn. emlak, klinik, restoran…" /><button type="submit" disabled={!sector.trim()}>Jarvis’e anlat <span>→</span></button></div>
+            <div><input id="sector" value={sector} onChange={(event) => setSector(event.target.value)} placeholder="Örn. emlak, klinik, restoran…" /><button type="submit" disabled={!sector.trim()}>Asistana anlat <span>→</span></button></div>
           </form>
           <div className="panelControls"><span>✓ Önemli işleri siz onaylarsınız</span><span>✓ Yapılan işi açıkça görürsünüz</span></div>
         </aside>
@@ -125,7 +125,7 @@ export default function Home() {
 
       <section className="homeServices" aria-label="Tüm hizmetlerimiz">
         <div className="shell">
-          <div className="homeServicesHead"><div><small>İHTİYACINIZ OLABİLECEK HİZMETLER</small><h2>Jarvis işletmeniz için doğru başlangıcı bulur.</h2></div><button type="button" onClick={() => tabAc("hizmetler")}>Tüm detayları gör <span>→</span></button></div>
+          <div className="homeServicesHead"><div><small>İHTİYACINIZ OLABİLECEK HİZMETLER</small><h2>Akıllı İşletme Asistanı işletmeniz için doğru başlangıcı bulur.</h2></div><button type="button" onClick={() => tabAc("hizmetler")}>Tüm detayları gör <span>→</span></button></div>
           <div className="homeServiceGrid">
             {services.map((service) => <button type="button" key={service.no} onClick={() => tabAc("hizmetler")}><i>{service.icon}</i><strong>{service.title}</strong><small>{service.result}</small></button>)}
           </div>
@@ -187,13 +187,13 @@ export default function Home() {
         </div>
         <div className="evidenceChecklist">
           <article><span>01</span><div><strong>Kaynaklı analiz</strong><p>Her bulgunun nereden geldiği açıkça gösterilir.</p></div></article>
-          <article><span>02</span><div><strong>Çalışan sistem</strong><p>Sunum değil, gerçek kullanımda çalışan Jarvis sistemi kurulur.</p></div></article>
+          <article><span>02</span><div><strong>Çalışan sistem</strong><p>Sunum değil, gerçek kullanımda çalışan Akıllı İşletme Asistanı sistemi kurulur.</p></div></article>
           <article><span>03</span><div><strong>Ölçülebilir sonuç</strong><p>10 günlük denemede yalnız gerçekten ölçülen değişim raporlanır.</p></div></article>
           <article><span>04</span><div><strong>Sizin kontrolünüz</strong><p>Mesaj, yayın ve hesap işlemleri açık onayınız olmadan yapılmaz.</p></div></article>
         </div>
         <div className="evidenceRule">
           <b>Neyi kanıt sayıyoruz?</b>
-          <span>Kaynağı görülebilen analiz, çalışan sistem, açık onay kaydı ve Jarvis denemesi sonunda ölçülen gerçek sonuç.</span>
+          <span>Kaynağı görülebilen analiz, çalışan sistem, açık onay kaydı ve ücretsiz deneme sonunda ölçülen gerçek sonuç.</span>
         </div>
       </div>
       </section>
@@ -204,10 +204,10 @@ export default function Home() {
           <div className="finderCopy">
             <p className="eyebrow"><span /> Ücretsiz ön inceleme</p>
             <h2>İşletmenizi anlatın, uygun başlangıcı birlikte bulalım.</h2>
-            <p>Jarvis; işletmenizi anlamaya, en değerli fırsatı seçmeye ve uygulanabilir başlangıç planını oluşturmaya yardımcı olan dijital iş asistanınızdır.</p>
+            <p>Akıllı İşletme Asistanı; işletmenizi anlamaya, en değerli fırsatı seçmeye ve uygulanabilir başlangıç planını oluşturmaya yardımcı olur.</p>
           </div>
           <div className="compactFaq">
-            <h3>Jarvis hakkında merak edilenler</h3>
+            <h3>Akıllı İşletme Asistanı hakkında merak edilenler</h3>
             {faqs.map(([question, answer]) => (
               <details key={question}><summary>{question}<span>+</span></summary><p>{answer}</p></details>
             ))}

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 type NeedId = "visibility" | "follow" | "automation" | "website" | "reactivation";
-type ChatItem = { role: "jarvis" | "user"; text: string };
+type ChatItem = { role: "assistant" | "user"; text: string };
 
 const needs: Array<{ id: NeedId; label: string }> = [
   { id: "visibility", label: "Daha fazla müşteriye ulaşmak" },
@@ -21,7 +21,7 @@ const serviceMap: Record<NeedId, string[]> = {
   reactivation: ["Eski müşteri listesinin güvenli segmentasyonu", "İzin durumuna uygun geri kazanım planı", "Sonuç takibi"],
 };
 
-function jarvisReply(question: string) {
+function assistantReply(question: string) {
   const q = question.toLocaleLowerCase("tr-TR");
   if (/sms|whatsapp|mesaj/.test(q)) {
     return "SMS veya WhatsApp zorunlu değildir. İsterseniz kendi sağlayıcınızı bağlayabilirsiniz. Bağlantı öncesinde kapsam, maliyet ve izinler açıkça gösterilir; şifrenizi istemeyiz.";
@@ -30,7 +30,7 @@ function jarvisReply(question: string) {
     return "10 günlük deneme ücretsizdir ve kendiliğinden ücretliye dönüşmez. Deneme sonunda yalnız kullandığınız hizmetlere göre açık bir aylık hizmet önerisi hazırlanır; kabul etmek zorunda değilsiniz.";
   }
   if (/güven|veri|şifre|kvkk|gizli/.test(q)) {
-    return "Jarvis her önemli adımı görünür tutar. Yalnız gerekli olan en düşük erişim kullanılır; yetkiler önceden belirlenir ve önemli işlemler sizin onayınızla yapılır. Analiz kaynakları, yapılan işler ve ölçülen değişim açıkça paylaşılır.";
+    return "Akıllı İşletme Asistanı her önemli adımı görünür tutar. Yalnız gerekli olan en düşük erişim kullanılır; yetkiler önceden belirlenir ve önemli işlemler sizin onayınızla yapılır. Analiz kaynakları, yapılan işler ve ölçülen değişim açıkça paylaşılır.";
   }
   if (/ne yap|nasıl|otomasyon|hizmet/.test(q)) {
     return "Kesin öneri vermeden önce doğrulanmış işletme analizinizi ve sizin önceliklerinizi birlikte değerlendiririm. Gerçek ihtiyaç görmediğim bir hizmeti önermem; uygun olanları 10 günlük deneme kapsamına ekleriz.";
@@ -46,7 +46,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
   const [started, setStarted] = useState(false);
   const [ready, setReady] = useState(false);
   const [chat, setChat] = useState<ChatItem[]>([
-    { role: "jarvis", text: "Merhaba, ben Jarvis. İşletmenizin ihtiyaçlarını anlamanıza, en değerli fırsatı seçmenize ve uygulanabilir bir çalışma planı oluşturmanıza yardımcı olan dijital iş asistanıyım." },
+    { role: "assistant", text: "Merhaba, ben Akıllı İşletme Asistanınız. İşletmenizin ihtiyaçlarını anlamanıza, en değerli fırsatı seçmenize ve uygulanabilir bir çalışma planı oluşturmanıza yardımcı olurum." },
   ]);
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
     setChat((items) => [
       ...items,
       { role: "user", text: `${business.trim()} için görüşmek istiyorum.${website.trim() ? ` Bağlantı: ${website.trim()}` : ""}` },
-      { role: "jarvis", text: "Teşekkür ederim. Şimdi önceliklerinizi seçin; size uygulanabilir bir başlangıç planı hazırlayayım." },
+      { role: "assistant", text: "Teşekkür ederim. Şimdi önceliklerinizi seçin; size uygulanabilir bir başlangıç planı hazırlayayım." },
     ]);
   }
 
@@ -88,22 +88,22 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
     if (!selected.length) return;
     setReady(true);
     const labels = selected.map((id) => needs.find((item) => item.id === id)?.label).filter(Boolean).join(", ");
-    setChat((items) => [...items, { role: "user", text: labels }, { role: "jarvis", text: "Önceliklerinize göre ilk çalışma planını hazırladım. İnceleme sırasında en çok fayda sağlayacak adımları netleştirip birlikte uygulayabiliriz." }]);
+    setChat((items) => [...items, { role: "user", text: labels }, { role: "assistant", text: "Önceliklerinize göre ilk çalışma planını hazırladım. İnceleme sırasında en çok fayda sağlayacak adımları netleştirip birlikte uygulayabiliriz." }]);
   }
 
   function ask(event: React.FormEvent) {
     event.preventDefault();
     const clean = question.trim();
     if (!clean) return;
-    setChat((items) => [...items, { role: "user", text: clean }, { role: "jarvis", text: jarvisReply(clean) }]);
+    setChat((items) => [...items, { role: "user", text: clean }, { role: "assistant", text: assistantReply(clean) }]);
     setQuestion("");
   }
 
   return (
     <div className="needAssistant">
       <div className="chatIntro">
-        <span className="botDot" aria-hidden="true">J</span>
-        <div><strong>Jarvis — Dijital İş Asistanınız</strong><p>İşletmenizi inceler, doğru başlangıcı bulur ve işleri anlaşılır bir plana dönüştürür.</p></div>
+        <span className="botDot" aria-hidden="true">Aİ</span>
+        <div><strong>Akıllı İşletme Asistanı</strong><p>İşletmenizi inceler, doğru başlangıcı bulur ve işleri anlaşılır bir plana dönüştürür.</p></div>
         <i>Ön görüşme modu</i>
       </div>
 
@@ -135,7 +135,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
           </fieldset>
 
           <form className="askForm" onSubmit={ask}>
-            <label htmlFor="question">Aklınıza takılan şeyi Jarvis’e sorun</label>
+            <label htmlFor="question">Aklınıza takılan şeyi asistana sorun</label>
             <div><input id="question" value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Örn. SMS kullanmak zorunda mıyım?" /><button type="submit" disabled={!question.trim()} aria-label="Soruyu gönder">↑</button></div>
           </form>
         </>
@@ -146,7 +146,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
           <small>10 GÜNLÜK ÜCRETSİZ DENEME</small>
           <h3>{business} için düşünülebilecek başlangıç hizmetleri</h3>
           <ul>{services.map((item) => <li key={item}>✓ {item}</li>)}</ul>
-          <p className="scopeRule">Jarvis bu başlangıç planını verdiğiniz bilgiler ve analiz bulgularıyla oluşturur; işletmenize en çok fayda sağlayacak adımları plana dahil eder.</p>
+          <p className="scopeRule">Akıllı İşletme Asistanı bu başlangıç planını verdiğiniz bilgiler ve analiz bulgularıyla oluşturur; işletmenize en çok fayda sağlayacak adımları plana dahil eder.</p>
           <a className="primary" href={mailHref}>Ücretsiz görüşme talebi gönder <span>→</span></a>
           <em>Deneme her işletmeye bir kez sunulur, otomatik ücretliye dönüşmez ve SMS tamamen isteğe bağlıdır.</em>
         </div>
