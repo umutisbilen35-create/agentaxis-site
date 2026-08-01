@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
+
+const root = new URL("../", import.meta.url);
 
 async function render() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -74,4 +77,10 @@ test("ana donusum ve guvenlik unsurlari korunur", async () => {
   assert.match(html, /mailto:agentaxislabs@gmail.com/);
   assert.match(html, /Yaptığımız işi açık ve doğrulanabilir biçimde gösteriyoruz/);
   assert.doesNotMatch(html, /<strong>3<\/strong>|<strong>0<\/strong>/);
+});
+
+test("ucretsiz inceleme basligi SSS alaninin ustune yapismaz", async () => {
+  const css = await readFile(new URL("app/globals.css", root), "utf8");
+  assert.match(css, /\.finderCopy\s*\{[^}]*position:static/);
+  assert.doesNotMatch(css, /\.finderCopy\s*\{[^}]*position:sticky/);
 });

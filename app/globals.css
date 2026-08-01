@@ -153,7 +153,7 @@ h1 em { color:var(--blue); font-style:normal; }
 .evidenceRule span { color:#435170; font-size:16.9px; line-height:1.5; }
 
 .finderSection { padding-block:110px; display:grid; grid-template-columns:.78fr 1.22fr; gap:76px; align-items:start; border-top:1px solid var(--line); }
-.finderCopy { position:sticky; top:40px; }
+.finderCopy { position:static; }
 .finderCopy>p:last-child { color:var(--muted); font-size:16px; line-height:1.7; max-width:500px; }
 .compactFaq { margin-top:35px; border-top:1px solid var(--line); }
 .compactFaq h3 { margin:24px 0 5px; font-size:18px; }
