@@ -46,17 +46,38 @@ const services = [
 const steps = [
   ["01", "Dinleriz", "İşletmenizi, müşterilerinizi ve yaşadığınız sorunu öğreniriz."],
   ["02", "Doğrularız", "Herkese açık veriler ve sizin verdiğiniz bilgilerle gerçek ihtiyacı buluruz."],
-  ["03", "Kurarız", "Uygun sistemi 10 günlük ücretsiz Akıllı İşletme Asistanı denemesi olarak hazırlarız."],
-  ["04", "Birlikte ölçeriz", "10 gün sonunda neyin işe yaradığını açık bir raporla gösteririz."],
+  ["03", "Kurarız", "Uygun sistemi test eder, çalışan bağlantıları doğruladıktan sonra 7 günlük ücretsiz denemeyi başlatırız."],
+  ["04", "Birlikte ölçeriz", "7 gün sonunda neyin işe yaradığını açık bir raporla gösteririz."],
+];
+
+const sectorExamples = [
+  {
+    sector: "KLİNİK",
+    metric: "%30",
+    title: "daha az randevuya gelmeme hedefi",
+    text: "Hatırlatma, onay ve takip akışıyla boş kalan randevuları azaltmaya yönelik sistem.",
+  },
+  {
+    sector: "EMLAK",
+    metric: "HIZLI",
+    title: "alıcı ve satıcı talep takibi",
+    text: "Yeni talepleri tek yerde toplar, doğru kişiye dönüş yapılmasını görünür hâle getirir.",
+  },
+  {
+    sector: "RESTORAN",
+    metric: "TEK",
+    title: "rezervasyon ve mesaj düzeni",
+    text: "Rezervasyon, onay ve müşteri sorularını ekibin takip edebileceği sade bir akışta toplar.",
+  },
 ];
 
 const faqs = [
   ["Akıllı İşletme Asistanı nedir?", "İşletmenizin ihtiyaçlarını analiz eden, en faydalı işleri sıraya koyan ve uygulanacak sistemi anlaşılır bir plana dönüştüren dijital iş asistanıdır."],
   ["İşletmeme nasıl yardımcı olur?", "Müşteri takibi, tekrar eden işler ve web sitesi gibi alanları inceler. İşletmeniz için en değerli başlangıç noktasını bulup uygulanabilir adımları hazırlar."],
-  ["10 günlük ücretsiz deneme nasıl çalışır?", "Bir hedef seçer, sınırlı kapsamda çalışan sistemi kurar ve 10 gün boyunca birlikte ölçeriz. Deneme ücretsizdir ve otomatik olarak ücretli hizmete dönüşmez."],
+  ["7 günlük ücretsiz deneme nasıl çalışır?", "Bir hedef seçer, sistemi önce güvenli biçimde test ederiz. Bağlantılar çalıştıktan sonra 7 günlük süre başlar; deneme ücretsizdir ve otomatik olarak ücretli hizmete dönüşmez."],
   ["Neden AgentAxis’e güvenebilirim?", "Her önemli adımı size gösteririz. Analiz kaynaklarını, verilen izinleri, yapılan işleri ve ölçülen değişimi açık biçimde paylaşırız; kontrol her zaman sizde kalır."],
   ["Verilerim ve hesaplarım güvende mi?", "Yalnız gerekli olan en düşük erişimi kullanırız. Yetki sınırlarını önceden birlikte belirler, önemli hesap işlemlerini sizin açık onayınızla yaparız."],
-  ["10 günün sonunda ne olur?", "Ortaya çıkan sistemi ve ölçüm sonuçlarını birlikte inceleriz. Size fayda sağlıyorsa devam seçeneğini konuşuruz; otomatik ödeme veya zorunlu geçiş olmaz."],
+  ["7 günün sonunda ne olur?", "Ortaya çıkan sistemi ve ölçüm sonuçlarını birlikte inceleriz. Size fayda sağlıyorsa devam seçeneğini konuşuruz; otomatik ödeme veya zorunlu geçiş olmaz."],
   ["Akıllı İşletme Asistanı her şeyi benim yerime mi yapar?", "Uygun rutin işleri düzenler ve hızlandırır. Önemli kararlar, mesajlar ve hesap işlemleri sizin kontrolünüzde kalır."],
 ];
 
@@ -77,15 +98,16 @@ export default function Home() {
   return (
     <main>
       <nav className="nav shell" aria-label="Ana menü">
-        <button className="brand brandButton" type="button" onClick={() => tabAc("anasayfa")} aria-label="AgentAxis Labs ana sayfa">
+        <button className="brand brandButton" type="button" onClick={() => tabAc("anasayfa")} aria-label="AgentAxis Labs ana sayfa" aria-pressed={activeTab === "anasayfa"}>
           <span className="brandMark" aria-hidden="true"><i /></span>
           <span>AgentAxis <b>Labs</b></span>
         </button>
-        <div className="navLinks" role="tablist" aria-label="Site bölümleri">
-          <button className={activeTab === "hizmetler" ? "active" : ""} type="button" onClick={() => tabAc("hizmetler")} role="tab" aria-selected={activeTab === "hizmetler"}>Hizmetler</button>
-          <button className={activeTab === "surec" ? "active" : ""} type="button" onClick={() => tabAc("surec")} role="tab" aria-selected={activeTab === "surec"}>Nasıl çalışır?</button>
-          <button className={activeTab === "kanit" ? "active" : ""} type="button" onClick={() => tabAc("kanit")} role="tab" aria-selected={activeTab === "kanit"}>Çalışma kanıtı</button>
-          <button className={`navCta ${activeTab === "iletisim" ? "active" : ""}`} type="button" onClick={() => tabAc("iletisim")} role="tab" aria-selected={activeTab === "iletisim"}>Ücretsiz inceleme iste</button>
+        <button className={`mobileNavCta ${activeTab === "iletisim" ? "active" : ""}`} type="button" onClick={() => tabAc("iletisim")} aria-pressed={activeTab === "iletisim"}>Ücretsiz inceleme</button>
+        <div className="navLinks" aria-label="Site bölümleri">
+          <button className={activeTab === "hizmetler" ? "active" : ""} type="button" onClick={() => tabAc("hizmetler")} aria-pressed={activeTab === "hizmetler"}>Hizmetler</button>
+          <button className={activeTab === "surec" ? "active" : ""} type="button" onClick={() => tabAc("surec")} aria-pressed={activeTab === "surec"}>Nasıl çalışır?</button>
+          <button className={activeTab === "kanit" ? "active" : ""} type="button" onClick={() => tabAc("kanit")} aria-pressed={activeTab === "kanit"}>Çalışma kanıtı</button>
+          <button className={`navCta ${activeTab === "iletisim" ? "active" : ""}`} type="button" onClick={() => tabAc("iletisim")} aria-pressed={activeTab === "iletisim"}>Ücretsiz inceleme iste</button>
         </div>
       </nav>
 
@@ -94,7 +116,7 @@ export default function Home() {
       <div className="hero shell">
         <div className="heroCopy">
           <p className="eyebrow"><span /> Yerel işletmeler için uygulamalı yapay zekâ</p>
-          <h1>İşletmenizi büyüten dijital sistemi <em>birlikte kuruyoruz.</em></h1>
+          <h1>Müşteri kazanma ve takip işlerinizi <em>tek düzene kuruyoruz.</em></h1>
           <p className="lead">
             Akıllı İşletme Asistanı işletmenizi inceler; müşteri kazanma, takip, otomasyon ve web sitesi alanlarında en değerli fırsatı bulur. Uygulama sizin bilginiz ve kontrolünüz altında ilerler.
           </p>
@@ -103,7 +125,7 @@ export default function Home() {
             <button className="secondary linkButton" type="button" onClick={() => tabAc("surec")}>Süreç nasıl işliyor?</button>
           </div>
           <div className="trustRow" aria-label="Güven ilkelerimiz">
-            <span>✓ 10 günlük ücretsiz Akıllı İşletme Asistanı denemesi</span>
+            <span>✓ 7 günlük ücretsiz Akıllı İşletme Asistanı denemesi</span>
             <span>✓ Otomatik ödeme yok</span>
             <span>✓ Önemli işlemler sizin onayınızda</span>
           </div>
@@ -129,15 +151,45 @@ export default function Home() {
           <div className="homeServiceGrid">
             {services.map((service) => <button type="button" key={service.no} onClick={() => tabAc("hizmetler")}><i>{service.icon}</i><strong>{service.title}</strong><small>{service.result}</small></button>)}
           </div>
-          <div className="exampleOutcome" aria-label="Klinikler için örnek otomasyon hedefi">
-            <div><small>KLİNİKLER İÇİN ÖRNEK OTOMASYON HEDEFİ</small><strong><b>%30</b> daha az randevuya gelmeme</strong></div>
-            <p>Hatırlatma, onay ve takip akışlarıyla boş kalan randevuları azaltmaya yönelik sistem kurabiliriz.</p>
-            <span>Hedef, mevcut veriler incelendikten sonra işletmeye özel belirlenir.</span>
+          <div className="sectorExamplesHead">
+            <div><small>SEKTÖRE GÖRE SOMUT ÖRNEKLER</small><strong>Aynı şablonu herkese sunmuyoruz.</strong></div>
+            <p>İhtiyaç, hizmet ve ölçüm yöntemi sektörünüze göre değişir.</p>
           </div>
+          <div className="sectorExamples" aria-label="Sektöre özel hizmet örnekleri">
+            {sectorExamples.map((example) => (
+              <article key={example.sector} className={example.sector === "KLİNİK" ? "featured" : ""}>
+                <small>{example.sector} · ÖRNEK HEDEF</small>
+                <strong><b>{example.metric}</b>{example.title}</strong>
+                <p>{example.text}</p>
+                <span>Hedef, mevcut veriler incelendikten sonra işletmeye özel belirlenir.</span>
+              </article>
+            ))}
+          </div>
+          <section className="aboutBand" aria-label="AgentAxis Labs hakkında">
+            <div className="aboutCopy">
+              <small>BİZ KİMİZ?</small>
+              <h2>Teknik karmaşayı sadeleştiren uygulama ortağınızız.</h2>
+              <p>AgentAxis Labs, yerel işletmeler için müşteri kazanma, takip, otomasyon ve web sistemleri kurar. İlk temas ve ücretsiz ön inceleme çevrim içi ilerler; ne yapılacağını anlaşılır biçimde görürsünüz.</p>
+              <a href="mailto:agentaxislabs@gmail.com">agentaxislabs@gmail.com <span>→</span></a>
+            </div>
+            <div className="aboutPrinciples">
+              <article><b>01</b><div><strong>Önce ihtiyacı buluruz</strong><p>Aracı değil, işletmenizde gerçekten değer yaratacak sorunu seçeriz.</p></div></article>
+              <article><b>02</b><div><strong>Küçük ve görünür başlarız</strong><p>Sistemi test eder, çalıştıktan sonra 7 günlük ücretsiz denemeyi başlatırız.</p></div></article>
+              <article><b>03</b><div><strong>Kontrol sizde kalır</strong><p>Önemli mesaj, yayın ve hesap işlemleri sizin açık onayınızla ilerler.</p></div></article>
+            </div>
+          </section>
           <div className="controlPromise">
             <strong>Güven sözümüz:</strong>
             <span>Şeffaf kapsam</span><span>Sizin açık onayınız</span><span>Ölçülebilir çalışma</span><span>Otomatik ödeme yok</span>
           </div>
+          <section className="homeCtaBand" aria-label="Ücretsiz incelemeye başla">
+            <div>
+              <small>İLK ADIM ÜCRETSİZ</small>
+              <h3>İşletmeniz için en değerli başlangıcı birlikte bulalım.</h3>
+              <p>Yaklaşık 2 dakikada ihtiyacınızı anlatın; size uygun hizmet fikirlerini hemen görün.</p>
+            </div>
+            <button className="primary lightButton" type="button" onClick={() => tabAc("iletisim")}>Ücretsiz incelemeyi başlat <span>→</span></button>
+          </section>
         </div>
       </section>
       </section>
@@ -149,7 +201,7 @@ export default function Home() {
             <p className="eyebrow"><span /> Hizmetler</p>
             <h2>İşletmeniz için ne kuruyoruz?</h2>
           </div>
-          <p>Her şeyi aynı anda satmaya çalışmayız. İnceleme sonucunda en faydalı başlangıç noktasını birlikte seçeriz.</p>
+          <p>Ücretsiz ön inceleme, işletmeniz için hangi hizmetin önce değer yaratacağını gösterir. Sonra küçük, test edilebilir bir başlangıç seçeriz.</p>
         </div>
         <div className="serviceGrid">
           {services.map((service) => (
@@ -188,7 +240,7 @@ export default function Home() {
         <div className="evidenceChecklist">
           <article><span>01</span><div><strong>Kaynaklı analiz</strong><p>Her bulgunun nereden geldiği açıkça gösterilir.</p></div></article>
           <article><span>02</span><div><strong>Çalışan sistem</strong><p>Sunum değil, gerçek kullanımda çalışan Akıllı İşletme Asistanı sistemi kurulur.</p></div></article>
-          <article><span>03</span><div><strong>Ölçülebilir sonuç</strong><p>10 günlük denemede yalnız gerçekten ölçülen değişim raporlanır.</p></div></article>
+          <article><span>03</span><div><strong>Ölçülebilir sonuç</strong><p>7 günlük denemede yalnız gerçekten ölçülen değişim raporlanır.</p></div></article>
           <article><span>04</span><div><strong>Sizin kontrolünüz</strong><p>Mesaj, yayın ve hesap işlemleri açık onayınız olmadan yapılmaz.</p></div></article>
         </div>
         <div className="evidenceRule">
@@ -213,7 +265,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-        <NeedFinder initialBusiness={sector} />
+        <NeedFinder key={sector || "bos"} initialBusiness={sector} />
       </div>
       <footer className="shell compactFooter">
         <span>© 2026 AgentAxis Labs</span><a href="mailto:agentaxislabs@gmail.com">agentaxislabs@gmail.com</a><a href="/gizlilik">Gizlilik</a><a href="/kullanim-kosullari">Kullanım koşulları</a>

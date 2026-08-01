@@ -1,5 +1,27 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1785535665196,
+      "tag": "0000_parched_vengeance",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1785535687029,
+      "tag": "0001_wandering_captain_america",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1785536758672,
+      "tag": "0002_bitter_the_anarchist",
+      "breakpoints": true
+    }
+  ]
 }
