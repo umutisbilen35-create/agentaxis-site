@@ -8,6 +8,7 @@ export const leadIntakes = sqliteTable("lead_intakes", {
   website: text("website"),
   needsJson: text("needs_json").notNull(),
   plan: text("plan").notNull(),
+  diagnosisJson: text("diagnosis_json").notNull().default("[]"),
   contactName: text("contact_name").notNull(),
   email: text("email").notNull(),
   phone: text("phone"),

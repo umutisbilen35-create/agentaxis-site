@@ -1,5 +1,13 @@
 const allowedNeeds = new Set(["visibility", "follow", "automation", "website", "reactivation"]);
-const allowedPlans = new Set(["baslangic", "buyume", "ozel"]);
+const allowedPlans = new Set(["teshis"]);
+
+const diagnosisChecks: Record<string, string[]> = {
+  visibility: ["ai_search_visibility", "source_citation", "incorrect_brand_info"],
+  follow: ["first_response_time", "next_step", "human_handoff"],
+  automation: ["manual_repetition", "approval_points", "measurable_time_loss"],
+  website: ["first_screen_clarity", "primary_cta", "mobile_contact_path"],
+  reactivation: ["consent_quality", "unfollowed_segments", "next_step"],
+};
 
 type IntakeBody = {
   business?: unknown;
@@ -94,13 +102,15 @@ export async function POST(request: Request) {
     for (let attempt = 0; attempt < 2; attempt += 1) {
       try {
         const intakeStatement = db.prepare(`INSERT INTO lead_intakes
-          (reference, business, sector, website, needs_json, plan, contact_name, email, phone, note, consent_at, idempotency_key, content_hash, ip_hash, marketing_consent_at, status, created_at)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', ?)`)
-          .bind(reference, business, sector, website || null, JSON.stringify(needs), plan, contactName, email, phone || null, note || null, createdAt, idempotencyKey, contentHash, ipHash, body.marketingConsent === true ? createdAt : null, createdAt);
+          (reference, business, sector, website, needs_json, plan, diagnosis_json, contact_name, email, phone, note, consent_at, idempotency_key, content_hash, ip_hash, marketing_consent_at, status, created_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'diagnosis_requested', ?)`)
+          .bind(reference, business, sector, website || null, JSON.stringify(needs), plan,
+            JSON.stringify(needs.flatMap((need) => diagnosisChecks[need] ?? [])),
+            contactName, email, phone || null, note || null, createdAt, idempotencyKey, contentHash, ipHash, body.marketingConsent === true ? createdAt : null, createdAt);
         const trialStatement = db.prepare(`INSERT INTO trial_runs
           (intake_id, status, starts_at, ends_at, milestones_json, metrics_json, created_at)
-          SELECT id, 'waiting_for_review', NULL, NULL, ?, ?, ? FROM lead_intakes WHERE reference = ?`)
-          .bind(JSON.stringify(["setup", "sandbox_test", "approval", "seven_day_trial", "result_report"]), JSON.stringify({}), createdAt, reference);
+          SELECT id, 'diagnosis_requested', NULL, NULL, ?, ?, ? FROM lead_intakes WHERE reference = ?`)
+          .bind(JSON.stringify(["public_evidence", "mini_diagnosis", "customer_review", "solution_only_if_confirmed"]), JSON.stringify({}), createdAt, reference);
         await db.batch([intakeStatement, trialStatement]);
         kayitTamam = true;
         break;

@@ -7,9 +7,9 @@ export default function PrivacyPage() {
     <h1>Gizlilik ve Aydınlatma Metni</h1>
     <p>Bu metin, ücretsiz işletme inceleme formunda paylaştığınız bilgilerin nasıl kullanıldığını açıklar. Veri sorumlusu AgentAxis Labs’tır. Sorularınız ve başvurularınız için <a href="mailto:agentaxislabs@gmail.com">agentaxislabs@gmail.com</a> adresini kullanabilirsiniz.</p>
     <h2>Hangi bilgileri topluyoruz?</h2>
-    <p>İşletme adı, sektör, isteğe bağlı web sitesi veya Google Haritalar bağlantısı, seçtiğiniz ihtiyaçlar ve paket, adınız, e-posta adresiniz, isteğe bağlı telefon numarası ve notunuz. Güvenlik ve kötüye kullanımı önlemek için, platform tarafından sağlandığında bağlantı adresinizin geri döndürülemez özeti de kaydedilebilir. Hasta, teşhis, tedavi veya başka kişilere ait özel bilgi istemiyoruz.</p>
+    <p>İşletme adı, sektör, isteğe bağlı web sitesi veya Google Haritalar bağlantısı, seçtiğiniz ihtiyaçlar ve mini teşhis başlıkları, adınız, e-posta adresiniz, isteğe bağlı telefon numarası ve notunuz. Güvenlik ve kötüye kullanımı önlemek için, platform tarafından sağlandığında bağlantı adresinizin geri döndürülemez özeti de kaydedilebilir. Hasta, teşhis, tedavi veya başka kişilere ait özel bilgi istemiyoruz.</p>
     <h2>Neden ve nasıl kullanıyoruz?</h2>
-    <p>Bilgiler form üzerinden elektronik olarak alınır; ücretsiz inceleme talebinizi değerlendirmek, tekrar kayıtları önlemek, sizinle talebiniz hakkında iletişim kurmak, size uygun demo ve hizmet kapsamını hazırlamak amacıyla kullanılır. İsteğe bağlı bilgilendirme kutusunu seçmediğiniz sürece pazarlama mesajı gönderilmez.</p>
+    <p>Bilgiler form üzerinden elektronik olarak alınır; ücretsiz mini teşhis talebinizi değerlendirmek, tekrar kayıtları önlemek, sizinle talebiniz hakkında iletişim kurmak ve ölçüm planını hazırlamak amacıyla kullanılır. İsteğe bağlı bilgilendirme kutusunu seçmediğiniz sürece pazarlama mesajı gönderilmez.</p>
     <h2>Kimlerle paylaşılabilir?</h2>
     <p>Bilgileriniz satılmaz. Teknik barındırma, güvenli kayıt veya iletişim hizmeti sağlayan iş ortakları yalnız hizmetin gerektirdiği ölçüde veri işleyebilir. Kanunen zorunlu hâllerde yetkili kamu kurumlarıyla paylaşım yapılabilir.</p>
     <h2>Ne kadar süre saklıyoruz?</h2>

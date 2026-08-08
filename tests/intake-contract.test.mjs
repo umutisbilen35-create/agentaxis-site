@@ -6,11 +6,11 @@ const root = new URL("../", import.meta.url);
 
 test("ücretsiz inceleme akışı müşteri için açık ve güvenlidir", async () => {
   const form = await readFile(new URL("app/NeedFinder.tsx", root), "utf8");
-  assert.match(form, /7 GÜN ÜCRETSİZ/);
-  assert.match(form, /Sistem çalışmadan süre başlamaz/);
-  assert.match(form, /Başlangıç/);
-  assert.match(form, /Büyüme/);
-  assert.match(form, /İşletmeye Özel/);
+  assert.match(form, /60 SANİYELİK MİNİ TEŞHİS/);
+  assert.match(form, /Önce problemi görünür yapalım/);
+  assert.match(form, /Henüz hizmet veya paket önermiyoruz/);
+  assert.match(form, /ÖNCE TEŞHİS/);
+  assert.match(form, /Mini teşhis iste/);
   assert.match(form, /Akıllı Randevu Takibi/);
   assert.match(form, /Alıcı ve Satıcı Takibi/);
   assert.match(form, /Rezervasyon ve Talep Takibi/);
@@ -18,8 +18,8 @@ test("ücretsiz inceleme akışı müşteri için açık ve güvenlidir", async 
   assert.match(form, /Aydınlatma metnini/);
   assert.match(form, /30 SANİYELİK HIZLI KEŞİF/);
   assert.match(form, /İhtiyacınızı birlikte bulalım/);
-  assert.match(form, /SİZE UYGUN HİZMET FİKİRLERİ/);
-  assert.match(form, /Bu önerilerle forma geç/);
+  assert.match(form, /SİZE UYGUN MİNİ TEŞHİSLER/);
+  assert.match(form, /Bu teşhislerle forma geç/);
   assert.match(form, /Sektörünüz için önerilen/);
   assert.match(form, /Seçimlerinizi gözden geçirin/);
   assert.match(form, /items\.length >= 3/);
@@ -35,12 +35,14 @@ test("başvuru kapısı dış eylem başlatmadan korumaları uygular", async () 
   assert.match(route, /content_hash/);
   assert.match(route, /idempotency_key/);
   assert.match(route, /cf-connecting-ip/);
-  assert.match(route, /waiting_for_review/);
+  assert.match(route, /diagnosis_requested/);
+  assert.match(route, /diagnosis_json/);
+  assert.match(route, /solution_only_if_confirmed/);
   assert.match(route, /starts_at, ends_at/);
   assert.match(route, /needs\.length > 3/);
   assert.match(route, /needs\.length !== submittedNeeds\.length/);
   assert.match(route, /await db\.batch\(\[intakeStatement, trialStatement\]\)/);
-  assert.match(route, /SELECT id, 'waiting_for_review'/);
+  assert.match(route, /SELECT id, 'diagnosis_requested'/);
   assert.match(route, /\.toLowerCase\(\)/);
   assert.doesNotMatch(route, /toLocaleLowerCase/);
   assert.doesNotMatch(route, /const intakeId = Number/);

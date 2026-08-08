@@ -102,12 +102,12 @@ export default function Home() {
           <span className="brandMark" aria-hidden="true"><i /></span>
           <span>AgentAxis <b>Labs</b></span>
         </button>
-        <button className={`mobileNavCta ${activeTab === "iletisim" ? "active" : ""}`} type="button" onClick={() => tabAc("iletisim")} aria-pressed={activeTab === "iletisim"}>Ücretsiz inceleme</button>
+        <button className={`mobileNavCta ${activeTab === "iletisim" ? "active" : ""}`} type="button" onClick={() => tabAc("iletisim")} aria-pressed={activeTab === "iletisim"}>Ücretsiz mini teşhis</button>
         <div className="navLinks" aria-label="Site bölümleri">
           <button className={activeTab === "hizmetler" ? "active" : ""} type="button" onClick={() => tabAc("hizmetler")} aria-pressed={activeTab === "hizmetler"}>Hizmetler</button>
           <button className={activeTab === "surec" ? "active" : ""} type="button" onClick={() => tabAc("surec")} aria-pressed={activeTab === "surec"}>Nasıl çalışır?</button>
           <button className={activeTab === "kanit" ? "active" : ""} type="button" onClick={() => tabAc("kanit")} aria-pressed={activeTab === "kanit"}>Çalışma kanıtı</button>
-          <button className={`navCta ${activeTab === "iletisim" ? "active" : ""}`} type="button" onClick={() => tabAc("iletisim")} aria-pressed={activeTab === "iletisim"}>Ücretsiz inceleme iste</button>
+          <button className={`navCta ${activeTab === "iletisim" ? "active" : ""}`} type="button" onClick={() => tabAc("iletisim")} aria-pressed={activeTab === "iletisim"}>Ücretsiz mini teşhis iste</button>
         </div>
       </nav>
 
@@ -188,7 +188,7 @@ export default function Home() {
               <h3>İşletmeniz için en değerli başlangıcı birlikte bulalım.</h3>
               <p>Yaklaşık 2 dakikada ihtiyacınızı anlatın; size uygun hizmet fikirlerini hemen görün.</p>
             </div>
-            <button className="primary lightButton" type="button" onClick={() => tabAc("iletisim")}>Ücretsiz incelemeyi başlat <span>→</span></button>
+            <button className="primary lightButton" type="button" onClick={() => tabAc("iletisim")}>Ücretsiz mini teşhisi başlat <span>→</span></button>
           </section>
         </div>
       </section>

@@ -49,12 +49,13 @@ test("AgentAxis ana sayfasi guclu giris metniyle sunulur", async () => {
   assert.match(html, /BİZ KİMİZ/);
   assert.match(html, /Teknik karmaşayı sadeleştiren uygulama ortağınızız/);
   assert.match(html, /İşletmeniz için en değerli başlangıcı birlikte bulalım/);
-  assert.match(html, /Ücretsiz incelemeyi başlat/);
+  assert.match(html, /Ücretsiz mini teşhisi başlat/);
   assert.doesNotMatch(html, /Jarvis/i);
   assert.doesNotMatch(html, /pilot|kesin sonuç sözü|sonuç garantisi/i);
   assert.match(html, /30 SANİYELİK HIZLI KEŞİF/);
   assert.match(html, /İhtiyacınızı birlikte bulalım/);
-  assert.match(html, /Bu önerilerle forma geç/);
+  assert.match(html, /Bu teşhislerle forma geç/);
+  assert.match(html, /60 SANİYELİK MİNİ TEŞHİS/);
   assert.match(html, /Şeffaf çalışma kanıtı/);
   assert.match(html, /Örnek analizleri gerçek müşteri sonucu gibi sunmayız/);
   assert.doesNotMatch(html, /Henüz büyük sonuçlar uydurmuyoruz|büyük sonuçlar uydurmuyoruz/i);

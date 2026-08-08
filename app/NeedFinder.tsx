@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 
 type NeedId = "visibility" | "follow" | "automation" | "website" | "reactivation";
-type PlanId = "baslangic" | "buyume" | "ozel";
+type PlanId = "teshis";
 type Step = 0 | 1 | 2 | 3 | 4;
 
 type Service = {
@@ -60,6 +60,14 @@ const serviceMap: Record<NeedId, Service> = {
   },
 };
 
+const diagnosisMap: Record<NeedId, { title: string; checks: string[] }> = {
+  visibility: { title: "AI ve yerel görünürlük mini teşhisi", checks: ["Gerçek müşteri arama senaryoları", "Markanın AI cevaplarında görünmesi", "Kaynak gösterimi ve yanlış bilgi"] },
+  follow: { title: "Talep ve randevu mini teşhisi", checks: ["İlk yanıt süresi", "Talebin net sonraki adıma taşınması", "Gerektiğinde insan devri"] },
+  automation: { title: "Tekrarlanan iş mini teşhisi", checks: ["Elle tekrarlanan adımlar", "Onay ve hata noktaları", "Ölçülebilecek zaman kaybı"] },
+  website: { title: "Web dönüşüm yolu mini teşhisi", checks: ["İlk ekranın açıklığı", "Ana iletişim düğmesi", "Mobil görünüm ve iletişim adımları"] },
+  reactivation: { title: "Eski müşteri takibi mini teşhisi", checks: ["İzinli ve uygun kayıtlar", "Takipsiz kalan gruplar", "Yanıt sonrası net sonraki adım"] },
+};
+
 const sectorOverrides: Array<{ test: RegExp; services: Partial<Record<NeedId, Partial<Service>>> }> = [
   {
     test: /diş|klinik|sağlık|doktor/i,
@@ -90,42 +98,13 @@ const sectorOverrides: Array<{ test: RegExp; services: Partial<Record<NeedId, Pa
   },
 ];
 
-const plans: Array<{ id: PlanId; name: string; badge?: string; summary: string; items: string[] }> = [
-  {
-    id: "baslangic",
-    name: "Başlangıç",
-    summary: "Tek bir öncelikli sorunu çözmek isteyen işletmeler için.",
-    items: ["1 çalışan hizmet akışı", "Basit sonuç ekranı", "7 günlük ücretsiz deneme"],
-  },
-  {
-    id: "buyume",
-    name: "Büyüme",
-    badge: "En çok tercih edilen",
-    summary: "Birbirine bağlı birkaç işi tek düzende toplamak için.",
-    items: ["3 hizmet akışına kadar", "Ortak müşteri takip ekranı", "7 günlük ücretsiz deneme"],
-  },
-  {
-    id: "ozel",
-    name: "İşletmeye Özel",
-    summary: "Birden fazla ekip veya özel bağlantı gereken işler için.",
-    items: ["İhtiyaca özel kapsam", "Gerekli hesap bağlantıları", "7 günlük kontrollü deneme"],
-  },
-];
-
-const trialDays = [
-  ["1", "Kurulum ve güvenli test"],
-  ["2–3", "Gerçek akışın kontrollü başlangıcı"],
-  ["4–6", "İzleme ve iyileştirme"],
-  ["7", "Sonuç raporu ve karar"],
-];
-
 export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?: string }) {
   const [step, setStep] = useState<Step>(0);
   const [business, setBusiness] = useState("");
   const [sector, setSector] = useState(() => initialBusiness.trim());
   const [website, setWebsite] = useState("");
   const [selected, setSelected] = useState<NeedId[]>([]);
-  const [plan, setPlan] = useState<PlanId>("buyume");
+  const plan: PlanId = "teshis";
   const [contactName, setContactName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -138,13 +117,8 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
   const [reference, setReference] = useState("");
   const [idempotencyKey] = useState(() => typeof crypto !== "undefined" ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`);
 
-  const services = useMemo(() => {
-    const matched = sectorOverrides.find((profile) => profile.test.test(sector));
-    return selected.map((need) => ({ ...serviceMap[need], ...(matched?.services[need] ?? {}) }));
-  }, [selected, sector]);
   const matchedSectorPriority = useMemo(() => sectorPriorities.find((profile) => profile.test.test(sector)), [sector]);
   const priorityNeeds = matchedSectorPriority?.ids ?? ([] as NeedId[]);
-  const selectedPlan = plans.find((item) => item.id === plan) ?? plans[1];
 
   function toggleNeed(id: NeedId) {
     setSelected((items) => items.includes(id) ? items.filter((item) => item !== id) : items.length >= 3 ? items : [...items, id]);
@@ -186,12 +160,12 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
       <div className="needAssistant intakeSuccess" role="status" aria-live="polite">
         <div className="successMark" aria-hidden="true">✓</div>
         <p className="intakeEyebrow">TALEBİNİZ GÜVENLE ALINDI</p>
-        <h3>Ücretsiz incelemeniz sıraya alındı.</h3>
+        <h3>Ücretsiz mini teşhisiniz sıraya alındı.</h3>
         <p>Referans numaranız: <strong>{reference}</strong></p>
         <div className="successNext">
           <span><b>1</b> Bilgiler kontrol edilir</span>
-          <span><b>2</b> Size özel demo hazırlanır</span>
-          <span><b>3</b> Onayınızla 7 günlük deneme kurulur</span>
+          <span><b>2</b> 60 saniyelik mini teşhis hazırlanır</span>
+          <span><b>3</b> Sorun görünürse uygun çözüm konuşulur</span>
         </div>
         <small>Otomatik ödeme yapılmaz. Hesap erişimi ve canlı iletişim sizin açık onayınız olmadan başlatılmaz.</small>
       </div>
@@ -203,7 +177,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
       <div className="needAssistant discoveryFlow">
         <div className="discoveryTop">
           <span className="botDot" aria-hidden="true">Aİ</span>
-          <div><small>30 SANİYELİK HIZLI KEŞİF</small><h3>İhtiyacınızı birlikte bulalım.</h3><p>Teknik hizmet seçmeniz gerekmez. Yaşadığınız sorunu söyleyin; size uygun başlangıç fikirlerini gösterelim.</p></div>
+          <div><small>30 SANİYELİK HIZLI KEŞİF</small><h3>İhtiyacınızı birlikte bulalım.</h3><p>Teknik hizmet seçmeniz gerekmez. Önce 60 SANİYELİK MİNİ TEŞHİS ile problemin gerçekten var olup olmadığını ölçelim.</p></div>
         </div>
 
         <label className="discoverySector">Hangi sektörde hizmet veriyorsunuz?<input value={sector} onChange={(event) => setSector(event.target.value)} placeholder="Örn. diş kliniği, emlak, restoran…" maxLength={100} autoComplete="organization-title" /></label>
@@ -229,17 +203,17 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
 
         {selected.length > 0 && (
           <section className="instantSuggestions" aria-label="Size uygun hizmet fikirleri">
-            <div className="suggestionHeading"><small>SİZE UYGUN HİZMET FİKİRLERİ</small><strong role="status" aria-live="polite">{selected.length} başlangıç önerisi bulundu</strong></div>
+            <div className="suggestionHeading"><small>SİZE UYGUN MİNİ TEŞHİSLER</small><strong role="status" aria-live="polite">{selected.length} ölçüm başlığı bulundu</strong></div>
             <div className="suggestionCards">
-              {services.slice(0, 3).map((service) => <article key={service.title}><span>✓</span><div><strong>{service.title}</strong><p>{service.promise}</p><small>Ölçüm: {service.measure}</small></div></article>)}
+              {selected.slice(0, 3).map((need) => { const diagnosis = diagnosisMap[need]; return <article key={diagnosis.title}><span>✓</span><div><strong>{diagnosis.title}</strong><p>Önce problemi ölçer, sonra sonucu birlikte değerlendiririz.</p><small>{diagnosis.checks.length} somut kontrol</small></div></article>; })}
             </div>
-            <p className="suggestionNote">Bunlar ilk fikirlerdir. Ücretsiz incelemede işletmenize uygunluğu doğrulanır; istemediğiniz hiçbir hizmet kurulmaz.</p>
+            <p className="suggestionNote">Bunlar yalnız teşhis başlıklarıdır. Problem ölçülmeden hizmet önerilmez; istemediğiniz hiçbir işlem yapılmaz.</p>
           </section>
         )}
 
         <div className="discoveryActions">
           <span>🔒 Şifre veya müşteri bilgisi istemiyoruz</span>
-          <button className="primary finderButton" type="button" disabled={!sector.trim() || !selected.length} onClick={() => setStep(1)}>Bu önerilerle forma geç <b>→</b></button>
+          <button className="primary finderButton" type="button" disabled={!sector.trim() || !selected.length} onClick={() => setStep(1)}>Bu teşhislerle forma geç <b>→</b></button>
         </div>
       </div>
     );
@@ -254,7 +228,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
           <i>Güvenli ön başvuru</i>
         </div>
         <ol className="stepper" aria-label="Başvuru adımları">
-          {["İşletme", "İhtiyaç", "Demo", "Başvuru"].map((label, index) => (
+          {["İşletme", "İhtiyaç", "Teşhis", "Başvuru"].map((label, index) => (
             <li key={label} className={step === index + 1 ? "active" : step > index + 1 ? "done" : ""}>
               <span>{step > index + 1 ? "✓" : index + 1}</span><small>{label}</small>
             </li>
@@ -288,41 +262,34 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
             ))}
           </div>
           <p className="selectionLimit" id="formNeedLimit">{selected.length >= 3 ? "3 seçim yaptınız. Başka birini seçmek için önce bir seçimi kaldırın." : `${selected.length}/3 seçim yaptınız.`}</p>
-          <div className="flowActions"><button className="secondary" type="button" onClick={() => setStep(1)}>← Geri</button><button className="primary finderButton" type="button" disabled={!selected.length} onClick={() => setStep(3)}>Bana uygun demoyu göster <span>→</span></button></div>
+          <div className="flowActions"><button className="secondary" type="button" onClick={() => setStep(1)}>← Geri</button><button className="primary finderButton" type="button" disabled={!selected.length} onClick={() => setStep(3)}>Mini teşhisi göster <span>→</span></button></div>
         </div>
       )}
 
       {step === 3 && (
         <div className="intakeBody">
-          <div className="stepTitle"><small>ADIM 3 / 4 · KİŞİSELLEŞTİRİLMİŞ ÖN DEMO</small><h3>{business} için düşünülebilecek hizmetler</h3><p>Bu ekran bir ön taslaktır. Kesin kapsam, işletme incelemesi ve sizin onayınızla belirlenir.</p></div>
+          <div className="stepTitle"><small>ADIM 3 / 4 · 60 SANİYELİK MİNİ TEŞHİS</small><h3>Önce problemi görünür yapalım.</h3><p>Henüz hizmet veya paket önermiyoruz. Seçtiğiniz konularda neyi ölçeceğimizi açıkça gösteriyoruz.</p></div>
           <div className="serviceDemoList">
-            {services.map((service, index) => (
-              <article key={service.title}>
+            {selected.map((need, index) => {
+              const diagnosis = diagnosisMap[need];
+              return <article key={diagnosis.title}>
                 <div className="demoNumber">0{index + 1}</div>
-                <div><h4>{service.title}</h4><p>{service.promise}</p><ul>{service.demo.map((item) => <li key={item}>✓ {item}</li>)}</ul><small>Ölçüm: {service.measure}</small></div>
-              </article>
-            ))}
+                <div><h4>{diagnosis.title}</h4><p>30–60 saniyelik kısa incelemede:</p><ul>{diagnosis.checks.map((item) => <li key={item}>✓ {item}</li>)}</ul><small>Ölçülmeyen problem gerçekmiş gibi sunulmaz.</small></div>
+              </article>;
+            })}
           </div>
-          <section className="trialPreview" aria-label="7 günlük ücretsiz deneme planı">
-            <div><span>7 GÜN ÜCRETSİZ</span><h4>Sistem çalışmadan süre başlamaz.</h4><p>Önce test ederiz; deneme yalnız çalışan bağlantılar doğrulandıktan sonra başlar.</p></div>
-            <ol>{trialDays.map(([day, text]) => <li key={day}><b>{day}. gün</b><span>{text}</span></li>)}</ol>
+          <section className="trialPreview diagnosisPromise" aria-label="Mini teşhis güvence bilgisi">
+            <div><span>ÖNCE TEŞHİS</span><h4>Karar vermeniz gerekmez.</h4><p>Önce ölçümü paylaşırız. Yalnız gerçek bir sorun görünürse uygun çözümü ve 7 günlük ücretsiz denemeyi konuşuruz.</p></div>
+            <ol><li><b>1</b><span>Kaynaklı gözlem</span></li><li><b>2</b><span>Ölçülebilir problem</span></li><li><b>3</b><span>Sizin kararınız</span></li></ol>
           </section>
-          <div className="flowActions"><button className="secondary" type="button" onClick={() => setStep(2)}>← Değiştir</button><button className="primary finderButton" type="button" onClick={() => setStep(4)}>Planları gör <span>→</span></button></div>
+          <div className="flowActions"><button className="secondary" type="button" onClick={() => setStep(2)}>← Değiştir</button><button className="primary finderButton" type="button" onClick={() => setStep(4)}>Mini teşhis iste <span>→</span></button></div>
         </div>
       )}
 
       {step === 4 && (
         <form className="intakeBody" onSubmit={submit}>
-          <div className="stepTitle"><small>ADIM 4 / 4</small><h3>Size uygun çalışma şeklini seçin.</h3><p>Bu seçim fiyat veya sözleşme değildir. İncelemede hangi kapsamın konuşulacağını belirler.</p></div>
+          <div className="stepTitle"><small>ADIM 4 / 4</small><h3>Mini teşhisi nereye gönderelim?</h3><p>Önce sonucu görürsünüz. Paket, fiyat veya kurulum kararı daha sonra ve yalnız sizin onayınızla konuşulur.</p></div>
           <p className="formRequired">* Zorunlu alan</p>
-          <div className="planGrid">
-            {plans.map((item) => (
-              <label className={plan === item.id ? "selected" : ""} key={item.id}>
-                <input type="radio" name="plan" value={item.id} checked={plan === item.id} onChange={() => setPlan(item.id)} />
-                {item.badge && <em>{item.badge}</em>}<strong>{item.name}</strong><p>{item.summary}</p><ul>{item.items.map((line) => <li key={line}>✓ {line}</li>)}</ul>
-              </label>
-            ))}
-          </div>
           <div className="contactFields">
             <label>Adınız *<input value={contactName} onChange={(event) => setContactName(event.target.value)} placeholder="Ad soyad" maxLength={120} autoComplete="name" required /></label>
             <label>E-posta adresiniz *<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="ornek@firma.com" maxLength={180} autoComplete="email" required /></label>
@@ -330,11 +297,11 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
             <label className="wideField">Eklemek istediğiniz not <span>(isteğe bağlı)</span><textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="Önceliğiniz veya yaşadığınız sorun..." rows={3} maxLength={1000} /><small>Hasta adı, telefon numarası, teşhis, tedavi veya başka bir kişiye ait özel bilgi yazmayın.</small></label>
             <label className="websiteTrap" aria-hidden="true">Web<input value={websiteField} onChange={(event) => setWebsiteField(event.target.value)} tabIndex={-1} autoComplete="off" /></label>
           </div>
-          <label className="consentCheck"><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} required /><span>Ücretsiz inceleme talebim için bilgilerimin nasıl kullanılacağını açıklayan <a href="/gizlilik" target="_blank" rel="noopener noreferrer">Aydınlatma metnini</a> okudum. *</span></label>
+          <label className="consentCheck"><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} required /><span>Ücretsiz mini teşhis talebim için bilgilerimin nasıl kullanılacağını açıklayan <a href="/gizlilik" target="_blank" rel="noopener noreferrer">Aydınlatma metnini</a> okudum. *</span></label>
           <label className="consentCheck optionalConsent"><input type="checkbox" checked={marketingConsent} onChange={(event) => setMarketingConsent(event.target.checked)} /><span>İleride sunulabilecek hizmet ve yenilikler hakkında bilgilendirme almak istiyorum. <b>(İsteğe bağlı)</b></span></label>
-          <div className="selectionSummary"><span>Seçilen plan</span><strong>{selectedPlan.name}</strong><small>7 günlük ücretsiz deneme · otomatik ödeme yok</small></div>
+          <div className="selectionSummary"><span>İlk adım</span><strong>Ücretsiz mini teşhis</strong><small>Satış teklifi değil · otomatik ödeme yok</small></div>
           {error && <p className="formError" role="alert">{error}</p>}
-          <div className="flowActions"><button className="secondary" type="button" onClick={() => setStep(3)}>← Geri</button><button className="primary finderButton" type="submit" disabled={sending || !consent}>{sending ? "Güvenle kaydediliyor…" : "Ücretsiz incelemeyi gönder"} <span>→</span></button></div>
+          <div className="flowActions"><button className="secondary" type="button" onClick={() => setStep(3)}>← Geri</button><button className="primary finderButton" type="submit" disabled={sending || !consent}>{sending ? "Güvenle kaydediliyor…" : "Ücretsiz mini teşhisi gönder"} <span>→</span></button></div>
         </form>
       )}
     </div>

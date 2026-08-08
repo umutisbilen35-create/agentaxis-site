@@ -22,6 +22,13 @@
       "when": 1785536758672,
       "tag": "0002_bitter_the_anarchist",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1786194535228,
+      "tag": "0003_clever_spacker_dave",
+      "breakpoints": true
     }
   ]
 }
