@@ -82,10 +82,8 @@ export async function POST(request: Request) {
     const ipHash = trustedIp ? await sha256(`agentaxis-intake:${trustedIp}`) : "not-available";
     const now = new Date();
     const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000).toISOString();
-    if (trustedIp) {
-      const rate = await db.prepare("SELECT COUNT(*) AS count FROM lead_intakes WHERE ip_hash = ? AND created_at >= ?").bind(ipHash, oneHourAgo).first<{ count: number }>();
-      if ((rate?.count ?? 0) >= 5) return json("Çok sayıda talep alındı. Lütfen bir süre sonra tekrar deneyin.", 429);
-    }
+    const rate = await db.prepare("SELECT COUNT(*) AS count FROM lead_intakes WHERE ip_hash = ? AND created_at >= ?").bind(ipHash, oneHourAgo).first<{ count: number }>();
+    if ((rate?.count ?? 0) >= 5) return json("Çok sayıda talep alındı. Lütfen bir süre sonra tekrar deneyin.", 429);
 
     const existing = await db.prepare("SELECT reference FROM lead_intakes WHERE idempotency_key = ?").bind(idempotencyKey).first<{ reference: string }>();
     if (existing?.reference) return json("Talebiniz daha önce alınmıştı.", 200, { reference: existing.reference });
@@ -115,6 +113,10 @@ export async function POST(request: Request) {
         kayitTamam = true;
         break;
       } catch (error) {
+        const concurrentExisting = await db.prepare("SELECT reference FROM lead_intakes WHERE idempotency_key = ?").bind(idempotencyKey).first<{ reference: string }>();
+        if (concurrentExisting?.reference) {
+          return json("Talebiniz daha önce alınmıştı.", 200, { reference: concurrentExisting.reference });
+        }
         if (attempt === 1) throw error;
         reference = referenceNumber();
       }

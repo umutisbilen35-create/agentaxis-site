@@ -42,9 +42,18 @@ test("başvuru kapısı dış eylem başlatmadan korumaları uygular", async () 
   assert.match(route, /needs\.length > 3/);
   assert.match(route, /needs\.length !== submittedNeeds\.length/);
   assert.match(route, /await db\.batch\(\[intakeStatement, trialStatement\]\)/);
+  assert.match(route, /concurrentExisting/);
+  assert.match(route, /SELECT reference FROM lead_intakes WHERE idempotency_key = \?/);
+  assert.doesNotMatch(route, /if \(trustedIp\) \{\s*const rate/);
   assert.match(route, /SELECT id, 'diagnosis_requested'/);
   assert.match(route, /\.toLowerCase\(\)/);
   assert.doesNotMatch(route, /toLocaleLowerCase/);
   assert.doesNotMatch(route, /const intakeId = Number/);
   assert.doesNotMatch(route, /sendMail|sendMessage|payment|charge/i);
+});
+
+test("aydınlatma metni IP özetini geri döndürülemez diye tanımlamaz", async () => {
+  const privacy = await readFile(new URL("app/gizlilik/page.tsx", root), "utf8");
+  assert.match(privacy, /doğrudan adres yerine kullanılan teknik özeti/);
+  assert.doesNotMatch(privacy, /geri döndürülemez özeti/);
 });
