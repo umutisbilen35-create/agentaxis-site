@@ -1,8 +1,9 @@
-const allowedNeeds = new Set(["visibility", "follow", "automation", "website", "reactivation"]);
+const allowedNeeds = new Set(["visibility", "appointments", "follow", "automation", "website", "reactivation"]);
 const allowedPlans = new Set(["teshis"]);
 
 const diagnosisChecks: Record<string, string[]> = {
   visibility: ["ai_search_visibility", "source_citation", "incorrect_brand_info"],
+  appointments: ["booking_creation", "confirmation_reminder", "reschedule_flow"],
   follow: ["first_response_time", "next_step", "human_handoff"],
   automation: ["manual_repetition", "approval_points", "measurable_time_loss"],
   website: ["first_screen_clarity", "primary_cta", "mobile_contact_path"],

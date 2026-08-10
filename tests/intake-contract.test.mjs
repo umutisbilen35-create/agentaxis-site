@@ -11,9 +11,9 @@ test("ücretsiz inceleme akışı müşteri için açık ve güvenlidir", async 
   assert.match(form, /Henüz hizmet veya paket önermiyoruz/);
   assert.match(form, /ÖNCE TEŞHİS/);
   assert.match(form, /Mini teşhis iste/);
-  assert.match(form, /Akıllı Randevu Takibi/);
+  assert.match(form, /Akıllı Klinik Randevu Sistemi/);
   assert.match(form, /Alıcı ve Satıcı Takibi/);
-  assert.match(form, /Rezervasyon ve Talep Takibi/);
+  assert.match(form, /Akıllı Rezervasyon Sistemi/);
   assert.match(form, /Hasta adı, telefon numarası, teşhis, tedavi/);
   assert.match(form, /Aydınlatma metnini/);
   assert.match(form, /30 SANİYELİK HIZLI KEŞİF/);
@@ -22,6 +22,10 @@ test("ücretsiz inceleme akışı müşteri için açık ve güvenlidir", async 
   assert.match(form, /Bu teşhislerle forma geç/);
   assert.match(form, /Sektörünüz için önerilen/);
   assert.match(form, /Seçimlerinizi gözden geçirin/);
+  assert.match(form, /İşletmenizde neyi geliştirmek istersiniz/);
+  assert.match(form, /Randevu ve rezervasyonları otomatik yönetmek/);
+  assert.match(form, /Gelen talepleri düzenli takip etmek/);
+  assert.match(form, /Eski müşterileri yeniden kazanmak/);
   assert.match(form, /uygun olanların tamamını seçebilirsiniz/);
   assert.match(form, /selected\.map\(\(need\)/);
   assert.doesNotMatch(form, /items\.length >= 3|3 seçim yaptınız|en fazla 3/);
@@ -41,6 +45,7 @@ test("başvuru kapısı dış eylem başlatmadan korumaları uygular", async () 
   assert.match(route, /solution_only_if_confirmed/);
   assert.match(route, /starts_at, ends_at/);
   assert.match(route, /new Set\(submittedNeeds/);
+  assert.match(route, /"appointments"/);
   assert.match(route, /needs\.length > allowedNeeds\.size/);
   assert.match(route, /needs\.length !== submittedNeeds\.length/);
   assert.match(route, /await db\.batch\(\[intakeStatement, trialStatement\]\)/);

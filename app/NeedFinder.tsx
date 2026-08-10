@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-type NeedId = "visibility" | "follow" | "automation" | "website" | "reactivation";
+type NeedId = "visibility" | "appointments" | "follow" | "automation" | "website" | "reactivation";
 type PlanId = "teshis";
 type Step = 0 | 1 | 2 | 3 | 4;
 
@@ -14,17 +14,18 @@ type Service = {
 };
 
 const needs: Array<{ id: NeedId; label: string; help: string; symptom: string }> = [
-  { id: "visibility", label: "Yeni müşteri bulmak", help: "Görünürlük, rakipler ve fırsatlar", symptom: "Yeterince yeni müşteri bulamıyoruz" },
-  { id: "follow", label: "Müşteri takibini düzenlemek", help: "Talepler, dönüşler ve hatırlatmalar", symptom: "Taleplere geç dönüyor veya takibi unutuyoruz" },
-  { id: "automation", label: "Tekrarlanan işleri azaltmak", help: "Uygun işleri otomatikleştirme", symptom: "Aynı işleri tekrar tekrar yapmak zaman alıyor" },
-  { id: "website", label: "Web sitesini geliştirmek", help: "Daha anlaşılır ve güven veren site", symptom: "Web sitemiz hizmetimizi iyi anlatmıyor" },
-  { id: "reactivation", label: "Eski müşterileri geri kazanmak", help: "İzinli listeyi yeniden değerlendirme", symptom: "Eski müşterilerimizle bağımız kopuyor" },
+  { id: "visibility", label: "Daha fazla doğru müşteriye ulaşmak", help: "Görünürlük, rakipler ve yeni fırsatlar", symptom: "Daha fazla doğru müşteriye ulaşmak" },
+  { id: "appointments", label: "Randevu ve rezervasyonları otomatik yönetmek", help: "Oluşturma, onay, hatırlatma ve yeniden planlama", symptom: "Randevu ve rezervasyonları otomatik yönetmek" },
+  { id: "follow", label: "Gelen talepleri düzenli takip etmek", help: "Yeni talepler, geri dönüşler ve sonraki adımlar", symptom: "Gelen talepleri düzenli takip etmek" },
+  { id: "automation", label: "Tekrarlanan işleri otomatikleştirmek", help: "Zaman alan uygun işleri kontrollü hızlandırmak", symptom: "Tekrarlanan işleri otomatikleştirmek" },
+  { id: "reactivation", label: "Eski müşterileri yeniden kazanmak", help: "İzinli müşterileri uygun teklif ve hatırlatmalarla canlandırmak", symptom: "Eski müşterileri yeniden kazanmak" },
+  { id: "website", label: "Web sitesini daha etkili hâle getirmek", help: "Hizmeti net anlatan ve iletişime yönlendiren site", symptom: "Web sitesini daha etkili hâle getirmek" },
 ];
 
 const sectorPriorities: Array<{ test: RegExp; ids: NeedId[] }> = [
-  { test: /diş|klinik|sağlık|doktor/i, ids: ["follow", "reactivation", "visibility"] },
+  { test: /diş|klinik|sağlık|doktor/i, ids: ["appointments", "follow", "reactivation", "visibility"] },
   { test: /emlak|gayrimenkul|konut/i, ids: ["follow", "visibility", "automation"] },
-  { test: /restoran|kafe|lokanta|yeme/i, ids: ["follow", "reactivation", "visibility"] },
+  { test: /restoran|kafe|lokanta|yeme/i, ids: ["appointments", "follow", "reactivation", "visibility"] },
 ];
 
 const serviceMap: Record<NeedId, Service> = {
@@ -33,6 +34,12 @@ const serviceMap: Record<NeedId, Service> = {
     promise: "Bölgenizdeki görünür talebi ve rakip boşluklarını inceler.",
     demo: ["Yakındaki rakiplerin karşılaştırılması", "Kaçırılan görünürlük fırsatları", "Öncelikli müşteri kazanma planı"],
     measure: "Nitelikli talep ve görünürlük değişimi",
+  },
+  appointments: {
+    title: "Akıllı Randevu ve Rezervasyon",
+    promise: "Randevu talebini oluşturma, onay ve hatırlatma adımlarıyla düzenler.",
+    demo: ["Randevu talep ekranı", "Onay ve hatırlatma akışı", "İptal / yeniden planlama görünümü"],
+    measure: "Tamamlanan randevu ve unutulan takip sayısı",
   },
   follow: {
     title: "Akıllı Müşteri Takibi",
@@ -62,7 +69,8 @@ const serviceMap: Record<NeedId, Service> = {
 
 const diagnosisMap: Record<NeedId, { title: string; checks: string[] }> = {
   visibility: { title: "AI ve yerel görünürlük mini teşhisi", checks: ["Gerçek müşteri arama senaryoları", "Markanın AI cevaplarında görünmesi", "Kaynak gösterimi ve yanlış bilgi"] },
-  follow: { title: "Talep ve randevu mini teşhisi", checks: ["İlk yanıt süresi", "Talebin net sonraki adıma taşınması", "Gerektiğinde insan devri"] },
+  appointments: { title: "Randevu ve rezervasyon akışı mini teşhisi", checks: ["Talebin randevuya dönüşmesi", "Onay ve hatırlatma adımları", "İptal veya yeniden planlama akışı"] },
+  follow: { title: "Müşteri talebi takip mini teşhisi", checks: ["İlk yanıt süresi", "Talebin net sonraki adıma taşınması", "Gerektiğinde insan devri"] },
   automation: { title: "Tekrarlanan iş mini teşhisi", checks: ["Elle tekrarlanan adımlar", "Onay ve hata noktaları", "Ölçülebilecek zaman kaybı"] },
   website: { title: "Web dönüşüm yolu mini teşhisi", checks: ["İlk ekranın açıklığı", "Ana iletişim düğmesi", "Mobil görünüm ve iletişim adımları"] },
   reactivation: { title: "Eski müşteri takibi mini teşhisi", checks: ["İzinli ve uygun kayıtlar", "Takipsiz kalan gruplar", "Yanıt sonrası net sonraki adım"] },
@@ -73,7 +81,8 @@ const sectorOverrides: Array<{ test: RegExp; services: Partial<Record<NeedId, Pa
     test: /diş|klinik|sağlık|doktor/i,
     services: {
       visibility: { title: "Klinik Fırsat Radarı", demo: ["Yakındaki kliniklerin görünürlük karşılaştırması", "Hizmet ve yorum boşlukları", "Öncelikli hasta kazanma planı"] },
-      follow: { title: "Akıllı Randevu Takibi", demo: ["Yeni hasta talep ekranı", "Randevu onay ve hatırlatmaları", "İptal / yeniden planlama görünümü"], measure: "Yanıt süresi ve boş kalan randevu" },
+      appointments: { title: "Akıllı Klinik Randevu Sistemi", demo: ["Yeni randevu oluşturma", "Randevu onay ve hatırlatmaları", "İptal / yeniden planlama görünümü"], measure: "Tamamlanan ve boş kalan randevu" },
+      follow: { title: "Yeni Hasta Talep Takibi", demo: ["Yeni hasta talep ekranı", "Geri dönüş hatırlatması", "Cevaplandı / bekliyor görünümü"], measure: "Yanıt süresi ve takip edilen talep" },
       automation: { title: "Klinik İş Akışı Otomasyonu", demo: ["Randevu öncesi kontrol", "Onay gerektiren hasta iletişimi", "Hata ve yeniden deneme kaydı"] },
       reactivation: { title: "İzinli Eski Hasta Canlandırma", demo: ["İzin ve veri kalite kontrolü", "Uygun hasta grupları", "Onaylı iletişim ve randevu takibi"], measure: "Yanıt ve yeniden randevu sayısı" },
     },
@@ -91,7 +100,8 @@ const sectorOverrides: Array<{ test: RegExp; services: Partial<Record<NeedId, Pa
     test: /restoran|kafe|lokanta|yeme/i,
     services: {
       visibility: { title: "Yerel Restoran Fırsat Radarı", demo: ["Yakındaki işletme ve yorum karşılaştırması", "Menü / Haritalar görünürlüğü fırsatları", "Yoğun olmayan saatler için plan"] },
-      follow: { title: "Rezervasyon ve Talep Takibi", demo: ["Rezervasyon kayıt ekranı", "Onay ve hatırlatma akışı", "İptal / bekleme listesi görünümü"], measure: "Yanıt süresi ve dolan masa" },
+      appointments: { title: "Akıllı Rezervasyon Sistemi", demo: ["Rezervasyon oluşturma", "Onay ve hatırlatma akışı", "İptal / bekleme listesi görünümü"], measure: "Tamamlanan rezervasyon ve dolan masa" },
+      follow: { title: "Misafir Talep Takibi", demo: ["Yeni talep ekranı", "Geri dönüş hatırlatması", "Cevaplandı / bekliyor görünümü"], measure: "Yanıt süresi ve takip edilen talep" },
       automation: { title: "Sipariş ve Rezervasyon Akışı", demo: ["Tekrarlanan müşteri soruları", "Onaylı rezervasyon bilgilendirmesi", "Hata ve yoğunluk kaydı"] },
       reactivation: { title: "İzinli Misafir Canlandırma", demo: ["İzinli kayıt kontrolü", "Ziyaret tercihine göre gruplama", "Onaylı kampanya taslağı"] },
     },
@@ -183,7 +193,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
         <label className="discoverySector">Hangi sektörde hizmet veriyorsunuz?<input value={sector} onChange={(event) => setSector(event.target.value)} placeholder="Örn. diş kliniği, emlak, restoran…" maxLength={100} autoComplete="organization-title" /></label>
 
         <fieldset className="discoveryProblems">
-          <legend>Size en yakın sorunları seçin <span>(uygun olanların tamamını seçebilirsiniz)</span></legend>
+          <legend>İşletmenizde neyi geliştirmek istersiniz? <span>(uygun olanların tamamını seçebilirsiniz)</span></legend>
           <div className="problemGrid">
             {needs.map((item) => {
               const recommended = Boolean(matchedSectorPriority && priorityNeeds.includes(item.id));
@@ -198,7 +208,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
               );
             })}
           </div>
-          <p className="selectionLimit" id="discoveryLimit">{selected.length ? `${selected.length} sorun seçtiniz. İsterseniz diğerlerini de seçebilirsiniz.` : "Size uyan bütün sorunları seçebilirsiniz."}</p>
+          <p className="selectionLimit" id="discoveryLimit">{selected.length ? `${selected.length} ihtiyaç seçtiniz. İsterseniz diğerlerini de seçebilirsiniz.` : "İşletmenize uyan bütün ihtiyaçları seçebilirsiniz."}</p>
         </fieldset>
 
         {selected.length > 0 && (
