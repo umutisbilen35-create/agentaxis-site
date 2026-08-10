@@ -218,5 +218,14 @@
 .modalProof .proofCards article>span{width:52px;height:52px;border-radius:15px;font-size:14px;font-weight:900;box-shadow:0 15px 30px rgba(39,95,243,.24)}
 .modalProof .proofCards strong{font-size:20px;color:#111a2a}
 .modalProof .proofCards p{font-size:14px;line-height:1.55;color:#34445c;font-weight:560}
+/* Hizmetler, Süreç ve Kanıt panellerinde ortak canlı kart hareketi */
+.liveModalBody>.process .stepGrid article,.modalProof .proofCards article{position:relative;overflow:hidden;transition:transform .3s cubic-bezier(.2,.7,.2,1),border-color .3s ease,box-shadow .3s ease,background .3s ease}
+.liveModalBody>.process .stepGrid article:before,.modalProof .proofCards article:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,#2c62ef,#746de9,#ff835f);transform:scaleX(0);transform-origin:left;transition:transform .3s ease}
+.liveModalBody>.process .stepGrid article:hover,.modalProof .proofCards article:hover{transform:translateY(-9px);border-color:#b9c7ea;background:#fff;box-shadow:0 24px 55px rgba(41,61,103,.14)}
+.liveModalBody>.process .stepGrid article:hover:before,.modalProof .proofCards article:hover:before{transform:scaleX(1)}
+.liveModalBody>.process .stepGrid article>span,.modalProof .proofCards article>span{transition:transform .3s ease,box-shadow .3s ease,background .3s ease}
+.liveModalBody>.process .stepGrid article:hover>span,.modalProof .proofCards article:hover>span{transform:translateY(-2px) scale(1.07);box-shadow:0 16px 32px rgba(39,95,243,.24)}
 @media (max-width:900px){.liveModalBody>.process .stepGrid{grid-template-columns:1fr 1fr}.modalProof .proofCards{grid-template-columns:1fr}}
 @media (max-width:560px){.liveModalBody>.services,.liveModalBody>.process,.modalProof{padding:35px 18px}.liveModalBody>.services .serviceGrid,.liveModalBody>.process .stepGrid{grid-template-columns:1fr}.liveModalBody>.services .serviceGrid article,.liveModalBody>.process .stepGrid article{min-height:auto}.liveModalBody>.process .stepGrid h3{margin-top:28px}}
+@media (hover:none){.liveModalBody>.process .stepGrid article:hover,.modalProof .proofCards article:hover{transform:none}.liveModalBody>.process .stepGrid article:hover>span,.modalProof .proofCards article:hover>span{transform:none}}
+@media (prefers-reduced-motion:reduce){.liveModalBody>.process .stepGrid article,.modalProof .proofCards article,.liveModalBody>.process .stepGrid article:before,.modalProof .proofCards article:before,.liveModalBody>.process .stepGrid article>span,.modalProof .proofCards article>span{transition:none!important}.liveModalBody>.process .stepGrid article:hover,.modalProof .proofCards article:hover,.liveModalBody>.process .stepGrid article:hover>span,.modalProof .proofCards article:hover>span{transform:none!important}}
