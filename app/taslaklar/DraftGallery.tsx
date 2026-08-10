@@ -357,9 +357,9 @@ function PremiumFinalCta({ onStart }: { onStart?: () => void }) {
   );
 }
 
-type LivePanelId = "hizmetler" | "surec" | "kanit" | "iletisim";
+type LivePanelId = "hizmetler" | "surec" | "demolar" | "paketler" | "kanit" | "iletisim";
 
-function LivePanel({ panel, onClose }: { panel: LivePanelId; onClose: () => void }) {
+function LivePanel({ panel, onClose, onRequest }: { panel: LivePanelId; onClose: () => void; onRequest: () => void }) {
   return (
     <div className={styles.liveOverlay} role="dialog" aria-modal="true" aria-label="AgentAxis bilgi paneli">
       <button className={styles.liveBackdrop} type="button" onClick={onClose} aria-label="Paneli kapat" />
@@ -368,6 +368,8 @@ function LivePanel({ panel, onClose }: { panel: LivePanelId; onClose: () => void
         <div className={styles.liveModalBody}>
           {panel === "hizmetler" && <Services />}
           {panel === "surec" && <Process />}
+          {panel === "demolar" && <section className={styles.catalogPanel}><small>CANLI DEMOLAR</small><h2>Sektörünüze uyarlanan sistemi önce görün.</h2><p>Hazır şablon dayatmıyoruz. İhtiyaca göre uyarlanan örnek akışı birlikte inceliyoruz.</p><div className={styles.catalogGrid}><article><span>01</span><h3>Diş kliniği</h3><p>WhatsApp talebi, randevuya geçiş, hatırlatma ve insan devralma akışı.</p><button type="button" onClick={onRequest}>Benzerini isteyin →</button></article><article><span>02</span><h3>Emlak</h3><p>Yeni talep, uygun portföy eşleşmesi, takip ve görüşme planlama akışı.</p><button type="button" onClick={onRequest}>Benzerini isteyin →</button></article><article><span>03</span><h3>Yerel işletme</h3><p>Müşteri soruları, teklif talebi, geri dönüş ve tekrar eden işlerin takibi.</p><button type="button" onClick={onRequest}>Benzerini isteyin →</button></article></div></section>}
+          {panel === "paketler" && <section className={styles.catalogPanel}><small>ESNEK ÇALIŞMA KAPSAMLARI</small><h2>İhtiyacınız kadar sistem kurulur.</h2><p>Önce problemi doğrularız; kullanmayacağınız özellikleri pakete doldurmayız.</p><div className={styles.catalogGrid}><article><span>01</span><h3>Başlangıç</h3><p>Tek bir önemli soruna odaklanan küçük, güvenli ve ölçülebilir sistem.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article><article><span>02</span><h3>Büyüme</h3><p>Müşteri kazanma ve takip gibi birbiriyle bağlantılı birkaç iş akışı.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article><article><span>03</span><h3>Özel sistem</h3><p>İşletmenize özel web sitesi, otomasyon ve takip düzeninin birleşimi.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article></div><div className={styles.catalogTrust}>✓ 7 gün ücretsiz deneyin <span>✓ Otomatik ödeme yok</span> <span>✓ Önemli işler sizin onayınızda</span></div></section>}
           {panel === "kanit" && <section className={styles.modalProof}><small>ŞEFFAF ÇALIŞMA KANITI</small><h2>Kaynağı, çalışan sistemi ve ölçülen sonucu birlikte görürsünüz.</h2><div className={styles.proofCards}><article><span>01</span><strong>Kaynaklı teşhis</strong><p>Problemin nerede olduğunu kanıtıyla gösteririz.</p></article><article><span>02</span><strong>Çalışan sistem</strong><p>Sunum değil, test edilmiş akış kurarız.</p></article><article><span>03</span><strong>Sizin kontrolünüz</strong><p>Önemli dış işlemler açık onayınızla ilerler.</p></article></div></section>}
           {panel === "iletisim" && <section className={styles.liveFinder}><div><small>ÜCRETSİZ MİNİ TEŞHİS</small><h2>İşletmenizi anlatın, doğru başlangıcı birlikte bulalım.</h2><p>Yaklaşık iki dakikada ihtiyacınızı seçin. Otomatik ödeme yok; önemli işlemler sizin onayınızda kalır.</p></div><NeedFinder /></section>}
         </div>
@@ -428,7 +430,7 @@ export function HybridDraft({ live = false }: { live?: boolean }) {
 
   return (
     <div className={`${styles.draft} ${styles.hybridDraft} ${live ? styles.liveRoot : ""}`}>
-      <header className={styles.hybridNav}><Logo /><nav><button type="button" onClick={() => live && setLivePanel("hizmetler")}><i>◇</i> Hizmetler</button><button type="button" onClick={() => live && setLivePanel("surec")}><i>↺</i> Nasıl çalışır?</button><button type="button" onClick={() => live && setLivePanel("kanit")}><i>✓</i> Çalışma kanıtı</button></nav><button type="button" onClick={() => live && setLivePanel("iletisim")}>Ücretsiz inceleme <b>↗</b></button></header>
+      <header className={styles.hybridNav}><Logo /><nav><button type="button" onClick={() => live && setLivePanel("hizmetler")}><i>◇</i> Hizmetler</button><button type="button" onClick={() => live && setLivePanel("surec")}><i>↺</i> Nasıl çalışır?</button><button type="button" onClick={() => live && setLivePanel("demolar")}><i>▶</i> Demolar</button><button type="button" onClick={() => live && setLivePanel("paketler")}><i>▦</i> Paketler</button><button type="button" onClick={() => live && setLivePanel("kanit")}><i>✓</i> Kanıt</button><button type="button" onClick={() => live && setLivePanel("iletisim")}><i>✎</i> İhtiyacınızı anlatın</button></nav><button type="button" onClick={() => live && setLivePanel("iletisim")}>Ücretsiz inceleme <b>↗</b></button></header>
       <section className={styles.hybridHero} ref={heroRef} onPointerMove={moveHero} onPointerLeave={resetHero}>
         <ParticleCanvas className={styles.particleCanvas} />
         <div className={styles.pointerGlow} aria-hidden="true" />
@@ -456,7 +458,7 @@ export function HybridDraft({ live = false }: { live?: boolean }) {
       <Process />
       <PremiumFinalCta onStart={() => live && setLivePanel("iletisim")} />
       {live && <footer className={styles.premiumFooter}><Logo /><span>© 2026 AgentAxis Labs</span><a href="mailto:agentaxislabs@gmail.com">agentaxislabs@gmail.com</a><a href="/gizlilik">Gizlilik</a><a href="/kullanim-kosullari">Kullanım koşulları</a></footer>}
-      {livePanel && <LivePanel panel={livePanel} onClose={() => setLivePanel(null)} />}
+      {livePanel && <LivePanel panel={livePanel} onClose={() => setLivePanel(null)} onRequest={() => setLivePanel("iletisim")} />}
     </div>
   );
 }
