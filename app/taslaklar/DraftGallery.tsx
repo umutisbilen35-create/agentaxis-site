@@ -415,6 +415,13 @@ export function HybridDraft({ live = false }: { live?: boolean }) {
           <div className={styles.livePill}><i /> İŞLETMENİZ İÇİN AKILLI SİSTEMLER <b>CANLI</b></div>
           <h1>Müşteriyi kaçırmayın.<br /><em>Takibi sisteme bırakın.</em></h1>
           <p>Akıllı İşletme Asistanı talebi görür, ihtiyacı düzenler ve doğru sonraki adımı hazırlar. Gönderme ve hesap işlemleri sizin onayınızla ilerler.</p>
+          <div className={styles.heroMiniServices} aria-label="Kısa hizmet özeti">
+            {services.map(([no, title], index) => (
+              <button key={no} type="button" onClick={() => live && setLivePanel("hizmetler")}>
+                <i>{["↗", "◎", "⚡", "◇"][index]}</i><span>{title}</span>
+              </button>
+            ))}
+          </div>
           <div className={styles.actions}><button type="button" onClick={() => live && setLivePanel("iletisim")}>Ücretsiz mini teşhis <span>→</span></button><button type="button" onClick={() => live && setLivePanel("surec")}>Nasıl çalıştığını gör</button></div>
           <TrustStrip />
         </div>
