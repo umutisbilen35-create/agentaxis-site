@@ -47,6 +47,12 @@
 .heroMiniServices button:hover>i{background:#275ff3;color:#fff}
 .hybridCopy .actions{margin-top:0}
 .hybridVisual>.dashboard{border-color:rgba(70,98,160,.15);background:rgba(255,255,255,.83);backdrop-filter:blur(24px) saturate(135%)}
+.heroValuePanel{position:relative;width:100%;padding:25px;border:1px solid rgba(59,89,153,.15);border-radius:28px;background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(239,244,255,.86));box-shadow:0 42px 105px rgba(41,64,116,.2);backdrop-filter:blur(24px) saturate(135%);overflow:hidden;transform:rotateX(var(--tilt-x)) rotateY(var(--tilt-y));transition:transform .22s ease,box-shadow .22s ease}
+.heroValuePanel:after{content:"";position:absolute;right:-120px;bottom:-170px;width:330px;height:330px;border-radius:50%;background:radial-gradient(circle,rgba(84,113,255,.22),transparent 69%);pointer-events:none}
+.valuePanelTop{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:14px;padding-bottom:17px;border-bottom:1px solid rgba(56,84,145,.12);font-size:11px;font-weight:800}.valuePanelTop>span>i{display:inline-block;width:8px;height:8px;margin-right:8px;border-radius:50%;background:#2cbd73;box-shadow:0 0 0 5px rgba(44,189,115,.12)}.valuePanelTop small{font:700 8px var(--font-geist-mono);letter-spacing:1px;color:#758299}
+.valuePanelTitle{position:relative;z-index:1;padding:23px 2px 18px}.valuePanelTitle small{font:750 9px var(--font-geist-mono);letter-spacing:1.1px;color:#2d60e7}.valuePanelTitle h2{font-size:31px;line-height:1.07;letter-spacing:-1.3px;margin:9px 0 0;max-width:470px}
+.valueServiceList{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:9px}.valueServiceList button{min-height:110px;padding:14px;border:1px solid rgba(57,87,149,.12);border-radius:16px;background:rgba(255,255,255,.82);color:#24334a;display:grid;grid-template-columns:35px 1fr auto;gap:11px;align-items:start;text-align:left;cursor:pointer}.valueServiceList button>i{width:35px;height:35px;border-radius:11px;background:#e7eeff;color:#275ff3;display:grid;place-items:center;font-style:normal}.valueServiceList button>span{display:grid;gap:5px}.valueServiceList button strong{font-size:12px}.valueServiceList button small{font-size:9px;line-height:1.45;color:#68768b}.valueServiceList button>b{align-self:center;color:#7d8ba0;font-size:12px}.valueServiceList button:hover>i{background:#275ff3;color:#fff}.valueServiceList button:hover>b{color:#275ff3;transform:translateX(4px)}
+.valuePanelTrust{position:relative;z-index:1;display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.valuePanelTrust span{padding:8px 10px;border-radius:999px;background:#e9f6ee;color:#266a47;font-size:9px;font-weight:800}
 .orbit{border-color:rgba(56,94,225,.18);background:radial-gradient(circle,rgba(255,255,255,.8),rgba(230,237,255,.25) 45%,transparent 70%)}
 .orbit>span{background:linear-gradient(145deg,#1a2745,#2e62ef);box-shadow:0 25px 70px rgba(39,95,243,.29)}
 .capabilityBar{position:relative;z-index:3;padding:24px;background:linear-gradient(90deg,#edf3ff,#fff 48%,#f1f0ff);color:#263550;border-bottom:1px solid rgba(54,86,154,.11);box-shadow:0 12px 30px rgba(65,87,134,.05)}
@@ -158,3 +164,59 @@
 @media (max-width:900px){.premiumFooter{flex-wrap:wrap}.premiumFooter>span{margin-left:0}.liveFinder{grid-template-columns:1fr}.modalProof .proofCards{grid-template-columns:1fr}.liveModalBody .serviceGrid{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.liveOverlay{padding:0}.liveModal{max-height:100dvh;height:100dvh;border-radius:0}.liveModalTop{min-height:64px;padding:0 14px}.liveModalBody>.services,.liveModalBody>.process,.modalProof,.liveFinder{padding:50px 18px}.liveModalBody .serviceGrid{grid-template-columns:1fr}.premiumFooter{align-items:flex-start;flex-direction:column;gap:13px}.premiumFooter>span{order:5}.hybridNav nav button{display:none}}
 @media (prefers-reduced-motion:reduce){.liveModal{animation:none}.liveOverlay{backdrop-filter:none}}
+@media (max-width:900px){.heroValuePanel{transform:none}}
+@media (max-width:560px){.heroValuePanel{padding:17px}.valuePanelTitle h2{font-size:26px}.valueServiceList{grid-template-columns:1fr}.valueServiceList button{min-height:88px}.valuePanelTop small{display:none}}
+@media (prefers-reduced-motion:reduce){.heroValuePanel{transform:none!important;transition:none!important}}
+
+/* İlk ekran yerleşim düzeltmesi — daha dolu, daha geniş, daha belirgin */
+.liveRoot .hybridNav{padding-inline:max(34px,calc((100% - 1300px)/2));height:78px}
+.liveRoot .hybridNav nav{gap:7px;padding:5px;border-color:rgba(42,73,143,.15);background:rgba(255,255,255,.82);box-shadow:0 10px 28px rgba(46,68,113,.08)}
+.liveRoot .hybridNav nav button{padding:9px 12px;border:1px solid transparent;color:#26364e;font-size:12px;font-weight:800}
+.liveRoot .hybridNav nav button>i{width:23px;height:23px;display:inline-grid;place-items:center;margin-right:5px;border-radius:7px;background:#e7eeff;color:#275ff3;font-style:normal;font-size:10px}
+.liveRoot .hybridNav nav button:hover{border-color:rgba(39,95,243,.18);background:#edf3ff;color:#1748c9;box-shadow:0 8px 20px rgba(39,95,243,.1)}
+.liveRoot .hybridHero{min-height:720px;padding:56px max(34px,calc((100% - 1300px)/2)) 62px;grid-template-columns:1.12fr .88fr;gap:42px;align-items:center}
+.liveRoot .hybridCopy h1{max-width:760px;font-size:clamp(56px,5.7vw,82px);letter-spacing:-3.5px;line-height:.96}
+.liveRoot .hybridCopy>p{margin:21px 0;max-width:690px}
+.liveRoot .livePill{margin-bottom:18px}
+.liveRoot .hybridCopy .trustStrip{margin-top:19px}
+.liveRoot .heroValuePanel{max-width:610px;margin-left:auto}
+.liveRoot .hybridCopy,.liveRoot .hybridVisual{transform:translateY(-18px)}
+.liveRoot .valuePanelTitle{padding:12px 2px 15px}
+.liveRoot .valuePanelTitle h2{font-size:36px;line-height:1.04;margin-top:7px;letter-spacing:-1.5px}
+.liveRoot .valueServiceList button{min-height:116px;padding:15px}
+.liveRoot .valueServiceList button strong{font-size:15px;color:#172238;line-height:1.2}
+.liveRoot .valueServiceList button small{font-size:11px;line-height:1.5;color:#3f4e65;font-weight:560}
+.liveRoot .valuePanelTrust{margin-top:15px;gap:9px}
+.liveRoot .valuePanelTrust span{padding:10px 12px;border:1px solid rgba(33,137,82,.13);background:#e4f6eb;color:#185f3b;font-size:11px;box-shadow:0 8px 20px rgba(34,116,70,.08)}
+@media (max-width:900px){.liveRoot .hybridNav{padding-inline:20px}.liveRoot .hybridHero{grid-template-columns:1fr;padding:54px 24px 68px}.liveRoot .hybridCopy h1{font-size:clamp(50px,9vw,72px);max-width:780px}.liveRoot .heroValuePanel{max-width:none;margin:0}}
+@media (max-width:900px){.liveRoot .hybridCopy,.liveRoot .hybridVisual{transform:none}}
+@media (max-width:560px){.liveRoot .hybridNav{height:66px;padding-inline:12px}.liveRoot .hybridHero{padding:48px 18px 62px}.liveRoot .hybridCopy h1{font-size:46px;letter-spacing:-2.2px}.liveRoot .livePill{font-size:8px}.liveRoot .hybridCopy>p{font-size:14px}.liveRoot .valuePanelTitle h2{font-size:29px}.liveRoot .valueServiceList button strong{font-size:14px}.liveRoot .valueServiceList button small{font-size:10.5px}.liveRoot .valuePanelTrust span{font-size:10px}}
+
+/* Açılır paneller: tek ekranda dolu ve daha okunaklı */
+.liveModalBody>.services{padding:34px 38px 38px}
+.liveModalBody>.services .sectionHeading{margin-bottom:22px;align-items:center}
+.liveModalBody>.services .sectionHeading h2{font-size:clamp(38px,4.2vw,56px);margin-top:8px}
+.liveModalBody>.services .sectionHeading>p{font-size:14px;color:#34445d;font-weight:600;line-height:1.55}
+.liveModalBody>.services .serviceGrid{grid-template-columns:repeat(2,1fr);gap:10px}
+.liveModalBody>.services .serviceGrid article{min-height:158px;padding:18px 20px}
+.liveModalBody>.services .serviceGrid h3{font-size:21px;margin:24px 0 8px}
+.liveModalBody>.services .serviceGrid p{font-size:12px;color:#37465e;line-height:1.5}
+.liveModalBody>.services .serviceGrid b{font-size:10px}
+.liveModalBody>.process{padding:38px}
+.liveModalBody>.process .sectionHeading{margin-bottom:28px;align-items:center}
+.liveModalBody>.process .sectionHeading h2{font-size:clamp(38px,4.2vw,56px);margin-top:8px}
+.liveModalBody>.process .sectionHeading>p{font-size:16px;line-height:1.55;color:#26364d;font-weight:700}
+.liveModalBody>.process .stepGrid{grid-template-columns:repeat(4,1fr);gap:10px}
+.liveModalBody>.process .stepGrid article{min-height:225px;padding:22px;border-top-width:4px}
+.liveModalBody>.process .stepGrid span{font-size:13px;font-weight:900}
+.liveModalBody>.process .stepGrid h3{font-size:21px;line-height:1.15;margin:42px 0 12px;color:#111a2a}
+.liveModalBody>.process .stepGrid p{font-size:14px;line-height:1.55;color:#34445c;font-weight:560}
+.modalProof{padding:48px 38px}
+.modalProof>h2{font-size:clamp(38px,4.2vw,56px);margin-bottom:30px}
+.modalProof .proofCards{gap:12px}
+.modalProof .proofCards article{min-height:175px;padding:24px;grid-template-columns:58px 1fr;column-gap:16px}
+.modalProof .proofCards article>span{width:52px;height:52px;border-radius:15px;font-size:14px;font-weight:900;box-shadow:0 15px 30px rgba(39,95,243,.24)}
+.modalProof .proofCards strong{font-size:20px;color:#111a2a}
+.modalProof .proofCards p{font-size:14px;line-height:1.55;color:#34445c;font-weight:560}
+@media (max-width:900px){.liveModalBody>.process .stepGrid{grid-template-columns:1fr 1fr}.modalProof .proofCards{grid-template-columns:1fr}}
+@media (max-width:560px){.liveModalBody>.services,.liveModalBody>.process,.modalProof{padding:35px 18px}.liveModalBody>.services .serviceGrid,.liveModalBody>.process .stepGrid{grid-template-columns:1fr}.liveModalBody>.services .serviceGrid article,.liveModalBody>.process .stepGrid article{min-height:auto}.liveModalBody>.process .stepGrid h3{margin-top:28px}}

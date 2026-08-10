@@ -16,10 +16,10 @@ const services = [
 ];
 
 const steps = [
-  ["01", "Dinleriz", "İşletmenizi ve yaşadığınız sorunu öğreniriz."],
-  ["02", "Doğrularız", "Gerçek ihtiyacı küçük bir teşhisle görünür yaparız."],
-  ["03", "Kurarız", "Sistemi güvenli biçimde test edip çalışır hâle getiririz."],
-  ["04", "Ölçeriz", "7 günlük denemede yalnız doğrulanan değişimi raporlarız."],
+  ["01", "İhtiyacı dinleriz", "İşletmenizi, müşterilerinizi ve yaşadığınız asıl sorunu net biçimde öğreniriz."],
+  ["02", "Problemi doğrularız", "Küçük bir teşhisle sorunun nerede olduğunu ve size ne kaybettirdiğini görünür yaparız."],
+  ["03", "Güvenli sistemi kurarız", "Uygun sistemi önce test eder, önemli işlemleri sizin onayınıza bağlarız."],
+  ["04", "Birlikte ölçeriz", "7 günlük denemede yalnız doğrulanan değişimi anlaşılır bir raporla gösteririz."],
 ];
 
 function Logo({ light = false }: { light?: boolean }) {
@@ -64,11 +64,34 @@ function AssistantDashboard({ dark = false }: { dark?: boolean }) {
   );
 }
 
+function HeroValuePanel({ onOpenServices }: { onOpenServices?: () => void }) {
+  const valueServices = [
+    ["↗", "Müşteri kazanma", "Doğru müşteriye ulaşabileceğiniz fırsatları bulur."],
+    ["◎", "Müşteri takibi", "Yeni taleplerin ve geri dönüşlerin unutulmasını önler."],
+    ["⚡", "İş otomasyonu", "Tekrar eden uygun işleri kontrollü biçimde hızlandırır."],
+    ["◇", "Premium web sitesi", "İşinizi ilk bakışta anlatır ve güven oluşturur."],
+  ];
+  return (
+    <aside className={styles.heroValuePanel} aria-label="Akıllı İşletme Asistanı hizmet özeti">
+      <div className={styles.valuePanelTop}><span><i /> Akıllı İşletme Asistanı</span><small>İŞLETMENİZ İÇİN</small></div>
+      <div className={styles.valuePanelTitle}><small>NELERİ İYİLEŞTİRİYORUZ?</small><h2>İhtiyacınız olan sistemi birlikte kuruyoruz.</h2></div>
+      <div className={styles.valueServiceList}>
+        {valueServices.map(([icon, title, text]) => (
+          <button key={title} type="button" onClick={onOpenServices}>
+            <i>{icon}</i><span><strong>{title}</strong><small>{text}</small></span><b>→</b>
+          </button>
+        ))}
+      </div>
+      <div className={styles.valuePanelTrust}><span>✓ 7 gün ücretsiz deneyin</span><span>✓ Önemli işler sizin onayınızda</span></div>
+    </aside>
+  );
+}
+
 function Services({ dark = false }: { dark?: boolean }) {
   return (
     <section className={`${styles.services} ${dark ? styles.servicesDark : ""}`} data-premium-reveal="wait">
       <div className={styles.sectionHeading}>
-        <div><small>İŞLETMENİZ İÇİN</small><h2>Teknoloji değil, çalışan bir düzen.</h2></div>
+        <div><small>İŞLETMENİZ İÇİN</small><h2>Sizin yerinize çalışan bir düzen.</h2></div>
         <p>Her hizmet, işletmenizde görünür bir soruna ve ölçülebilir bir başlangıç hedefine bağlanır.</p>
       </div>
       <div className={styles.serviceGrid}>
@@ -85,7 +108,7 @@ function Process({ dark = false }: { dark?: boolean }) {
     <section className={`${styles.process} ${dark ? styles.processDark : ""}`} data-premium-reveal="wait">
       <div className={styles.sectionHeading}>
         <div><small>NASIL ÇALIŞIR?</small><h2>Dört sade adım. Her aşamada siz bilirsiniz.</h2></div>
-        <p>Önce problemi doğrular, sonra küçük ve güvenli bir sistem kurarız.</p>
+        <p>Önce problemi doğrular, sonra küçük ve güvenilir bir sistem kurarız.</p>
       </div>
       <div className={styles.stepGrid}>
         {steps.map(([no, title, text]) => <article key={no}><span>{no}</span><h3>{title}</h3><p>{text}</p></article>)}
@@ -405,30 +428,21 @@ export function HybridDraft({ live = false }: { live?: boolean }) {
 
   return (
     <div className={`${styles.draft} ${styles.hybridDraft} ${live ? styles.liveRoot : ""}`}>
-      <header className={styles.hybridNav}><Logo /><nav><button type="button" onClick={() => live && setLivePanel("hizmetler")}>Hizmetler</button><button type="button" onClick={() => live && setLivePanel("surec")}>Süreç</button><button type="button" onClick={() => live && setLivePanel("kanit")}>Kanıt</button></nav><button type="button" onClick={() => live && setLivePanel("iletisim")}>Ücretsiz inceleme <b>↗</b></button></header>
+      <header className={styles.hybridNav}><Logo /><nav><button type="button" onClick={() => live && setLivePanel("hizmetler")}><i>◇</i> Hizmetler</button><button type="button" onClick={() => live && setLivePanel("surec")}><i>↺</i> Nasıl çalışır?</button><button type="button" onClick={() => live && setLivePanel("kanit")}><i>✓</i> Çalışma kanıtı</button></nav><button type="button" onClick={() => live && setLivePanel("iletisim")}>Ücretsiz inceleme <b>↗</b></button></header>
       <section className={styles.hybridHero} ref={heroRef} onPointerMove={moveHero} onPointerLeave={resetHero}>
         <ParticleCanvas className={styles.particleCanvas} />
         <div className={styles.pointerGlow} aria-hidden="true" />
         <div className={styles.auroraOne} aria-hidden="true" />
         <div className={styles.auroraTwo} aria-hidden="true" />
         <div className={styles.hybridCopy}>
-          <div className={styles.livePill}><i /> İŞLETMENİZ İÇİN AKILLI SİSTEMLER <b>CANLI</b></div>
+          <div className={styles.livePill}><i /> İŞLETMENİZ İÇİN AKILLI SİSTEMLER <b>KONTROL SİZDE</b></div>
           <h1>Müşteriyi kaçırmayın.<br /><em>Takibi sisteme bırakın.</em></h1>
           <p>Akıllı İşletme Asistanı talebi görür, ihtiyacı düzenler ve doğru sonraki adımı hazırlar. Gönderme ve hesap işlemleri sizin onayınızla ilerler.</p>
-          <div className={styles.heroMiniServices} aria-label="Kısa hizmet özeti">
-            {services.map(([no, title], index) => (
-              <button key={no} type="button" onClick={() => live && setLivePanel("hizmetler")}>
-                <i>{["↗", "◎", "⚡", "◇"][index]}</i><span>{title}</span>
-              </button>
-            ))}
-          </div>
           <div className={styles.actions}><button type="button" onClick={() => live && setLivePanel("iletisim")}>Ücretsiz mini teşhis <span>→</span></button><button type="button" onClick={() => live && setLivePanel("surec")}>Nasıl çalıştığını gör</button></div>
           <TrustStrip />
         </div>
         <div className={styles.hybridVisual}>
-          <div className={styles.orbit}><span>Aİ</span><i /><i /><i /></div>
-          <div className={styles.signalBeam}><i /><i /><i /></div>
-          <AssistantDashboard />
+          <HeroValuePanel onOpenServices={() => live && setLivePanel("hizmetler")} />
         </div>
       </section>
       <CapabilityExperience />
