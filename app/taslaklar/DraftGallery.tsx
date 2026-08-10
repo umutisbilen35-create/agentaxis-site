@@ -152,27 +152,6 @@ function TrustDraft() {
   );
 }
 
-const sectorDemos = {
-  klinik: {
-    label: "Diş kliniği",
-    headline: "Randevu talebini yarıda bırakmayın.",
-    flow: ["WhatsApp talebi", "İhtiyacı anla", "Uygun saat", "İnsan onayı"],
-    insight: "İlk yanıt, randevuya geçiş ve hatırlatma adımları görünür hâle gelir.",
-  },
-  emlak: {
-    label: "Emlak",
-    headline: "Alıcı ve satıcı taleplerini karıştırmayın.",
-    flow: ["Yeni talep", "Bütçe ve bölge", "Uygun portföy", "Danışman devri"],
-    insight: "Talep doğru danışmana, gerekli bilgilerle ve takip zamanı belirlenmiş olarak gider.",
-  },
-  restoran: {
-    label: "Restoran",
-    headline: "Rezervasyon konuşmasını net bir sonuca taşıyın.",
-    flow: ["Masa talebi", "Kişi ve saat", "Uygunluk kontrolü", "Onay"],
-    insight: "Tekrarlanan sorular azalır; ekip yalnız karar veya istisna gereken yerde devreye girer.",
-  },
-};
-
 const capabilityFlows = [
   {
     id: "kazanma",
@@ -232,34 +211,6 @@ function CapabilityExperience() {
           {capability.flow.map((step, index) => <div key={step}><span>{String(index + 1).padStart(2, "0")}</span><strong>{step}</strong>{index < capability.flow.length - 1 && <i>→</i>}</div>)}
         </div>
         <p>İmleci başka bir hizmetin üzerine getirerek akışın nasıl değiştiğini görebilirsiniz.</p>
-      </div>
-    </section>
-  );
-}
-
-function SectorDemo() {
-  const [sector, setSector] = useState<keyof typeof sectorDemos>("klinik");
-  const demo = sectorDemos[sector];
-  return (
-    <section className={styles.sectorDemo} data-premium-reveal="wait">
-      <div className={styles.sectorDemoIntro}>
-        <small>SEKTÖRÜNÜZE GÖRE CANLI DEMO</small>
-        <h2>Aynı şablon değil.<br /><em>Size uygun akış.</em></h2>
-        <p>Bir sektör seçin; Akıllı İşletme Asistanı’nın o işletmede nasıl çalışacağını görün.</p>
-        <div className={styles.sectorTabs} role="group" aria-label="Demo sektörü">
-          {(Object.keys(sectorDemos) as Array<keyof typeof sectorDemos>).map((id) => (
-            <button key={id} className={sector === id ? styles.sectorActive : ""} onClick={() => setSector(id)}>{sectorDemos[id].label}</button>
-          ))}
-        </div>
-      </div>
-      <div className={styles.sectorStage} key={sector}>
-        <div className={styles.stageTop}><span><i /> {demo.label} akışı</span><small>ETKİLEŞİMLİ ÖRNEK</small></div>
-        <h3>{demo.headline}</h3>
-        <div className={styles.stageFlow}>
-          {demo.flow.map((item, index) => <div key={item}><span>{String(index + 1).padStart(2, "0")}</span><strong>{item}</strong>{index < demo.flow.length - 1 && <i>→</i>}</div>)}
-        </div>
-        <p>{demo.insight}</p>
-        <div className={styles.stageStatus}><span>✓ İnsan onayı korunur</span><span>✓ Her adım kaydedilir</span></div>
       </div>
     </section>
   );
@@ -357,7 +308,7 @@ function PremiumFinalCta({ onStart }: { onStart?: () => void }) {
   );
 }
 
-type LivePanelId = "hizmetler" | "surec" | "demolar" | "paketler" | "kanit" | "iletisim";
+type LivePanelId = "hizmetler" | "surec" | "paketler" | "kanit" | "iletisim";
 
 function LivePanel({ panel, onClose, onRequest }: { panel: LivePanelId; onClose: () => void; onRequest: () => void }) {
   return (
@@ -368,7 +319,6 @@ function LivePanel({ panel, onClose, onRequest }: { panel: LivePanelId; onClose:
         <div className={styles.liveModalBody}>
           {panel === "hizmetler" && <Services />}
           {panel === "surec" && <Process />}
-          {panel === "demolar" && <section className={styles.catalogPanel}><small>CANLI DEMOLAR</small><h2>Sektörünüze uyarlanan sistemi önce görün.</h2><p>Hazır şablon dayatmıyoruz. İhtiyaca göre uyarlanan örnek akışı birlikte inceliyoruz.</p><div className={styles.catalogGrid}><article><span>01</span><h3>Diş kliniği</h3><p>WhatsApp talebi, randevuya geçiş, hatırlatma ve insan devralma akışı.</p><button type="button" onClick={onRequest}>Benzerini isteyin →</button></article><article><span>02</span><h3>Emlak</h3><p>Yeni talep, uygun portföy eşleşmesi, takip ve görüşme planlama akışı.</p><button type="button" onClick={onRequest}>Benzerini isteyin →</button></article><article><span>03</span><h3>Yerel işletme</h3><p>Müşteri soruları, teklif talebi, geri dönüş ve tekrar eden işlerin takibi.</p><button type="button" onClick={onRequest}>Benzerini isteyin →</button></article></div></section>}
           {panel === "paketler" && <section className={styles.catalogPanel}><small>ESNEK ÇALIŞMA KAPSAMLARI</small><h2>İhtiyacınız kadar sistem kurulur.</h2><p>Önce problemi doğrularız; kullanmayacağınız özellikleri pakete doldurmayız.</p><div className={styles.catalogGrid}><article><span>01</span><h3>Başlangıç</h3><p>Tek bir önemli soruna odaklanan küçük, güvenli ve ölçülebilir sistem.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article><article><span>02</span><h3>Büyüme</h3><p>Müşteri kazanma ve takip gibi birbiriyle bağlantılı birkaç iş akışı.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article><article><span>03</span><h3>Özel sistem</h3><p>İşletmenize özel web sitesi, otomasyon ve takip düzeninin birleşimi.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article></div><div className={styles.catalogTrust}>✓ 7 gün ücretsiz deneyin <span>✓ Otomatik ödeme yok</span> <span>✓ Önemli işler sizin onayınızda</span></div></section>}
           {panel === "kanit" && <section className={styles.modalProof}><small>ŞEFFAF ÇALIŞMA KANITI</small><h2>Kaynağı, çalışan sistemi ve ölçülen sonucu birlikte görürsünüz.</h2><div className={styles.proofCards}><article><span>01</span><strong>Kaynaklı teşhis</strong><p>Problemin nerede olduğunu kanıtıyla gösteririz.</p></article><article><span>02</span><strong>Çalışan sistem</strong><p>Sunum değil, test edilmiş akış kurarız.</p></article><article><span>03</span><strong>Sizin kontrolünüz</strong><p>Önemli dış işlemler açık onayınızla ilerler.</p></article></div></section>}
           {panel === "iletisim" && <section className={styles.liveFinder}><div><small>ÜCRETSİZ MİNİ TEŞHİS</small><h2>İşletmenizi anlatın, doğru başlangıcı birlikte bulalım.</h2><p>Yaklaşık iki dakikada ihtiyacınızı seçin. Otomatik ödeme yok; önemli işlemler sizin onayınızda kalır.</p></div><NeedFinder /></section>}
@@ -430,7 +380,7 @@ export function HybridDraft({ live = false }: { live?: boolean }) {
 
   return (
     <div className={`${styles.draft} ${styles.hybridDraft} ${live ? styles.liveRoot : ""}`}>
-      <header className={styles.hybridNav}><Logo /><nav><button type="button" onClick={() => live && setLivePanel("hizmetler")}><i>◇</i> Hizmetler</button><button type="button" onClick={() => live && setLivePanel("surec")}><i>↺</i> Nasıl çalışır?</button><button type="button" onClick={() => live && setLivePanel("demolar")}><i>▶</i> Demolar</button><button type="button" onClick={() => live && setLivePanel("paketler")}><i>▦</i> Paketler</button><button type="button" onClick={() => live && setLivePanel("kanit")}><i>✓</i> Kanıt</button><button type="button" onClick={() => live && setLivePanel("iletisim")}><i>✎</i> İhtiyacınızı anlatın</button></nav><button type="button" onClick={() => live && setLivePanel("iletisim")}>Ücretsiz inceleme <b>↗</b></button></header>
+      <header className={styles.hybridNav}><Logo /><nav><button type="button" onClick={() => live && setLivePanel("hizmetler")}><i>◇</i> Hizmetler</button><button type="button" onClick={() => live && setLivePanel("surec")}><i>↺</i> Nasıl çalışır?</button><button type="button" onClick={() => live && setLivePanel("paketler")}><i>▦</i> Paketler</button><button type="button" onClick={() => live && setLivePanel("kanit")}><i>✓</i> Kanıt</button><button type="button" onClick={() => live && setLivePanel("iletisim")}><i>✎</i> İhtiyacınızı anlatın</button></nav><button type="button" onClick={() => live && setLivePanel("iletisim")}>Ücretsiz inceleme <b>↗</b></button></header>
       <section className={styles.hybridHero} ref={heroRef} onPointerMove={moveHero} onPointerLeave={resetHero}>
         <ParticleCanvas className={styles.particleCanvas} />
         <div className={styles.pointerGlow} aria-hidden="true" />
@@ -449,7 +399,6 @@ export function HybridDraft({ live = false }: { live?: boolean }) {
       </section>
       <CapabilityExperience />
       <WorkflowStory />
-      <SectorDemo />
       <Services />
       <section className={styles.hybridProof} data-premium-reveal="wait">
         <div><small>ŞEFFAF ÇALIŞMA KANITI</small><h2>Ne yapıldığını görür,<br />önemli işi siz onaylarsınız.</h2></div>

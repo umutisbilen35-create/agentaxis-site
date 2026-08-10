@@ -30,7 +30,7 @@ test("AgentAxis ana sayfasi guclu giris metniyle sunulur", async () => {
   assert.match(html, /Önemli işlemler sizin onayınızda/);
   assert.match(html, /Müşteri kazanma/);
   assert.match(html, /Premium web sitesi/);
-  assert.match(html, /Demolar/);
+  assert.doesNotMatch(html, />Demolar</);
   assert.match(html, /Paketler/);
   assert.match(html, /İhtiyacınızı anlatın/);
   assert.match(html, /Önemli işler sizin onayınızda/);
