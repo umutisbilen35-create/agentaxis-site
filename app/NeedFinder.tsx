@@ -121,7 +121,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
   const priorityNeeds = matchedSectorPriority?.ids ?? ([] as NeedId[]);
 
   function toggleNeed(id: NeedId) {
-    setSelected((items) => items.includes(id) ? items.filter((item) => item !== id) : items.length >= 3 ? items : [...items, id]);
+    setSelected((items) => items.includes(id) ? items.filter((item) => item !== id) : [...items, id]);
   }
 
   function nextFromBusiness(event: React.FormEvent) {
@@ -183,14 +183,14 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
         <label className="discoverySector">Hangi sektörde hizmet veriyorsunuz?<input value={sector} onChange={(event) => setSector(event.target.value)} placeholder="Örn. diş kliniği, emlak, restoran…" maxLength={100} autoComplete="organization-title" /></label>
 
         <fieldset className="discoveryProblems">
-          <legend>Size en yakın sorunları seçin <span>(en fazla 3)</span></legend>
+          <legend>Size en yakın sorunları seçin <span>(uygun olanların tamamını seçebilirsiniz)</span></legend>
           <div className="problemGrid">
             {needs.map((item) => {
               const recommended = Boolean(matchedSectorPriority && priorityNeeds.includes(item.id));
               const checked = selected.includes(item.id);
               return (
-                <label className={checked ? "selected" : selected.length >= 3 ? "limitReached" : recommended ? "recommended" : ""} key={item.id}>
-                  <input type="checkbox" checked={checked} disabled={!checked && selected.length >= 3} aria-describedby="discoveryLimit" onChange={() => toggleNeed(item.id)} />
+                <label className={checked ? "selected" : recommended ? "recommended" : ""} key={item.id}>
+                  <input type="checkbox" checked={checked} aria-describedby="discoveryLimit" onChange={() => toggleNeed(item.id)} />
                   <span aria-hidden="true">{checked ? "✓" : "+"}</span>
                   <strong>{item.symptom}</strong>
                   {recommended && <em>Sektörünüz için önerilen</em>}
@@ -198,14 +198,14 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
               );
             })}
           </div>
-          <p className="selectionLimit" id="discoveryLimit">{selected.length >= 3 ? "3 seçim yaptınız. Başka birini seçmek için önce bir seçimi kaldırın." : `${selected.length}/3 seçim yaptınız.`}</p>
+          <p className="selectionLimit" id="discoveryLimit">{selected.length ? `${selected.length} sorun seçtiniz. İsterseniz diğerlerini de seçebilirsiniz.` : "Size uyan bütün sorunları seçebilirsiniz."}</p>
         </fieldset>
 
         {selected.length > 0 && (
           <section className="instantSuggestions" aria-label="Size uygun hizmet fikirleri">
             <div className="suggestionHeading"><small>SİZE UYGUN MİNİ TEŞHİSLER</small><strong role="status" aria-live="polite">{selected.length} ölçüm başlığı bulundu</strong></div>
             <div className="suggestionCards">
-              {selected.slice(0, 3).map((need) => { const diagnosis = diagnosisMap[need]; return <article key={diagnosis.title}><span>✓</span><div><strong>{diagnosis.title}</strong><p>Önce problemi ölçer, sonra sonucu birlikte değerlendiririz.</p><small>{diagnosis.checks.length} somut kontrol</small></div></article>; })}
+              {selected.map((need) => { const diagnosis = diagnosisMap[need]; return <article key={diagnosis.title}><span>✓</span><div><strong>{diagnosis.title}</strong><p>Önce problemi ölçer, sonra sonucu birlikte değerlendiririz.</p><small>{diagnosis.checks.length} somut kontrol</small></div></article>; })}
             </div>
             <p className="suggestionNote">Bunlar yalnız teşhis başlıklarıdır. Problem ölçülmeden hizmet önerilmez; istemediğiniz hiçbir işlem yapılmaz.</p>
           </section>
@@ -252,16 +252,16 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
 
       {step === 2 && (
         <div className="intakeBody">
-          <div className="stepTitle"><small>ADIM 2 / 4</small><h3>Seçimlerinizi gözden geçirin.</h3><p>Hızlı keşifte seçtiklerinizi işaretledik. En fazla 3 ihtiyacı değiştirebilir veya onaylayabilirsiniz.</p></div>
+          <div className="stepTitle"><small>ADIM 2 / 4</small><h3>Seçimlerinizi gözden geçirin.</h3><p>Hızlı keşifte seçtiklerinizi işaretledik. Size uyan bütün ihtiyaçları ekleyebilir veya kaldırabilirsiniz.</p></div>
           <div className="goalGrid clearGoals">
             {needs.map((item) => (
-              <label className={selected.includes(item.id) ? "selected" : selected.length >= 3 ? "limitReached" : ""} key={item.id}>
-                <input type="checkbox" checked={selected.includes(item.id)} disabled={!selected.includes(item.id) && selected.length >= 3} aria-describedby="formNeedLimit" onChange={() => toggleNeed(item.id)} />
+              <label className={selected.includes(item.id) ? "selected" : ""} key={item.id}>
+                <input type="checkbox" checked={selected.includes(item.id)} aria-describedby="formNeedLimit" onChange={() => toggleNeed(item.id)} />
                 <strong>{item.label}</strong><small>{item.help}</small>{matchedSectorPriority && priorityNeeds.includes(item.id) && <em>Sektörünüze uygun olabilir</em>}
               </label>
             ))}
           </div>
-          <p className="selectionLimit" id="formNeedLimit">{selected.length >= 3 ? "3 seçim yaptınız. Başka birini seçmek için önce bir seçimi kaldırın." : `${selected.length}/3 seçim yaptınız.`}</p>
+          <p className="selectionLimit" id="formNeedLimit">{selected.length ? `${selected.length} ihtiyaç seçtiniz. İsterseniz diğerlerini de seçebilirsiniz.` : "Size uyan bütün ihtiyaçları seçebilirsiniz."}</p>
           <div className="flowActions"><button className="secondary" type="button" onClick={() => setStep(1)}>← Geri</button><button className="primary finderButton" type="button" disabled={!selected.length} onClick={() => setStep(3)}>Mini teşhisi göster <span>→</span></button></div>
         </div>
       )}

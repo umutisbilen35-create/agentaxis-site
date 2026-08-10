@@ -69,10 +69,10 @@ export async function POST(request: Request) {
     const note = clean(body.note, 1000);
     const plan = clean(body.plan, 30);
     const submittedNeeds = Array.isArray(body.needs) ? body.needs : [];
-    const needs = submittedNeeds.filter((item): item is string => typeof item === "string" && allowedNeeds.has(item));
+    const needs = [...new Set(submittedNeeds.filter((item): item is string => typeof item === "string" && allowedNeeds.has(item)))];
     const idempotencyKey = clean(request.headers.get("x-idempotency-key"), 100);
 
-    if (!business || !sector || !contactName || !email || !needs.length || needs.length > 3 || needs.length !== submittedNeeds.length || !allowedPlans.has(plan) || body.consent !== true || !idempotencyKey) {
+    if (!business || !sector || !contactName || !email || !needs.length || needs.length > allowedNeeds.size || needs.length !== submittedNeeds.length || !allowedPlans.has(plan) || body.consent !== true || !idempotencyKey) {
       return json("Lütfen zorunlu alanları kontrol edin.", 422);
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json("Geçerli bir e-posta adresi girin.", 422);

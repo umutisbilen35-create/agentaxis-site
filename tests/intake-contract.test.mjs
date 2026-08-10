@@ -22,8 +22,9 @@ test("ücretsiz inceleme akışı müşteri için açık ve güvenlidir", async 
   assert.match(form, /Bu teşhislerle forma geç/);
   assert.match(form, /Sektörünüz için önerilen/);
   assert.match(form, /Seçimlerinizi gözden geçirin/);
-  assert.match(form, /items\.length >= 3/);
-  assert.match(form, /3 seçim yaptınız/);
+  assert.match(form, /uygun olanların tamamını seçebilirsiniz/);
+  assert.match(form, /selected\.map\(\(need\)/);
+  assert.doesNotMatch(form, /items\.length >= 3|3 seçim yaptınız|en fazla 3/);
   assert.match(form, /maxLength=\{1000\}/);
   assert.match(form, /rel="noopener noreferrer"/);
   assert.doesNotMatch(form, /\bJarvis\b/i);
@@ -39,7 +40,8 @@ test("başvuru kapısı dış eylem başlatmadan korumaları uygular", async () 
   assert.match(route, /diagnosis_json/);
   assert.match(route, /solution_only_if_confirmed/);
   assert.match(route, /starts_at, ends_at/);
-  assert.match(route, /needs\.length > 3/);
+  assert.match(route, /new Set\(submittedNeeds/);
+  assert.match(route, /needs\.length > allowedNeeds\.size/);
   assert.match(route, /needs\.length !== submittedNeeds\.length/);
   assert.match(route, /await db\.batch\(\[intakeStatement, trialStatement\]\)/);
   assert.match(route, /concurrentExisting/);
