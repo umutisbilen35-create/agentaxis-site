@@ -28,25 +28,8 @@ interface D1Database {
   dump(): Promise<ArrayBuffer>;
 }
 
-interface R2ObjectBody {
-  body: ReadableStream;
-  httpMetadata?: { contentType?: string };
-}
-
-interface R2Bucket {
-  get(key: string): Promise<R2ObjectBody | null>;
-  put(key: string, value: ArrayBuffer, options?: {
-    httpMetadata?: { contentType?: string };
-    customMetadata?: Record<string, string>;
-  }): Promise<unknown>;
-  delete(key: string): Promise<void>;
-}
-
 declare module "cloudflare:workers" {
   export const env: {
     DB: D1Database;
-    MEDIA: R2Bucket;
-    SERHAT_APPROVAL_ADMIN_SECRET?: string;
-    SERHAT_MEDIA_SIGNING_SECRET?: string;
   };
 }
