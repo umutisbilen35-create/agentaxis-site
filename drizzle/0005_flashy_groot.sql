@@ -1,0 +1,1 @@
+ALTER TABLE `content_approvals` ADD `image_sha256` text NOT NULL;
