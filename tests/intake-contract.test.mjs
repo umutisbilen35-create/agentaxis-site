@@ -57,6 +57,10 @@ test("başvuru kapısı dış eylem başlatmadan korumaları uygular", async () 
   assert.match(route, /SELECT id, 'diagnosis_requested'/);
   assert.match(route, /utm_source, utm_medium, utm_campaign/);
   assert.match(route, /cleanAttribution/);
+  assert.match(route, /sensitiveHealthPattern/);
+  assert.match(route, /Not alanına hasta, sağlık veya başka kişiye ait iletişim bilgisi yazmayın/);
+  assert.match(route, /idempotency:\$\{idempotencyKey\}/);
+  assert.doesNotMatch(route, /ipHash = trustedIp \? .* : "not-available"/);
   assert.match(route, /\.toLowerCase\(\)/);
   assert.doesNotMatch(route, /toLocaleLowerCase/);
   assert.doesNotMatch(route, /const intakeId = Number/);

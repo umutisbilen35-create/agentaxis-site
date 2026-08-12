@@ -28,6 +28,7 @@ type IntakeBody = {
 
 const attributionKeys = new Set(["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]);
 const piiPattern = /[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|(?:\+?\d[\d\s().-]{8,}\d)/;
+const sensitiveHealthPattern = /\b(tanı|tani|teşhis|teshis|hastalık|hastalik|tedavi|ilaç|ilac|röntgen|rontgen|tahlil|reçete|recete|kanser|diyabet|hamile|ameliyat|enfeksiyon|ağrı|agri)\b/i;
 
 function cleanAttribution(value: unknown) {
   const input = value && typeof value === "object" ? value as Record<string, unknown> : {};
@@ -94,9 +95,13 @@ export async function POST(request: Request) {
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json("Geçerli bir e-posta adresi girin.", 422);
     if (website && !/^https?:\/\//i.test(website)) return json("Web bağlantısı http:// veya https:// ile başlamalıdır.", 422);
+    if (note && (sensitiveHealthPattern.test(note) || piiPattern.test(note))) {
+      return json("Not alanına hasta, sağlık veya başka kişiye ait iletişim bilgisi yazmayın.", 422);
+    }
 
     const trustedIp = request.headers.get("cf-connecting-ip");
-    const ipHash = trustedIp ? await sha256(`agentaxis-intake:${trustedIp}`) : "not-available";
+    const rateIdentity = trustedIp ? `ip:${trustedIp}` : `idempotency:${idempotencyKey}`;
+    const ipHash = await sha256(`agentaxis-intake:${rateIdentity}`);
     const now = new Date();
     const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000).toISOString();
     const rate = await db.prepare("SELECT COUNT(*) AS count FROM lead_intakes WHERE ip_hash = ? AND created_at >= ?").bind(ipHash, oneHourAgo).first<{ count: number }>();

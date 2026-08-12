@@ -26,8 +26,10 @@ export default function PrivacyAnalytics() {
   useEffect(() => {
     if (!validId) return;
     const stored = localStorage.getItem("agentaxis_analytics_consent");
-    setChoice(stored);
-    if (stored === "granted") enableAnalytics();
+    queueMicrotask(() => {
+      setChoice(stored);
+      if (stored === "granted") enableAnalytics();
+    });
   }, []);
   if (!validId || choice) return null;
   const decide = (value: "granted" | "denied") => {
