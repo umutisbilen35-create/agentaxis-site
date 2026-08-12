@@ -9,12 +9,15 @@ test("saklama işi önizleme ile başlar ve açık onay olmadan silmez", () => {
   assert.match(route, /RETENTION_JOB_KEY/);
   assert.match(route, /mode: "preview"/);
   assert.match(route, /DELETE_EXPIRED_LEADS/);
+  assert.match(route, /secureEqual/);
+  assert.match(route, /crypto\.subtle\.digest\("SHA-256"/);
   assert.match(route, /x-retention-confirmation/);
   assert.match(route, /DELETE FROM trial_runs/);
   assert.match(route, /DELETE FROM lead_intakes/);
 });
 
 test("saklama işi yalnız sonuçlanmayan veya kapanmış eski başvuruları kapsar", () => {
-  assert.match(route, /status IN \('new','diagnosis_requested','closed'\)/);
+  assert.match(route, /ELIGIBLE_STATUSES_SQL = "'new','diagnosis_requested','closed'"/);
+  assert.match(route, /results\[1\]\?\.meta\?\.changes/);
   assert.doesNotMatch(route, /DELETE FROM lead_intakes WHERE created_at < \?\s*$/m);
 });
