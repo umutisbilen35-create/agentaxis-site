@@ -18,6 +18,11 @@ export const leadIntakes = sqliteTable("lead_intakes", {
   contentHash: text("content_hash").notNull(),
   ipHash: text("ip_hash").notNull(),
   marketingConsentAt: text("marketing_consent_at"),
+  utmSource: text("utm_source"),
+  utmMedium: text("utm_medium"),
+  utmCampaign: text("utm_campaign"),
+  utmContent: text("utm_content"),
+  utmTerm: text("utm_term"),
   status: text("status").notNull().default("new"),
   createdAt: text("created_at").notNull(),
 }, (table) => [

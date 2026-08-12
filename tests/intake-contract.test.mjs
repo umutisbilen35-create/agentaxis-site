@@ -31,6 +31,8 @@ test("ücretsiz inceleme akışı müşteri için açık ve güvenlidir", async 
   assert.doesNotMatch(form, /items\.length >= 3|3 seçim yaptınız|en fazla 3/);
   assert.match(form, /maxLength=\{1000\}/);
   assert.match(form, /rel="noopener noreferrer"/);
+  assert.match(form, /utm_source/);
+  assert.match(form, /attribution/);
   assert.doesNotMatch(form, /\bJarvis\b/i);
 });
 
@@ -53,6 +55,8 @@ test("başvuru kapısı dış eylem başlatmadan korumaları uygular", async () 
   assert.match(route, /SELECT reference FROM lead_intakes WHERE idempotency_key = \?/);
   assert.doesNotMatch(route, /if \(trustedIp\) \{\s*const rate/);
   assert.match(route, /SELECT id, 'diagnosis_requested'/);
+  assert.match(route, /utm_source, utm_medium, utm_campaign/);
+  assert.match(route, /cleanAttribution/);
   assert.match(route, /\.toLowerCase\(\)/);
   assert.doesNotMatch(route, /toLocaleLowerCase/);
   assert.doesNotMatch(route, /const intakeId = Number/);
@@ -62,5 +66,19 @@ test("başvuru kapısı dış eylem başlatmadan korumaları uygular", async () 
 test("aydınlatma metni IP özetini geri döndürülemez diye tanımlamaz", async () => {
   const privacy = await readFile(new URL("app/gizlilik/page.tsx", root), "utf8");
   assert.match(privacy, /doğrudan adres yerine kullanılan teknik özeti/);
+  assert.match(privacy, /yalnız açık tercihinizden sonra çalışır/);
   assert.doesNotMatch(privacy, /geri döndürülemez özeti/);
+});
+
+test("GA4 yalnız geçerli kimlik ve açık izinle yüklenir", async () => {
+  const component = await readFile(new URL("app/PrivacyAnalytics.tsx", root), "utf8");
+  assert.match(component, /NEXT_PUBLIC_GA4_ID/);
+  assert.match(component, /agentaxis_analytics_consent/);
+  assert.match(component, /stored === "granted"/);
+  assert.match(component, /anonymize_ip: true/);
+});
+
+test("eski lead bulunan D1 veritabanı güvenli biçimde yükseltilebilir", async () => {
+  const migration = await readFile(new URL("drizzle/0002_bitter_the_anarchist.sql", root), "utf8");
+  assert.match(migration, /content_hash` text NOT NULL DEFAULT ''/);
 });

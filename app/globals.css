@@ -453,3 +453,5 @@ footer .brandMark i { width:8px; height:8px; border-width:2px; }
   .compactFooter { align-items:flex-start; flex-direction:column; }
   .compactFooter span { margin-right:0; }
 }
+/* İsteğe bağlı analiz yalnız GA4 kimliği ayarlandığında ve ziyaretçi izin verdiğinde görünür. */
+.analyticsConsent{position:fixed;z-index:90;left:20px;right:20px;bottom:18px;max-width:760px;margin:auto;padding:16px 18px;border:1px solid #d8e1f5;border-radius:18px;background:rgba(255,255,255,.97);box-shadow:0 18px 60px rgba(20,43,93,.18);display:flex;align-items:center;justify-content:space-between;gap:20px;color:#13213b}.analyticsConsent p{margin:0;display:grid;gap:4px}.analyticsConsent p span{font-size:13px;color:#53627b}.analyticsConsent div{display:flex;gap:8px;flex:none}.analyticsConsent button{border:1px solid #cdd8ee;border-radius:11px;padding:10px 12px;background:#fff;color:#13213b;font-weight:700;cursor:pointer}.analyticsConsent button:last-child{background:#2861f3;color:#fff;border-color:#2861f3}@media(max-width:680px){.analyticsConsent{align-items:stretch;flex-direction:column}.analyticsConsent div button{flex:1}}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type NeedId = "visibility" | "appointments" | "follow" | "automation" | "website" | "reactivation";
 type PlanId = "teshis";
@@ -126,6 +126,16 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
   const [error, setError] = useState("");
   const [reference, setReference] = useState("");
   const [idempotencyKey] = useState(() => typeof crypto !== "undefined" ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`);
+  const [attribution, setAttribution] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const allowed = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
+    setAttribution(Object.fromEntries(allowed.flatMap((key) => {
+      const value = params.get(key)?.trim().slice(0, 80);
+      return value ? [[key, value]] : [];
+    })));
+  }, []);
 
   const matchedSectorPriority = useMemo(() => sectorPriorities.find((profile) => profile.test.test(sector)), [sector]);
   const priorityNeeds = matchedSectorPriority?.ids ?? ([] as NeedId[]);
@@ -152,7 +162,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
         body: JSON.stringify({
           business: business.trim(), sector: sector.trim(), website: website.trim(),
           needs: selected, plan, contactName: contactName.trim(), email: email.trim(),
-          phone: phone.trim(), note: note.trim(), consent, marketingConsent, websiteField,
+          phone: phone.trim(), note: note.trim(), consent, marketingConsent, websiteField, attribution,
         }),
       });
       const result = await response.json() as { reference?: string; message?: string };

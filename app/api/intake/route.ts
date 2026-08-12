@@ -23,7 +23,22 @@ type IntakeBody = {
   consent?: unknown;
   marketingConsent?: unknown;
   websiteField?: unknown;
+  attribution?: unknown;
 };
+
+const attributionKeys = new Set(["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]);
+const piiPattern = /[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|(?:\+?\d[\d\s().-]{8,}\d)/;
+
+function cleanAttribution(value: unknown) {
+  const input = value && typeof value === "object" ? value as Record<string, unknown> : {};
+  const result: Record<string, string | null> = {};
+  for (const key of attributionKeys) {
+    const original = clean(input[key], 200);
+    const cleaned = original.toLowerCase().replace(/[^a-z0-9_-]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
+    result[key] = cleaned && !piiPattern.test(original) ? cleaned : null;
+  }
+  return result;
+}
 
 function clean(value: unknown, max: number) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
@@ -72,6 +87,7 @@ export async function POST(request: Request) {
     const submittedNeeds = Array.isArray(body.needs) ? body.needs : [];
     const needs = [...new Set(submittedNeeds.filter((item): item is string => typeof item === "string" && allowedNeeds.has(item)))];
     const idempotencyKey = clean(request.headers.get("x-idempotency-key"), 100);
+    const attribution = cleanAttribution(body.attribution);
 
     if (!business || !sector || !contactName || !email || !needs.length || needs.length > allowedNeeds.size || needs.length !== submittedNeeds.length || !allowedPlans.has(plan) || body.consent !== true || !idempotencyKey) {
       return json("Lütfen zorunlu alanları kontrol edin.", 422);
@@ -101,11 +117,13 @@ export async function POST(request: Request) {
     for (let attempt = 0; attempt < 2; attempt += 1) {
       try {
         const intakeStatement = db.prepare(`INSERT INTO lead_intakes
-          (reference, business, sector, website, needs_json, plan, diagnosis_json, contact_name, email, phone, note, consent_at, idempotency_key, content_hash, ip_hash, marketing_consent_at, status, created_at)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'diagnosis_requested', ?)`)
+          (reference, business, sector, website, needs_json, plan, diagnosis_json, contact_name, email, phone, note, consent_at, idempotency_key, content_hash, ip_hash, marketing_consent_at, utm_source, utm_medium, utm_campaign, utm_content, utm_term, status, created_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'diagnosis_requested', ?)`)
           .bind(reference, business, sector, website || null, JSON.stringify(needs), plan,
             JSON.stringify(needs.flatMap((need) => diagnosisChecks[need] ?? [])),
-            contactName, email, phone || null, note || null, createdAt, idempotencyKey, contentHash, ipHash, body.marketingConsent === true ? createdAt : null, createdAt);
+            contactName, email, phone || null, note || null, createdAt, idempotencyKey, contentHash, ipHash,
+            body.marketingConsent === true ? createdAt : null, attribution.utm_source, attribution.utm_medium,
+            attribution.utm_campaign, attribution.utm_content, attribution.utm_term, createdAt);
         const trialStatement = db.prepare(`INSERT INTO trial_runs
           (intake_id, status, starts_at, ends_at, milestones_json, metrics_json, created_at)
           SELECT id, 'diagnosis_requested', NULL, NULL, ?, ?, ? FROM lead_intakes WHERE reference = ?`)
