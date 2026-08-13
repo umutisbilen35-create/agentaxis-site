@@ -7,48 +7,46 @@ const root = process.cwd();
 const component = fs.readFileSync(path.join(root, "app/inceleme/doga-dent-corlu/ClinicPackage.tsx"), "utf8");
 const layout = fs.readFileSync(path.join(root, "app/inceleme/doga-dent-corlu/layout.tsx"), "utf8");
 
-test("özel inceleme arama motorlarına kapalıdır", () => {
+test("özel ilk temas demosu arama motorlarına kapalıdır", () => {
   assert.match(layout, /index:\s*false/);
   assert.match(layout, /follow:\s*false/);
   assert.match(layout, /noarchive:\s*true/);
 });
 
-test("kanıt, açık sorular ve sentetik demo net ayrılmıştır", () => {
-  assert.match(component, /KAMUYA AÇIK KAYNAKLARDA GÖRÜLDÜ/);
-  assert.match(component, /GÖRÜŞMEDE ÖLÇÜLECEK/);
-  assert.match(component, /tek başına işletmede sorun olduğu anlamına gelmez/);
-  assert.match(component, /SENTETİK · DIŞ MESAJ YOK/);
-  assert.match(component, /Henüz gerçek klinik sonucu yok/);
+test("ilk temas metni sorun varsaymaz ve fiyat göstermez", () => {
+  assert.match(component, /Kamuya açık bilgilerinizden yola çıkarak/);
+  assert.match(component, /kliniğinize özel kısa bir örnek hazırladık/);
+  assert.match(component, /Bu bir sorun iddiası değildir/);
+  assert.match(component, /Fiyat ve kapsam görüşmeden sonra hazırlanır/);
+  assert.doesNotMatch(component, /5\.000 TL|3\.000 TL|Aylık yönetim|Harici gider/);
+});
+
+test("doğrulanmış analiz ve üç hizmet birlikte gösterilir", () => {
+  assert.match(component, /4,9/);
+  assert.match(component, /140/);
+  assert.match(component, /Telefon · WhatsApp · e-posta · form/);
+  assert.match(component, /Randevu iletişimi/);
+  assert.match(component, /Hasta takibi/);
+  assert.match(component, /Eski hastalarla yeniden iletişim/);
+  assert.match(component, /AgentAxis Labs hizmetlerini inceleyin/);
+  assert.match(component, /https:\/\/agentaxislabs\.com\/#hizmetler/);
 });
 
 test("demo ağ çağrısı yapmaz ve hasta kişisel verisi içermez", () => {
-  assert.doesNotMatch(component, /fetch\s*\(/);
-  assert.doesNotMatch(component, /XMLHttpRequest|axios/);
+  assert.doesNotMatch(component, /fetch\s*\(|XMLHttpRequest|axios/);
   assert.doesNotMatch(component, /05\d{9}|\+90\s*5/);
-  assert.match(component, /A-104/);
+  assert.match(component, /Gerçek hasta verisi yok/);
+  assert.match(component, /dışarı mesaj göndermez/);
 });
 
-test("üç doğrulama noktası ve dört güvenli demo senaryosu vardır", () => {
-  assert.match(component, /ÜÇ DOĞRULAMA NOKTASI/);
-  assert.equal((component.match(/title: "/g) ?? []).length, 7);
-  assert.match(component, /Randevu teyidi/);
-  assert.match(component, /Yanıt gelmedi/);
-  assert.match(component, /İnsan desteği/);
-  assert.match(component, /DUR isteği/);
-});
-
-test("fiyat üç satırdır ve bağlayıcı sonuç vaadi yoktur", () => {
-  assert.match(component, /KURULUM/);
-  assert.match(component, /AYLIK YÖNETİM/);
-  assert.match(component, /HARİCİ GİDERLER/);
-  assert.match(component, /5\.000 TL/);
-  assert.match(component, /3\.000 TL \/ ay/);
-  assert.doesNotMatch(component, /garanti ediyoruz|kesin kazanç|%\d+ azal/i);
-  assert.match(component, /bağlayıcı teklif değildir/);
-});
-
-test("web sitesi hizmeti kapsam dışıdır ve Akıllı İşletme Asistanı adı kullanılır", () => {
-  assert.match(component, /Web sitesi hizmeti bu kapsamda değildir/);
-  assert.match(component, /Akıllı İşletme Asistanı/);
+test("güvenlik sınırları ve müşteri adı doğrudur", () => {
+  assert.match(component, /tıbbi karar vermez/);
+  assert.match(component, /Bu bir sorun iddiası değildir/);
+  assert.match(component, /Görüşme talebi henüz gönderilmedi/);
   assert.doesNotMatch(component, />Jarvis</);
+});
+
+test("60 saniyelik incelemeden sonra sayfa dikey kaydırılabilir", () => {
+  assert.match(component, /document\.body\.style\.overflowY = "auto"/);
+  assert.match(component, /document\.body\.style\.overflowY = previousOverflowY/);
 });
