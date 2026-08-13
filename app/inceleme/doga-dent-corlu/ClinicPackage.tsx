@@ -1,23 +1,94 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./package.module.css";
 
 const officialContact = "https://www.dogadentcorlu.com/iletisim";
 const mapsArchive = "Google Haritalar salt-okunur arşivi · 28.07.2026";
 
-const cases = [
-  { id: "A-104", time: "Yarın · 10.30", state: "Hatırlatma taslağı hazır", tone: "ready" },
-  { id: "A-118", time: "Yarın · 13.00", state: "Onay bekliyor", tone: "waiting" },
-  { id: "A-126", time: "Yarın · 15.30", state: "İnsan kontrolü gerekli", tone: "human" },
+type ScenarioId = "confirm" | "silent" | "human" | "stop";
+
+const scenarios: Array<{
+  id: ScenarioId;
+  code: string;
+  title: string;
+  summary: string;
+}> = [
+  { id: "confirm", code: "A-104", title: "Randevu teyidi", summary: "Taslak onay bekliyor" },
+  { id: "silent", code: "A-118", title: "Yanıt gelmedi", summary: "Yeniden planlama önerisi" },
+  { id: "human", code: "A-126", title: "İnsan desteği", summary: "Ekip devralmalı" },
+  { id: "stop", code: "A-131", title: "DUR isteği", summary: "Akış hemen sessiz" },
+];
+
+const scenarioContent: Record<ScenarioId, {
+  reason: string;
+  control: string;
+  message: string;
+  outcome: string;
+}> = {
+  confirm: {
+    reason: "Yarın planlı randevu için teyit alınmadı.",
+    control: "Gönderimden önce ekip onayı gerekir.",
+    message: "Merhaba, yarınki randevunuzu teyit etmek için yazıyoruz. Uygunluğunuzu paylaşabilir misiniz?",
+    outcome: "Onay gelirse randevu durumu güncellenir; belirsiz yanıtta ekip devralır.",
+  },
+  silent: {
+    reason: "İlk hatırlatmaya sentetik senaryoda yanıt gelmedi.",
+    control: "İkinci temasın zamanı ve metni ekipçe onaylanır.",
+    message: "Randevu saatiniz sizin için uygun değilse yeni bir zaman önerebiliriz. İsterseniz ekibimiz yardımcı olsun.",
+    outcome: "Tekrar sayısı sınırlıdır; yanıt yoksa otomatik ısrar edilmez.",
+  },
+  human: {
+    reason: "Mesaj, otomatik akışın karar sınırının dışında.",
+    control: "Konuşma kilitlenir ve yalnız yetkili ekip üyesi devralır.",
+    message: "Mesajınızı ekibimize aktarıyoruz. Size bir ekip üyemiz yardımcı olacak.",
+    outcome: "Akıllı İşletme Asistanı tıbbi yorum yapmaz ve konuşmayı sürdürmez.",
+  },
+  stop: {
+    reason: "Kişi iletişim almak istemediğini belirtti.",
+    control: "DUR kaydı tüm otomatik takiplerden önce gelir.",
+    message: "Talebiniz alındı. Bu numara için otomatik mesajlar durduruldu.",
+    outcome: "İzin kapatılır; DEVAM onayı olmadan yeni otomatik mesaj hazırlanmaz.",
+  },
+};
+
+const checkpoints = [
+  { title: "Mevcut düzen", text: "Yeni randevu talebini bugün kimin ve nasıl devraldığını doğru anladık mı?" },
+  { title: "Öncelik", text: "İlk küçük pilotun randevu teyidi ve yanıtsız kalan talepler olması doğru mu?" },
+  { title: "Kontrol", text: "Dış mesaj ve hassas kararların ekip onayında kalması sizin için uygun mu?" },
 ];
 
 export default function ClinicPackage() {
-  const [selected, setSelected] = useState(cases[0]);
+  const [scenario, setScenario] = useState<ScenarioId>("confirm");
   const [demoState, setDemoState] = useState<"idle" | "approved" | "cancelled">("idle");
+  const [answers, setAnswers] = useState([false, false, false]);
+  const [playing, setPlaying] = useState(false);
+  const [step, setStep] = useState(0);
 
-  function choose(item: (typeof cases)[number]) {
-    setSelected(item);
+  const selected = useMemo(() => scenarios.find((item) => item.id === scenario) ?? scenarios[0], [scenario]);
+  const detail = scenarioContent[scenario];
+  const proposalReady = answers.every(Boolean);
+
+  useEffect(() => {
+    if (!playing) return;
+    if (step >= 3) {
+      setPlaying(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setStep((current) => current + 1), 850);
+    return () => window.clearTimeout(timer);
+  }, [playing, step]);
+
+  function chooseScenario(id: ScenarioId) {
+    setScenario(id);
+    setDemoState("idle");
+    setPlaying(false);
+    setStep(0);
+  }
+
+  function playFlow() {
+    setStep(0);
+    setPlaying(true);
     setDemoState("idle");
   }
 
@@ -28,101 +99,114 @@ export default function ClinicPackage() {
           <i aria-hidden="true"><b /></i><span>AgentAxis <strong>Labs</strong></span>
         </a>
         <nav aria-label="Sayfa bölümleri">
-          <a href="#inceleme">İnceleme</a><a href="#demo">Demo</a><a href="#onerimiz">Öneri</a><a href="#kanit">Test</a>
+          <a href="#inceleme">İnceleme</a><a href="#dogrulama">Doğrulama</a><a href="#demo">Demo</a><a href="#kapsam">Kapsam</a>
         </nav>
-        <span className={styles.private}>PAYLAŞILMADI</span>
+        <span className={styles.private}>PAYLAŞILMADI · SENTETİK</span>
       </header>
 
       <section className={styles.hero} id="ust">
-        <div>
-          <span className={styles.eyebrow}>DOĞA DENT ÇORLU İÇİN ÖZEL TASLAK</span>
+        <div className={styles.heroCopy}>
+          <span className={styles.eyebrow}>DOĞA DENT ÇORLU İÇİN ÇALIŞMA ÖNİZLEMESİ</span>
           <h1>Randevu iletişimini<br /><em>birlikte görünür</em> kılalım.</h1>
-          <p>Bu sayfa bir satış vaadi değil; herkese açık kaynaklardan başlayan mini inceleme, sentetik iş akışı demosu ve klinikle doğrulanacak soruların tek yerdeki önizlemesidir.</p>
-          <div className={styles.heroActions}><a href="#demo">Demoyu deneyin</a><a href="#inceleme">İncelemeyi görün</a></div>
+          <p>Bu bir sonuç vaadi değil. Kamuya açık bilgilerle başlayan mini incelemeyi, üç doğrulama sorusunu ve gerçek hasta verisi kullanmayan çalışan akış demosunu tek yerde topladık.</p>
+          <div className={styles.heroActions}><a href="#demo">Örnek akışı deneyin</a><a href="#inceleme">Mini incelemeyi görün</a></div>
+          <div className={styles.heroTrust}><span>Gerçek hasta verisi yok</span><span>Dışarı mesaj göndermez</span><span>Kontrol klinikte</span></div>
         </div>
-        <div className={styles.orbit} aria-hidden="true"><div className={styles.orbitCore}>AI</div><span /><span /><span /></div>
+        <div className={styles.orbit} aria-hidden="true"><div className={styles.orbitCore}>Ai</div><span /><span /><span /></div>
       </section>
 
       <section className={styles.section} id="inceleme">
-        <div className={styles.sectionHead}><span>01 · KAYNAKLI MİNİ İNCELEME</span><h2>Bildiğimiz ile doğrulamamız gerekeni ayırdık.</h2></div>
+        <div className={styles.sectionHead}><span>01 · KAYNAKLI MİNİ İNCELEME</span><h2>Bildiğimizi ve henüz bilmediğimizi ayırdık.</h2><p>Kamuya açık bir işaret, tek başına işletmede sorun olduğu anlamına gelmez. Bu nedenle kesin hüküm değil, görüşmede doğrulanacak küçük bir başlangıç hazırladık.</p></div>
         <div className={styles.twoCol}>
           <article className={styles.panel}>
-            <div className={styles.panelLabel}>KAMUYA AÇIK KAYNAKLARDA DOĞRULANDI</div>
+            <div className={styles.panelLabel}>KAMUYA AÇIK KAYNAKLARDA GÖRÜLDÜ</div>
             <ul className={styles.checkList}>
-              <li><b>İletişim kanalları mevcut.</b><small>Telefon, GSM/WhatsApp, e-posta ve iletişim formu resmi sitede yer alıyor.</small></li>
+              <li><b>İletişim kanalları görünür.</b><small>Telefon, GSM/WhatsApp, e-posta ve iletişim formu resmi sitede yer alıyor.</small></li>
               <li><b>Google Haritalar görünürlüğü güçlü.</b><small>Arşiv anında 4,9 puan ve taranmış 140 yorum görünüyordu.</small></li>
-              <li><b>Yorumlarda güven dili öne çıkıyor.</b><small>Ham metin anahtar kelime taramasında ilgi, güler yüz ve güven en sık görülen olumlu başlıklardı.</small></li>
+              <li><b>Yorumlarda güven dili öne çıkıyor.</b><small>Ham metin taramasında ilgi, güler yüz ve güven sık görülen olumlu başlıklardı.</small></li>
             </ul>
-            <div className={styles.sources}><a href={officialContact} target="_blank" rel="noreferrer">Resmi iletişim sayfası ↗</a><span>{mapsArchive}</span></div>
+            <div className={styles.sources}><a href={officialContact} target="_blank" rel="noreferrer">Resmî iletişim sayfası ↗</a><span>{mapsArchive}</span></div>
           </article>
           <article className={`${styles.panel} ${styles.questionPanel}`}>
-            <div className={styles.panelLabel}>KLİNİKLE GÖRÜŞMEDE DOĞRULANACAK</div>
-            <ol className={styles.questions}>
-              <li><span>01</span>Yeni talebi kim, ne kadar sürede devralıyor?</li>
-              <li><span>02</span>Randevu onayı ve hatırlatma hangi düzende ilerliyor?</li>
-              <li><span>03</span>Yanıt vermeyen veya gelmeyen hasta için sonraki adım nedir?</li>
-              <li><span>04</span>Hangi durumda konuşma insana aktarılıyor?</li>
-            </ol>
-            <p className={styles.note}>Bunlar tespit edilmiş sorunlar değildir. Ölçüm gelmeden “sorun doğrulandı” veya “kazanç sağlanır” demiyoruz.</p>
+            <div className={styles.panelLabel}>GÖRÜŞMEDE ÖLÇÜLECEK</div>
+            <div className={styles.metricList}>
+              <div><span>01</span><p><b>İlk yanıt süresi</b><small>Başlangıç değeri klinikle doldurulacak.</small></p></div>
+              <div><span>02</span><p><b>Randevu teyit oranı</b><small>Başlangıç değeri klinikle doldurulacak.</small></p></div>
+              <div><span>03</span><p><b>Yanıtsız kalan talep</b><small>Başlangıç değeri klinikle doldurulacak.</small></p></div>
+              <div><span>04</span><p><b>İnsan devri sayısı</b><small>Başlangıç değeri klinikle doldurulacak.</small></p></div>
+            </div>
+            <p className={styles.note}>Şu an gerçek klinik sonucu ölçülmedi. Aynı göstergeleri pilot öncesinde ve sonrasında karşılaştırmadan başarı iddiası yazılmayacak.</p>
           </article>
         </div>
       </section>
 
+      <section className={`${styles.section} ${styles.checkpointSection}`} id="dogrulama">
+        <div className={styles.sectionHead}><span>02 · ÜÇ DOĞRULAMA NOKTASI</span><h2>Öneriden önce aynı şeyi konuştuğumuzdan emin olalım.</h2><p>Her satırda “Evet, doğru” seçilirse küçük pilot kapsamı görünür. Bu seçimler yalnız bu sayfadaki demoyu değiştirir; hiçbir yere gönderilmez.</p></div>
+        <div className={styles.checkpoints}>
+          {checkpoints.map((item, index) => (
+            <button key={item.title} type="button" aria-pressed={answers[index]} onClick={() => setAnswers((current) => current.map((value, i) => i === index ? !value : value))} className={answers[index] ? styles.checkpointActive : ""}>
+              <span>0{index + 1}</span><div><b>{item.title}</b><p>{item.text}</p></div><i>{answers[index] ? "Evet, doğru ✓" : "Birlikte doğrulayalım"}</i>
+            </button>
+          ))}
+        </div>
+        <div className={styles.checkpointStatus} aria-live="polite"><b>{answers.filter(Boolean).length}/3</b><span>{proposalReady ? "Üç nokta da aynı yönde. Pilot kapsamı görüşmeye hazır." : "Kapsamı açmak için üç noktayı birlikte doğrulayın."}</span></div>
+      </section>
+
       <section className={`${styles.section} ${styles.demoSection}`} id="demo">
-        <div className={styles.sectionHead}><span>02 · ETKİLEŞİMLİ ÖNİZLEME</span><h2>Randevu ve no-show akışını risksiz deneyin.</h2><p>Sentetik kayıt kullanır. Hasta verisi içermez, dışarı mesaj göndermez ve gerçek randevuyu değiştirmez.</p></div>
+        <div className={styles.sectionHead}><span>03 · ÇALIŞAN AKIŞ ÖNİZLEMESİ</span><h2>Randevu ve no-show akışını risksiz deneyin.</h2><p>Sentetik kayıt kullanır. Sağlık verisi içermez, gerçek randevuyu değiştirmez ve dışarı mesaj göndermez.</p></div>
         <div className={styles.demoShell}>
           <aside className={styles.caseList}>
-            <div className={styles.demoBadge}>SENTETİK DEMO · DIŞ MESAJ GÖNDERMEZ</div>
-            {cases.map((item) => <button key={item.id} className={selected.id === item.id ? styles.caseActive : ""} onClick={() => choose(item)}><span>{item.id}<small>{item.time}</small></span><i data-tone={item.tone}>{item.state}</i></button>)}
+            <div className={styles.demoBadge}>SENTETİK · DIŞ MESAJ YOK</div>
+            {scenarios.map((item) => <button key={item.id} className={scenario === item.id ? styles.caseActive : ""} onClick={() => chooseScenario(item.id)}><span>{item.code}<small>{item.title}</small></span><i>{item.summary}</i></button>)}
           </aside>
           <article className={styles.approvalCard}>
-            <div className={styles.cardTop}><span>ONAY KARTI</span><strong>{selected.id}</strong></div>
+            <div className={styles.cardTop}><span>İNSAN ONAY KARTI</span><strong>{selected.code}</strong></div>
             <div className={styles.approvalGrid}>
-              <div><small>KİME</small><b>Sentetik randevu kaydı {selected.id}</b></div>
-              <div><small>NEDEN</small><b>Randevu teyidi alınmadı</b></div>
-              <div><small>DAYANAK</small><b>Yarın planlı randevu</b></div>
-              <div><small>İNSAN KONTROLÜ</small><b>Yanıt belirsizse zorunlu</b></div>
+              <div><small>DURUM</small><b>{selected.title}</b></div>
+              <div><small>NEDEN</small><b>{detail.reason}</b></div>
+              <div><small>İNSAN KONTROLÜ</small><b>{detail.control}</b></div>
+              <div><small>SONRAKİ KAYIT</small><b>{detail.outcome}</b></div>
             </div>
-            <div className={styles.message}><small>MESAJ ÖNİZLEMESİ</small><p>Merhaba, yarınki randevunuzu teyit etmek için yazıyoruz. Uygunluğunuzu paylaşabilir misiniz?</p></div>
+            <div className={styles.message}><small>MESAJ TASLAĞI</small><p>{detail.message}</p></div>
             <div className={styles.buttons}><button onClick={() => setDemoState("approved")}>Taslağı onayla</button><button onClick={() => setDemoState("cancelled")}>İptal et</button></div>
             <div className={styles.result} aria-live="polite">{demoState === "idle" && "Henüz işlem yapılmadı."}{demoState === "approved" && "Demo onayı kaydedildi. Dışarı mesaj gönderilmedi."}{demoState === "cancelled" && "Demo işlemi iptal edildi. Hiçbir kayıt değişmedi."}</div>
           </article>
         </div>
+        <div className={styles.flowHeader}><div><b>Akışın görünür kaydı</b><span>Her adım durdurulabilir ve insana bırakılabilir.</span></div><button type="button" onClick={playing ? () => setPlaying(false) : playFlow}>{playing ? "Akışı duraklat" : "Örnek akışı oynat"}</button></div>
         <div className={styles.flow}>
-          <div><span>01</span><b>24 saat önce</b><small>Hatırlatma taslağı hazırlanır.</small></div><i>→</i>
-          <div><span>02</span><b>Yanıt ayrıştırılır</b><small>Onay, değişiklik veya belirsiz yanıt.</small></div><i>→</i>
-          <div><span>03</span><b>İnsan kontrolü</b><small>Belirsiz ve hassas konuşmalar ekibe bırakılır.</small></div><i>→</i>
-          <div><span>04</span><b>Sonuç kaydı</b><small>Onay, yeniden planlama veya no-show notu.</small></div>
+          {["Talep alındı", "Taslak hazırlandı", "İnsan kontrolü", scenario === "stop" ? "Akış durdu" : "Sonuç kaydı"].map((title, index) => <div key={title} className={step >= index ? styles.flowActive : ""}><span>0{index + 1}</span><b>{title}</b><small>{index === 0 && "Sentetik olay sıraya girer."}{index === 1 && "İzin ve kural kontrol edilir."}{index === 2 && "Ekip onaylar veya devralır."}{index === 3 && (scenario === "stop" ? "Yeni takip hazırlanmaz." : "Durum ölçüme yazılır.")}</small></div>)}
         </div>
       </section>
 
-      <section className={styles.section} id="onerimiz">
-        <div className={styles.sectionHead}><span>03 · KÜÇÜK VE KONTROLLÜ BAŞLANGIÇ</span><h2>Önce ölçüm. Sonra yalnız gereken sistem.</h2></div>
+      <section className={styles.section} id="kapsam">
+        <div className={styles.sectionHead}><span>04 · KÜÇÜK PİLOT KAPSAMI</span><h2>Önce tek akış. Sonra yalnız gereken sistem.</h2><p>Tek şube, tek WhatsApp hattı ve tek randevu/no-show akışıyla başlayıp önce–sonra ölçümü yaparız. Web sitesi hizmeti bu kapsamda değildir.</p></div>
         <div className={styles.offerGrid}>
-          <article><span>DAHİL</span><h3>Randevu iletişim akışı</h3><ul><li>Onay ve hatırlatma taslakları</li><li>Yanıtların temel sınıflandırılması</li><li>İnsan devri ve kayıt görünürlüğü</li><li>Önce/sonra ölçüm tablosu</li></ul></article>
-          <article><span>SINIRLAR</span><h3>Kontrol klinikte kalır</h3><ul><li>Tıbbi tanı veya tedavi önermez</li><li>Onaysız dış mesaj göndermez</li><li>Randevuyu kendi başına kesinleştirmez</li><li>Gerçek hasta verisi demoda kullanılmaz</li></ul></article>
-          <article className={styles.nextCard}><span>SONRAKİ KARAR</span><h3>Teklif henüz kesinleşmedi.</h3><p>Kapsam, süre ve fiyat; mevcut işlem sayıları ve klinik görüşmesi doğrulandıktan sonra belirlenir. Bu sayfa bağlayıcı teklif değildir.</p><a href="#iletisim-taslagi">İlk temas taslağını görün ↓</a></article>
+          <article><span>KURULUM</span><h3>{proposalReady ? "5.000 TL" : "Doğrulama bekliyor"}</h3><p>Akış kurulumu, test numarası, senaryo ayarları ve ekip kabul testi.</p><small>Başlangıçta %50, yazılı kabulde %50.</small></article>
+          <article><span>AYLIK YÖNETİM</span><h3>{proposalReady ? "3.000 TL / ay" : "Doğrulama bekliyor"}</h3><p>İzleme, hata takibi, küçük iyileştirmeler ve aylık ölçüm özeti.</p><small>Canlıya geçişte peşin · 3 aylık pilot.</small></article>
+          <article><span>HARİCİ GİDERLER</span><h3>Gerçek kullanım kadar</h3><p>Meta mesaj, SMS, CRM veya ek yazılım giderleri ayrı ve belgeli gösterilir.</p><small>KDV ve müşteri seçimine bağlı araçlar dahil değildir.</small></article>
         </div>
+        <div className={`${styles.scopeLock} ${proposalReady ? styles.scopeReady : ""}`}><b>{proposalReady ? "Görüşmeye hazır başlangıç kapsamı" : "Bu rakamlar bağlayıcı teklif değildir"}</b><p>Klinik görüşmesi, işlem hacmi ve entegrasyon testi tamamlanınca kapsam ve fiyat yazılı olarak kesinleşir.</p></div>
       </section>
 
       <section className={styles.section} id="kanit">
-        <div className={styles.sectionHead}><span>04 · KANIT VE KABUL TESTİ</span><h2>“Çalışıyor” demeden önce neyi göstereceğiz?</h2></div>
+        <div className={styles.sectionHead}><span>05 · KANIT VE SINIRLAR</span><h2>Hazır olanı, kurulacak olandan ayırdık.</h2></div>
         <div className={styles.proofGrid}>
-          <div><b>01</b><span>Kaynak</span><p>Her kamuya açık bilgi, tarih ve kaynağıyla gösterilir.</p></div>
-          <div><b>02</b><span>Çalışan akış</span><p>Onay, iptal, insan devri ve hata durumları ekranda denenir.</p></div>
-          <div><b>03</b><span>Aynı ölçüm</span><p>Başlangıç ve pilot sonrası aynı metrikler karşılaştırılır.</p></div>
-          <div><b>04</b><span>Dürüst sonuç</span><p>Şu an gerçek klinik sonucu ölçülmedi; yalnız demo test edildi.</p></div>
+          <div><b>TEST EDİLDİ</b><span>Sentetik akış</span><p>Onay, iptal, DUR ve insan devri örnek kayıtlarla çalışır.</p></div>
+          <div><b>TEST EDİLDİ</b><span>Güvenlik katmanı</span><p>İzin, tekrar ve hatalı imza senaryoları teknik testten geçti.</p></div>
+          <div><b>KURULUM GEREKLİ</b><span>Klinik bağlantıları</span><p>Gerçek numara, takvim/CRM ve ekip yetkileri müşteri onayından sonra bağlanır.</p></div>
+          <div><b>ÖLÇÜM GEREKLİ</b><span>Gerçek sonuç</span><p>Henüz gerçek klinik sonucu yok; pilot verisi gelmeden oran veya kazanç sözü verilmez.</p></div>
         </div>
       </section>
 
       <section className={`${styles.section} ${styles.contactDraft}`} id="iletisim-taslagi">
-        <span>GÖNDERİME HAZIR DEĞİL · YALNIZ METİN TASLAĞI</span>
-        <h2>İlk temas kısa ve somut.</h2>
-        <blockquote>Merhaba, Doğa Dent’in kamuya açık iletişim kanallarını inceledik ve randevu yolculuğunuza dair birkaç soru hazırladık. Mevcut süreciniz hakkında kesin bir varsayım yapmadık; bunun yerine dört kısa doğrulama sorusu ve dışarı mesaj göndermeyen küçük bir randevu/no-show demosu hazırladık. Uygun olursanız 15 dakikada birlikte üzerinden geçebiliriz.</blockquote>
-        <p>Bu metin gönderilmedi. Klinik onayı ve gerçek ölçümler gelmeden kesin fiyat veya sonuç vaadi eklenmeyecek.</p>
+        <span>SONRAKİ ADIM · HENÜZ GÖNDERİLMEDİ</span>
+        <h2>15 dakikada birlikte doğrulayalım.</h2>
+        <p className={styles.contactLead}>Amaç satış baskısı yapmak değil; üç soruya yanıt bulup küçük pilotun gerçekten gerekli olup olmadığını anlamak.</p>
+        <blockquote>Merhaba, Doğa Dent’in kamuya açık iletişim kanallarını inceledik. Mevcut düzeniniz hakkında kesin bir varsayım yapmadan, üç kısa doğrulama sorusu ve dışarı mesaj göndermeyen randevu/no-show önizlemesi hazırladık. Uygun olursanız 15 dakikada birlikte üzerinden geçebiliriz.</blockquote>
+        <div className={styles.finalBadges}><span>Otomatik gönderim yok</span><span>Bağlayıcı teklif değil</span><span>Karar klinikte</span></div>
       </section>
 
-      <footer className={styles.footer}><span>AgentAxis <strong>Labs</strong></span><p>Özel inceleme taslağı · 13 Ağustos 2026 · Yayınlanmadı</p></footer>
+      <footer className={styles.footer}><span>AgentAxis <strong>Labs</strong></span><p>Özel inceleme taslağı · 13 Ağustos 2026 · Paylaşılmadı</p></footer>
     </main>
   );
 }
