@@ -4,8 +4,10 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const component = fs.readFileSync(path.join(root, "app/inceleme/doga-dent-corlu/ClinicPackage.tsx"), "utf8");
-const layout = fs.readFileSync(path.join(root, "app/inceleme/doga-dent-corlu/layout.tsx"), "utf8");
+const privateRoute = "doga-dent-corlu-195ad912147e82032b7237373d433874";
+const component = fs.readFileSync(path.join(root, `app/inceleme/${privateRoute}/ClinicPackage.tsx`), "utf8");
+const layout = fs.readFileSync(path.join(root, `app/inceleme/${privateRoute}/layout.tsx`), "utf8");
+const nextConfig = fs.readFileSync(path.join(root, "next.config.ts"), "utf8");
 
 test("özel ilk temas demosu arama motorlarına kapalıdır", () => {
   assert.match(layout, /index:\s*false/);
@@ -49,4 +51,15 @@ test("güvenlik sınırları ve müşteri adı doğrudur", () => {
 test("60 saniyelik incelemeden sonra sayfa dikey kaydırılabilir", () => {
   assert.match(component, /document\.body\.style\.overflowY = "auto"/);
   assert.match(component, /document\.body\.style\.overflowY = previousOverflowY/);
+});
+
+test("özel bağlantı uzun ve sunucu korumaları eksiksizdir", () => {
+  assert.match(privateRoute, /-[a-f0-9]{32}$/);
+  assert.match(nextConfig, new RegExp(privateRoute));
+  assert.match(nextConfig, /X-Robots-Tag/);
+  assert.match(nextConfig, /noindex, nofollow, noarchive, nosnippet, noimageindex/);
+  assert.match(nextConfig, /Referrer-Policy/);
+  assert.match(nextConfig, /no-referrer/);
+  assert.match(nextConfig, /Cache-Control/);
+  assert.match(nextConfig, /private, no-store, max-age=0/);
 });
