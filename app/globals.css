@@ -232,6 +232,12 @@ h1 em { color:var(--blue); font-style:normal; }
 .problemGrid label.selected>span { background:var(--blue); color:#fff; }
 .problemGrid label.limitReached,.clearGoals label.limitReached { opacity:.52; cursor:not-allowed; }
 .selectionLimit { color:#66748a; margin:9px 0 0; font-size:9px; line-height:1.4; }
+.customNeedField { display:grid; gap:8px; margin:18px 30px 0; color:#243148; font-size:13px; font-weight:750; }
+.customNeedField>span { color:#7c8796; font-weight:500; }
+.customNeedField textarea { width:100%; border:1px solid #cfd9e8; background:#fff; color:#101827; border-radius:12px; padding:13px 14px; font:inherit; line-height:1.5; resize:vertical; outline:none; }
+.customNeedField textarea:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(47,107,255,.12); }
+.customNeedField>small { color:#7c5360; font-size:9px; font-weight:650; line-height:1.45; }
+.customNeedReview { margin:18px 0 0; }
 .instantSuggestions { margin:22px 30px 0; padding:18px; border:1px solid #bfd0ff; border-radius:16px; background:linear-gradient(145deg,#f8faff,#eef3ff); animation:rise .25s ease-out; }
 .suggestionHeading { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px; }
 .suggestionHeading>strong { font-size:11px; color:#43516a; }

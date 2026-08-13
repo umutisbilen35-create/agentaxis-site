@@ -4,22 +4,23 @@ import { useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import ParticleCanvas from "./ParticleCanvas";
 import NeedFinder from "../NeedFinder";
+import { siteContact } from "../siteConfig";
 import styles from "./taslaklar.module.css";
 
-type DraftId = "guven" | "hibrit" | "sinema";
+type DraftId = "lumen" | "guven" | "hibrit" | "sinema" | "ucboyut";
 
 const services = [
   ["01", "Müşteri kazanma", "Doğru müşteriye ulaşabileceğiniz fırsatları görünür hâle getirir."],
   ["02", "Müşteri takibi", "Yeni talepleri, geri dönüşleri ve hatırlatmaları tek düzende toplar."],
   ["03", "İş otomasyonu", "Tekrar eden uygun işleri kontrolünüzü koruyarak hızlandırır."],
-  ["04", "Web sitesi", "İşinizi ilk bakışta anlatan ve müşteriyi doğru adıma taşıyan site kurar."],
+  ["04", "Randevu ve rezervasyon", "Talep, onay, hatırlatma ve yeniden planlama adımlarını düzenler."],
 ];
 
 const steps = [
   ["01", "İhtiyacı dinleriz", "İşletmenizi, müşterilerinizi ve yaşadığınız asıl sorunu net biçimde öğreniriz."],
   ["02", "Problemi doğrularız", "Küçük bir teşhisle sorunun nerede olduğunu ve size ne kaybettirdiğini görünür yaparız."],
   ["03", "Güvenli sistemi kurarız", "Uygun sistemi önce test eder, önemli işlemleri sizin onayınıza bağlarız."],
-  ["04", "Birlikte ölçeriz", "7 günlük denemede yalnız doğrulanan değişimi anlaşılır bir raporla gösteririz."],
+  ["04", "Birlikte ölçeriz", "Kurulan sistemin etkisini takip eder, yalnız doğrulanan sonucu anlaşılır bir raporla paylaşırız."],
 ];
 
 function Logo({ light = false }: { light?: boolean }) {
@@ -33,7 +34,6 @@ function Logo({ light = false }: { light?: boolean }) {
 function TrustStrip() {
   return (
     <div className={styles.trustStrip}>
-      <span>✓ 7 günlük ücretsiz deneme</span>
       <span>✓ Otomatik ödeme yok</span>
       <span>✓ Önemli işlemler sizin onayınızda</span>
     </div>
@@ -66,15 +66,15 @@ function AssistantDashboard({ dark = false }: { dark?: boolean }) {
 
 function HeroValuePanel({ onOpenServices }: { onOpenServices?: () => void }) {
   const valueServices = [
-    ["↗", "Müşteri kazanma", "Doğru müşteriye ulaşabileceğiniz fırsatları bulur."],
-    ["◎", "Müşteri takibi", "Yeni taleplerin ve geri dönüşlerin unutulmasını önler."],
-    ["⚡", "İş otomasyonu", "Tekrar eden uygun işleri kontrollü biçimde hızlandırır."],
-    ["◇", "Premium web sitesi", "İşinizi ilk bakışta anlatır ve güven oluşturur."],
+    ["◎", "Randevu takibi", "Yeni randevu, iptal ve geri dönüşleri tek düzende görün."],
+    ["↺", "Eski hastaları yeniden kazanma", "İletişim izni uygun hastalar için kontrollü hatırlatma listesi hazırlar."],
+    ["↗", "Cevapsız talep takibi", "Form, WhatsApp ve telefon taleplerinde dönüş bekleyenleri gösterir."],
+    ["✓", "Tedavi sonrası takip", "Kontrol ve memnuniyet adımlarının unutulmasını önler."],
   ];
   return (
-    <aside className={styles.heroValuePanel} aria-label="Akıllı İşletme Asistanı hizmet özeti">
-      <div className={styles.valuePanelTop}><span><i /> Akıllı İşletme Asistanı</span><small>İŞLETMENİZ İÇİN</small></div>
-      <div className={styles.valuePanelTitle}><small>NELERİ İYİLEŞTİRİYORUZ?</small><h2>İhtiyacınız olan sistemi birlikte kuruyoruz.</h2></div>
+    <aside className={styles.heroValuePanel} aria-label="Diş klinikleri için Akıllı İşletme Asistanı örneği">
+      <div className={styles.valuePanelTop}><span><i /> Akıllı İşletme Asistanı</span><small>DİŞ KLİNİĞİ ÖRNEĞİ</small></div>
+      <div className={styles.valuePanelTitle}><small>NELERİ DÜZENLİYORUZ?</small><h2>Randevu ve hasta takibini tek düzende görün.</h2></div>
       <div className={styles.valueServiceList}>
         {valueServices.map(([icon, title, text]) => (
           <button key={title} type="button" onClick={onOpenServices}>
@@ -82,12 +82,12 @@ function HeroValuePanel({ onOpenServices }: { onOpenServices?: () => void }) {
           </button>
         ))}
       </div>
-      <div className={styles.valuePanelTrust}><span>✓ 7 gün ücretsiz deneyin</span><span>✓ Önemli işler sizin onayınızda</span></div>
+      <div className={styles.valuePanelTrust}><span>✓ Önemli işler sizin onayınızda</span></div>
     </aside>
   );
 }
 
-function Services({ dark = false }: { dark?: boolean }) {
+export function Services({ dark = false }: { dark?: boolean }) {
   return (
     <section className={`${styles.services} ${dark ? styles.servicesDark : ""}`} data-premium-reveal="wait">
       <div className={styles.sectionHeading}>
@@ -96,14 +96,14 @@ function Services({ dark = false }: { dark?: boolean }) {
       </div>
       <div className={styles.serviceGrid}>
         {services.map(([no, title, text]) => (
-          <article key={no}><span>{no}</span><h3>{title}</h3><p>{text}</p><b>Detayı gör ↗</b></article>
+          <article key={no}><span>{no}</span><h3>{title}</h3><p>{text}</p></article>
         ))}
       </div>
     </section>
   );
 }
 
-function Process({ dark = false }: { dark?: boolean }) {
+export function Process({ dark = false }: { dark?: boolean }) {
   return (
     <section className={`${styles.process} ${dark ? styles.processDark : ""}`} data-premium-reveal="wait">
       <div className={styles.sectionHeading}>
@@ -175,15 +175,15 @@ const capabilityFlows = [
     flow: ["İşi belirle", "Akışı hazırla", "İnsan onayı", "Çalışma kaydı"],
   },
   {
-    id: "web",
-    label: "Web sitesi",
+    id: "randevu",
+    label: "Randevu yönetimi",
     icon: "◇",
-    title: "Ziyaretçiyi ne yaptığınızı anlamaktan doğru adıma götürür",
-    flow: ["İlk izlenim", "Net hizmet", "Güven kanıtı", "Ücretsiz inceleme"],
+    title: "Randevu talebini onaydan hatırlatmaya kadar düzenler",
+    flow: ["Talebi al", "Randevuyu onayla", "Hatırlat", "Sonucu kaydet"],
   },
 ];
 
-function CapabilityExperience() {
+export function CapabilityExperience() {
   const [active, setActive] = useState(0);
   const capability = capabilityFlows[active];
 
@@ -247,7 +247,7 @@ const workflowSteps = [
   },
 ];
 
-function WorkflowStory() {
+export function WorkflowStory() {
   const [active, setActive] = useState(0);
   const stepRefs = useRef<Array<HTMLElement | null>>([]);
 
@@ -308,29 +308,30 @@ function PremiumFinalCta({ onStart }: { onStart?: () => void }) {
   );
 }
 
-type LivePanelId = "hizmetler" | "surec" | "paketler" | "kanit" | "iletisim";
+export type LivePanelId = "hizmetler" | "surec" | "paketler" | "kanit" | "iletisim";
 
-function LivePanel({ panel, onClose, onRequest }: { panel: LivePanelId; onClose: () => void; onRequest: () => void }) {
+function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePanelId; onClose: () => void; onRequest: () => void; lumen?: boolean }) {
   return (
-    <div className={styles.liveOverlay} role="dialog" aria-modal="true" aria-label="AgentAxis bilgi paneli">
+    <div className={`${styles.liveOverlay} ${lumen ? styles.lumenLiveOverlay : ""}`} role="dialog" aria-modal="true" aria-label="AgentAxis bilgi paneli">
+      {lumen && <div className={styles.lumenPanelBackdrop} aria-hidden="true"><video src="/media/lumen-arc-scroll.mp4" poster="/media/lumen-arc-reference.png" autoPlay muted loop playsInline /><i /></div>}
       <button className={styles.liveBackdrop} type="button" onClick={onClose} aria-label="Paneli kapat" />
       <div className={styles.liveModal}>
         <div className={styles.liveModalTop}><Logo /><button type="button" onClick={onClose}>Kapat <span>×</span></button></div>
         <div className={styles.liveModalBody}>
           {panel === "hizmetler" && <Services />}
           {panel === "surec" && <Process />}
-          {panel === "paketler" && <section className={styles.catalogPanel}><small>ESNEK ÇALIŞMA KAPSAMLARI</small><h2>İhtiyacınız kadar sistem kurulur.</h2><p>Önce problemi doğrularız; kullanmayacağınız özellikleri pakete doldurmayız.</p><div className={styles.catalogGrid}><article><span>01</span><h3>Başlangıç</h3><p>Tek bir önemli soruna odaklanan küçük, güvenli ve ölçülebilir sistem.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article><article><span>02</span><h3>Büyüme</h3><p>Müşteri kazanma ve takip gibi birbiriyle bağlantılı birkaç iş akışı.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article><article><span>03</span><h3>Özel sistem</h3><p>İşletmenize özel web sitesi, otomasyon ve takip düzeninin birleşimi.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article></div><div className={styles.catalogTrust}>✓ 7 gün ücretsiz deneyin <span>✓ Otomatik ödeme yok</span> <span>✓ Önemli işler sizin onayınızda</span></div></section>}
+          {panel === "paketler" && <section className={styles.catalogPanel}><small>ESNEK ÇALIŞMA KAPSAMLARI</small><h2>İhtiyacınız kadar sistem kurulur.</h2><p>Önce problemi doğrularız; kullanmayacağınız özellikleri pakete doldurmayız.</p><div className={styles.catalogGrid}><article><span>01</span><h3>Başlangıç</h3><p>Tek bir önemli soruna odaklanan küçük, güvenli ve ölçülebilir sistem.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article><article><span>02</span><h3>Büyüme</h3><p>Müşteri kazanma ve takip gibi birbiriyle bağlantılı birkaç iş akışı.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article><article><span>03</span><h3>Özel sistem</h3><p>İşletmenize özel otomasyon, takip ve randevu düzeninin birleşimi.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article></div><div className={styles.catalogTrust}><span>✓ Otomatik ödeme yok</span> <span>✓ Önemli işler sizin onayınızda</span></div></section>}
           {panel === "kanit" && <section className={styles.modalProof}><small>ŞEFFAF ÇALIŞMA KANITI</small><h2>Kaynağı, çalışan sistemi ve ölçülen sonucu birlikte görürsünüz.</h2><div className={styles.proofCards}><article><span>01</span><strong>Kaynaklı teşhis</strong><p>Problemin nerede olduğunu kanıtıyla gösteririz.</p></article><article><span>02</span><strong>Çalışan sistem</strong><p>Sunum değil, test edilmiş akış kurarız.</p></article><article><span>03</span><strong>Sizin kontrolünüz</strong><p>Önemli dış işlemler açık onayınızla ilerler.</p></article></div></section>}
-          {panel === "iletisim" && <section className={styles.liveFinder}><div><small>ÜCRETSİZ MİNİ TEŞHİS</small><h2>İşletmenizi anlatın, doğru başlangıcı birlikte bulalım.</h2><p>Yaklaşık iki dakikada ihtiyacınızı seçin. Otomatik ödeme yok; önemli işlemler sizin onayınızda kalır.</p></div><NeedFinder /></section>}
+          {panel === "iletisim" && <section className={styles.liveFinder}><div><small>ÜCRETSİZ MİNİ TEŞHİS</small><h2>İşletmenizi anlatın, doğru başlangıcı birlikte bulalım.</h2><p>Yaklaşık iki dakikada ihtiyacınızı seçin. Otomatik ödeme yok; önemli işlemler sizin onayınızda kalır.</p><div className={styles.contactDirect}><span>Doğrudan iletişim</span><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.phoneDisplay && <a href={`tel:${siteContact.phoneHref}`}>{siteContact.phoneDisplay}</a>}{siteContact.whatsappHref && <a href={siteContact.whatsappHref} target="_blank" rel="noreferrer">WhatsApp’tan yazın ↗</a>}</div></div><NeedFinder /></section>}
         </div>
       </div>
     </div>
   );
 }
 
-export function HybridDraft({ live = false }: { live?: boolean }) {
+export function HybridDraft({ live = false, lumen = false, initialPanel = null }: { live?: boolean; lumen?: boolean; initialPanel?: LivePanelId | null }) {
   const heroRef = useRef<HTMLElement>(null);
-  const [livePanel, setLivePanel] = useState<LivePanelId | null>(null);
+  const [livePanel, setLivePanel] = useState<LivePanelId | null>(initialPanel);
 
   useEffect(() => {
     const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-premium-reveal="wait"]'));
@@ -379,10 +380,11 @@ export function HybridDraft({ live = false }: { live?: boolean }) {
   }
 
   return (
-    <div className={`${styles.draft} ${styles.hybridDraft} ${live ? styles.liveRoot : ""}`}>
+    <div className={`${styles.draft} ${styles.hybridDraft} ${live ? styles.liveRoot : ""} ${lumen ? styles.lumenOriginalRoot : ""}`}>
       <header className={styles.hybridNav}><Logo /><nav><button type="button" onClick={() => live && setLivePanel("hizmetler")}><i>◇</i> Hizmetler</button><button type="button" onClick={() => live && setLivePanel("surec")}><i>↺</i> Nasıl çalışır?</button><button type="button" onClick={() => live && setLivePanel("paketler")}><i>▦</i> Paketler</button><button type="button" onClick={() => live && setLivePanel("kanit")}><i>✓</i> Kanıt</button><button type="button" onClick={() => live && setLivePanel("iletisim")}><i>✎</i> İhtiyacınızı anlatın</button></nav><button type="button" onClick={() => live && setLivePanel("iletisim")}>Ücretsiz inceleme <b>↗</b></button></header>
       <section className={styles.hybridHero} ref={heroRef} onPointerMove={moveHero} onPointerLeave={resetHero}>
-        <ParticleCanvas className={styles.particleCanvas} />
+        {lumen && !livePanel && <div className={styles.lumenOriginalBackdrop} aria-hidden="true"><video src="/media/lumen-arc-scroll.mp4" poster="/media/lumen-arc-reference.png" autoPlay muted loop playsInline /><i /></div>}
+        {!livePanel && <ParticleCanvas className={styles.particleCanvas} />}
         <div className={styles.pointerGlow} aria-hidden="true" />
         <div className={styles.auroraOne} aria-hidden="true" />
         <div className={styles.auroraTwo} aria-hidden="true" />
@@ -402,12 +404,12 @@ export function HybridDraft({ live = false }: { live?: boolean }) {
       <Services />
       <section className={styles.hybridProof} data-premium-reveal="wait">
         <div><small>ŞEFFAF ÇALIŞMA KANITI</small><h2>Ne yapıldığını görür,<br />önemli işi siz onaylarsınız.</h2></div>
-        <div className={styles.proofCards}><article><span>01</span><strong>Kaynaklı teşhis</strong><p>Problemin nerede olduğunu kanıtıyla gösteririz.</p></article><article><span>02</span><strong>Çalışan sistem</strong><p>Sunum değil, test edilmiş akış kurarız.</p></article><article><span>03</span><strong>Ölçülen değişim</strong><p>7 gün sonunda yalnız gerçek sonucu raporlarız.</p></article></div>
+        <div className={styles.proofCards}><article><span>01</span><strong>Kaynaklı teşhis</strong><p>Problemin nerede olduğunu kanıtıyla gösteririz.</p></article><article><span>02</span><strong>Çalışan sistem</strong><p>Sunum değil, test edilmiş akış kurarız.</p></article><article><span>03</span><strong>Ölçülen değişim</strong><p>Çalışma sonunda yalnız gerçek sonucu raporlarız.</p></article></div>
       </section>
       <Process />
       <PremiumFinalCta onStart={() => live && setLivePanel("iletisim")} />
-      {live && <footer className={styles.premiumFooter}><Logo /><span>© 2026 AgentAxis Labs</span><a href="mailto:agentaxislabs@gmail.com">agentaxislabs@gmail.com</a><a href="/gizlilik">Gizlilik</a><a href="/kullanim-kosullari">Kullanım koşulları</a></footer>}
-      {livePanel && <LivePanel panel={livePanel} onClose={() => setLivePanel(null)} onRequest={() => setLivePanel("iletisim")} />}
+      {live && <footer className={styles.premiumFooter}><Logo /><span>© 2026 AgentAxis Labs</span><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.phoneDisplay && <a href={`tel:${siteContact.phoneHref}`}>{siteContact.phoneDisplay}</a>}{siteContact.whatsappHref && <a href={siteContact.whatsappHref} target="_blank" rel="noreferrer">WhatsApp</a>}<a href="/gizlilik">Gizlilik</a><a href="/kullanim-kosullari">Kullanım koşulları</a></footer>}
+      {livePanel && <LivePanel panel={livePanel} lumen={lumen} onClose={() => setLivePanel(null)} onRequest={() => setLivePanel("iletisim")} />}
     </div>
   );
 }
@@ -425,7 +427,7 @@ function CinemaDraft() {
           <div className={styles.actions}><button>Ücretsiz mini teşhis <span>→</span></button><button>Canlı sistemi gör</button></div>
         </div>
         <div className={styles.cinemaPanel}><AssistantDashboard dark /></div>
-        <div className={styles.cinemaTrust}><span>7 gün ücretsiz</span><span>Otomatik ödeme yok</span><span>Açık onay kaydı</span><span>Ölçülebilir çalışma</span></div>
+        <div className={styles.cinemaTrust}><span>Otomatik ödeme yok</span><span>Açık onay kaydı</span><span>Ölçülebilir çalışma</span></div>
       </section>
       <Services dark />
       <Process dark />
@@ -434,14 +436,226 @@ function CinemaDraft() {
   );
 }
 
+const lumenScenes = [
+  ["01", "Müşteri kazanma", "Doğru müşteriye ulaşabileceğiniz fırsatları görünür hâle getirir."],
+  ["02", "Müşteri takibi", "Yeni talepleri, geri dönüşleri ve hatırlatmaları tek düzende toplar."],
+  ["03", "İş otomasyonu", "Tekrar eden uygun işleri kontrolünüzü koruyarak hızlandırır."],
+  ["04", "Randevu ve rezervasyon", "Talep, onay, hatırlatma ve yeniden planlama adımlarını düzenler."],
+];
+
+function LumenScrollHero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [activeScene, setActiveScene] = useState(0);
+  const [useStatic, setUseStatic] = useState(false);
+
+  const goTo = (className: string) => {
+    document.querySelector(`.${className}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const navigatorWithMemory = navigator as Navigator & { deviceMemory?: number };
+    const lowMemory = (navigatorWithMemory.deviceMemory ?? 16) < 6;
+    if (reducedMotion || lowMemory) {
+      setUseStatic(true);
+      return;
+    }
+
+    const section = sectionRef.current;
+    const video = videoRef.current;
+    const galleryScroller = section?.closest<HTMLElement>(`.${styles.gallery}`) ?? null;
+    if (!section || !video) return;
+    const scrollTarget: HTMLElement | Window = galleryScroller ?? window;
+
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const sectionRect = section.getBoundingClientRect();
+      const viewportTop = galleryScroller?.getBoundingClientRect().top ?? 0;
+      const viewportHeight = galleryScroller?.clientHeight ?? window.innerHeight;
+      const distance = section.offsetHeight - viewportHeight;
+      const progress = Math.min(1, Math.max(0, (viewportTop - sectionRect.top) / Math.max(distance, 1)));
+      if (Number.isFinite(video.duration) && video.duration > 0) {
+        const targetTime = progress * Math.max(video.duration - 0.04, 0);
+        if (Math.abs(video.currentTime - targetTime) > 0.025) video.currentTime = targetTime;
+      }
+      setActiveScene(Math.min(lumenScenes.length - 1, Math.floor(progress * lumenScenes.length)));
+    };
+    const requestUpdate = () => { if (!frame) frame = requestAnimationFrame(update); };
+    scrollTarget.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+    video.addEventListener("loadedmetadata", update);
+    update();
+    return () => {
+      scrollTarget.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      video.removeEventListener("loadedmetadata", update);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  return (
+    <section className={styles.lumenScroll} ref={sectionRef} aria-label="Kaydırmalı premium AgentAxis deneyimi">
+      <div className={styles.lumenSticky}>
+        {useStatic ? (
+          <img className={styles.lumenMedia} src="/media/lumen-arc-reference.png" alt="Işık ve porselen dokulu soyut Lumen Arc objesi" />
+        ) : (
+          <video
+            ref={videoRef}
+            className={styles.lumenMedia}
+            src="/media/lumen-arc-scroll.mp4"
+            poster="/media/lumen-arc-reference.png"
+            muted
+            playsInline
+            preload="auto"
+            aria-label="Kaydırma hareketine bağlı Lumen Arc obje animasyonu"
+          />
+        )}
+        <div className={styles.lumenShade} aria-hidden="true" />
+        <header className={styles.lumenNav}><Logo light /><nav><a href="/taslaklar/modern-premium/hizmetler">Hizmetler</a><a href="/taslaklar/modern-premium/nasil-calisir">Nasıl çalışır?</a><a href="/taslaklar/modern-premium/paketler">Paketler</a><a href="/taslaklar/modern-premium/kanit">Kanıt</a></nav><a className={styles.lumenNavCta} href="/taslaklar/modern-premium/iletisim">Ücretsiz inceleme <b>↗</b></a></header>
+        <div className={styles.lumenCopy}>
+          <div className={styles.lumenPill}><i /> İŞLETMENİZ İÇİN AKILLI SİSTEMLER <b>KONTROL SİZDE</b></div>
+          <div className={styles.lumenHeadline}>
+            <h1 className={styles.lumenHeadlineFirst}>Müşteriyi kaçırmayın.<br /><em>Takibi sisteme bırakın.</em></h1>
+          </div>
+          <p>Akıllı İşletme Asistanı talebi görür, ihtiyacı düzenler ve doğru sonraki adımı hazırlar. Gönderme ve hesap işlemleri sizin onayınızla ilerler.</p>
+          <div className={styles.lumenActions}><button type="button" onClick={() => goTo(styles.finalCta)}>Ücretsiz mini teşhis <span>→</span></button><button type="button" onClick={() => goTo(styles.process)}>Nasıl çalıştığını gör</button></div>
+        </div>
+        <div className={styles.lumenScene} aria-live="polite">
+          {lumenScenes.map(([no, title, text], index) => (
+            <article key={no} className={activeScene === index ? styles.lumenSceneActive : ""}>
+              <span>{no}</span><div><strong>{title}</strong><p>{text}</p></div>
+            </article>
+          ))}
+        </div>
+        <div className={styles.lumenProgress} aria-hidden="true">{lumenScenes.map((scene, index) => <i key={scene[0]} className={index <= activeScene ? styles.lumenProgressDone : ""} />)}</div>
+        <div className={styles.lumenHint}>AŞAĞI KAYDIR · HAREKETİ KEŞFET <span>↓</span></div>
+      </div>
+    </section>
+  );
+}
+
+export function LumenPackages() {
+  const packages = [
+    ["01", "Başlangıç", "Tek bir önemli soruna odaklanan küçük, güvenli ve ölçülebilir sistem."],
+    ["02", "Büyüme", "Müşteri kazanma ve takip gibi birbiriyle bağlantılı birkaç iş akışı."],
+    ["03", "Özel sistem", "İşletmenize özel otomasyon, takip ve randevu düzeninin birleşimi."],
+  ];
+  return <section className={styles.lumenInfoSection}><div className={styles.lumenInfoHead}><small>ESNEK ÇALIŞMA KAPSAMLARI</small><h2>İhtiyacınız kadar sistem kurulur.</h2><p>Önce problemi doğrularız; kullanmayacağınız özellikleri pakete doldurmayız.</p></div><div className={styles.lumenInfoGrid}>{packages.map(([no,title,text])=><article key={no}><span>{no}</span><h3>{title}</h3><p>{text}</p><a href="/taslaklar/modern-premium/iletisim">İhtiyacınızı anlatın →</a></article>)}</div></section>;
+}
+
+export function LumenProof() {
+  const proof = [
+    ["01", "Kaynaklı teşhis", "Problemin nerede olduğunu kanıtıyla gösteririz."],
+    ["02", "Çalışan sistem", "Sunum değil, test edilmiş akış kurarız."],
+    ["03", "Ölçülen değişim", "Çalışma sonunda yalnız gerçek sonucu raporlarız."],
+  ];
+  return <section className={`${styles.lumenInfoSection} ${styles.lumenProofSection}`}><div className={styles.lumenInfoHead}><small>ŞEFFAF ÇALIŞMA KANITI</small><h2>Ne yapıldığını görür, önemli işi siz onaylarsınız.</h2><p>Kaynağı, çalışan sistemi ve ölçülen sonucu birlikte görürsünüz.</p></div><div className={styles.lumenInfoGrid}>{proof.map(([no,title,text])=><article key={no}><span>{no}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section>;
+}
+
+export function LumenDraft() {
+  return (
+    <div className={`${styles.draft} ${styles.lumenDraft}`}>
+      <LumenScrollHero />
+      <CapabilityExperience />
+      <WorkflowStory />
+      <Services dark />
+      <LumenProof />
+      <Process dark />
+      <FinalCta dark />
+    </div>
+  );
+}
+
+const spatialServices = [
+  ["↗", "Müşteri kazanma", "Doğru fırsatı bulur"],
+  ["◎", "Müşteri takibi", "Talebi kaybetmez"],
+  ["⚡", "İş otomasyonu", "Tekrarı hızlandırır"],
+  ["◇", "Randevu yönetimi", "Talebi düzenli takibe alır"],
+];
+
+function SpatialCore() {
+  return (
+    <div className={styles.spatialCore} aria-label="Akıllı İşletme Asistanı 3D iş akışı">
+      <div className={styles.coreHalo} />
+      <div className={styles.coreOrbitOne}><i /><i /><i /></div>
+      <div className={styles.coreOrbitTwo}><i /><i /></div>
+      <div className={styles.coreSphere}><span>Aİ</span><small>CANLI</small></div>
+      <div className={`${styles.coreNode} ${styles.nodeOne}`}><i>↗</i><span><b>Yeni talep</b><small>Algılandı</small></span></div>
+      <div className={`${styles.coreNode} ${styles.nodeTwo}`}><i>◎</i><span><b>İhtiyaç</b><small>Netleştirildi</small></span></div>
+      <div className={`${styles.coreNode} ${styles.nodeThree}`}><i>✓</i><span><b>İnsan onayı</b><small>Kontrol sizde</small></span></div>
+      <div className={`${styles.coreNode} ${styles.nodeFour}`}><i>↺</i><span><b>Takip</b><small>Planlandı</small></span></div>
+    </div>
+  );
+}
+
+function SpatialDraft() {
+  const spatialRef = useRef<HTMLElement>(null);
+  const [liteMode, setLiteMode] = useState(false);
+
+  useEffect(() => {
+    const navigatorWithMemory = navigator as Navigator & { deviceMemory?: number };
+    const lowMemoryDevice = (navigatorWithMemory.deviceMemory ?? 16) <= 8;
+    const limitedCpu = (navigator.hardwareConcurrency ?? 12) <= 8;
+    setLiteMode(lowMemoryDevice || limitedCpu);
+  }, []);
+
+  function moveSpatial(event: ReactPointerEvent<HTMLElement>) {
+    if (liteMode) return;
+    const section = spatialRef.current;
+    if (!section) return;
+    const rect = section.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    section.style.setProperty("--spatial-ry", `${x * 9}deg`);
+    section.style.setProperty("--spatial-rx", `${y * -7}deg`);
+    section.style.setProperty("--spatial-x", `${(x + 0.5) * 100}%`);
+    section.style.setProperty("--spatial-y", `${(y + 0.5) * 100}%`);
+  }
+
+  function resetSpatial() {
+    const section = spatialRef.current;
+    if (!section) return;
+    section.style.setProperty("--spatial-ry", "0deg");
+    section.style.setProperty("--spatial-rx", "0deg");
+  }
+
+  return (
+    <div className={`${styles.draft} ${styles.spatialDraft} ${liteMode ? styles.spatialLite : ""}`}>
+      <header className={styles.spatialNav}><Logo light /><nav><span>Hizmetler</span><span>Nasıl çalışır?</span><span>Çalışma kanıtı</span></nav><button>Ücretsiz inceleme <b>↗</b></button></header>
+      <section className={styles.spatialHero} ref={spatialRef} onPointerMove={moveSpatial} onPointerLeave={resetSpatial}>
+        <div className={styles.spatialGrid} aria-hidden="true" />
+        <div className={styles.spatialGlow} aria-hidden="true" />
+        <div className={styles.spatialCopy}>
+          <div className={styles.spatialPill}><i /> PREMIUM AI SİSTEMLERİ <b>3D DENEYİM</b></div>
+          <h1>İşletmenizin<br />akışı artık<br /><em>görünür.</em></h1>
+          <p>Talebi yakalayan, ihtiyacı düzenleyen ve doğru sonraki adımı hazırlayan Akıllı İşletme Asistanı. Önemli kararlar daima sizde.</p>
+          <div className={styles.spatialActions}><button>Ücretsiz mini teşhis <span>→</span></button><button>Canlı akışı keşfet</button></div>
+          <div className={styles.spatialTrust}><span>✓ Otomatik ödeme yok</span><span>✓ İnsan onayı</span></div>
+        </div>
+        <div className={styles.spatialStage}><SpatialCore /></div>
+      </section>
+      <section className={styles.spatialServices}>
+        <div><small>TEK MERKEZ · DÖRT YETENEK</small><h2>Sizin yerinize çalışan<br />premium bir düzen.</h2></div>
+        <div className={styles.spatialCardGrid}>
+          {spatialServices.map(([icon, title, text], index) => <article key={title} style={{ "--card-i": index } as React.CSSProperties}><i>{icon}</i><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p><b>Akışı gör ↗</b></article>)}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 const drafts: Record<DraftId, { name: string; note: string; component: React.ReactNode }> = {
+  lumen: { name: "E — Lumen Scroll", note: "Mert yöntemi · özgün sinematik pilot", component: <LumenDraft /> },
   guven: { name: "A — Açık Güven", note: "FintechX etkisi · en sade ve güven veren", component: <TrustDraft /> },
   hibrit: { name: "B — Premium Hibrit Pro", note: "Önerilen · hareketli ve etkileşimli", component: <HybridDraft /> },
   sinema: { name: "C — Sinematik AI", note: "New Era etkisi · en cesur görünüm", component: <CinemaDraft /> },
+  ucboyut: { name: "D — 3D Akıllı Çekirdek", note: "FintechX × New Era · premium 3D demo", component: <SpatialDraft /> },
 };
 
 export default function DraftGallery() {
-  const [active, setActive] = useState<DraftId>("hibrit");
+  const [active, setActive] = useState<DraftId>("lumen");
 
   useEffect(() => {
     const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-premium-reveal="wait"]'));

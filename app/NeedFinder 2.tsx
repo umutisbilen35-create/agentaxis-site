@@ -12,22 +12,22 @@ const goals = [
 const packages = {
   customer: {
     name: "Görünürlük Başlangıç Paketi",
-    text: "7 günlük denemede müşteri kaybettiğiniz noktaları bulur, ihtiyacınıza uygun görünürlük ve müşteri kazanma çalışmalarını birlikte yürütürüz.",
-    items: ["Dijital durum ve rakip analizi", "Müşteri kazanma fırsatları", "İhtiyaca göre 7 günlük uygulama"],
+    text: "Müşteri kaybettiğiniz noktaları bulur, ihtiyacınıza uygun görünürlük ve müşteri kazanma çalışmalarını birlikte planlarız.",
+    items: ["Dijital durum ve rakip analizi", "Müşteri kazanma fırsatları", "İhtiyaca göre uygulama planı"],
   },
   follow: {
     name: "Müşteri Takip Paketi",
-    text: "7 günlük denemede gelen talepleri, geri dönüşleri ve müşteri takibini işletmenizin ihtiyacına göre düzenler ve çalıştırırız.",
+    text: "Gelen talepleri, geri dönüşleri ve müşteri takibini işletmenizin ihtiyacına göre düzenler ve çalıştırırız.",
     items: ["Talep akışı analizi", "CRM ve takip düzeni", "Canlı kullanım, iyileştirme ve sonuç raporu"],
   },
   time: {
     name: "Özel Otomasyon Paketi",
-    text: "Ekibinizin tekrar eden işlerini belirler, 7 gün içinde uygulanabilecek yararlı otomasyonları ihtiyacınıza göre kurup gerçek ortamda deneriz.",
+    text: "Ekibinizin tekrar eden işlerini belirler, uygulanabilecek yararlı otomasyonları ihtiyacınıza göre kurup gerçek ortamda deneriz.",
     items: ["İş akışı haritası", "Uygun otomasyonların kurulumu", "Test, ölçüm ve kullanım eğitimi"],
   },
   unknown: {
     name: "Ücretsiz İhtiyaç Analizi",
-    text: "Kısa bir görüşmeyle mevcut düzeninizi inceler, 7 günlük denemede size gerçekten fayda sağlayacak hizmet kapsamını birlikte belirleriz.",
+    text: "Kısa bir görüşmeyle mevcut düzeninizi inceler, size gerçekten fayda sağlayacak hizmet kapsamını birlikte belirleriz.",
     items: ["Kısa ihtiyaç görüşmesi", "Fayda ve öncelik tespiti", "Size özel deneme kapsamı"],
   },
 };

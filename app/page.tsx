@@ -3,5 +3,5 @@
 import { HybridDraft } from "./taslaklar/DraftGallery";
 
 export default function Home() {
-  return <main><HybridDraft live /></main>;
+  return <main><HybridDraft live lumen /></main>;
 }

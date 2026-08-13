@@ -1,4 +1,4 @@
-const allowedNeeds = new Set(["visibility", "appointments", "follow", "automation", "website", "reactivation"]);
+const allowedNeeds = new Set(["visibility", "appointments", "follow", "automation", "reactivation"]);
 const allowedPlans = new Set(["teshis"]);
 
 const diagnosisChecks: Record<string, string[]> = {
@@ -6,7 +6,6 @@ const diagnosisChecks: Record<string, string[]> = {
   appointments: ["booking_creation", "confirmation_reminder", "reschedule_flow"],
   follow: ["first_response_time", "next_step", "human_handoff"],
   automation: ["manual_repetition", "approval_points", "measurable_time_loss"],
-  website: ["first_screen_clarity", "primary_cta", "mobile_contact_path"],
   reactivation: ["consent_quality", "unfollowed_segments", "next_step"],
 };
 
@@ -20,6 +19,7 @@ type IntakeBody = {
   email?: unknown;
   phone?: unknown;
   note?: unknown;
+  customNeed?: unknown;
   consent?: unknown;
   marketingConsent?: unknown;
   websiteField?: unknown;
@@ -84,6 +84,7 @@ export async function POST(request: Request) {
     const email = clean(body.email, 180).toLowerCase();
     const phone = clean(body.phone, 40);
     const note = clean(body.note, 1000);
+    const customNeed = clean(body.customNeed, 500);
     const plan = clean(body.plan, 30);
     const submittedNeeds = Array.isArray(body.needs) ? body.needs : [];
     const needs = [...new Set(submittedNeeds.filter((item): item is string => typeof item === "string" && allowedNeeds.has(item)))];
@@ -98,6 +99,10 @@ export async function POST(request: Request) {
     if (note && (sensitiveHealthPattern.test(note) || piiPattern.test(note))) {
       return json("Not alanına hasta, sağlık veya başka kişiye ait iletişim bilgisi yazmayın.", 422);
     }
+    if (customNeed && piiPattern.test(customNeed)) {
+      return json("İhtiyaç alanına başka kişiye ait iletişim bilgisi yazmayın.", 422);
+    }
+    const storedNote = [customNeed ? `Müşterinin yazdığı ihtiyaç: ${customNeed}` : "", note].filter(Boolean).join("\n\n").slice(0, 1000);
 
     const trustedIp = request.headers.get("cf-connecting-ip");
     const rateIdentity = trustedIp ? `ip:${trustedIp}` : `idempotency:${idempotencyKey}`;
@@ -126,7 +131,7 @@ export async function POST(request: Request) {
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'diagnosis_requested', ?)`)
           .bind(reference, business, sector, website || null, JSON.stringify(needs), plan,
             JSON.stringify(needs.flatMap((need) => diagnosisChecks[need] ?? [])),
-            contactName, email, phone || null, note || null, createdAt, idempotencyKey, contentHash, ipHash,
+            contactName, email, phone || null, storedNote || null, createdAt, idempotencyKey, contentHash, ipHash,
             body.marketingConsent === true ? createdAt : null, attribution.utm_source, attribution.utm_medium,
             attribution.utm_campaign, attribution.utm_content, attribution.utm_term, createdAt);
         const trialStatement = db.prepare(`INSERT INTO trial_runs

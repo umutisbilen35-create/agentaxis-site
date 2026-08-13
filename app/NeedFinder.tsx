@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-type NeedId = "visibility" | "appointments" | "follow" | "automation" | "website" | "reactivation";
+type NeedId = "visibility" | "appointments" | "follow" | "automation" | "reactivation";
 type PlanId = "teshis";
 type Step = 0 | 1 | 2 | 3 | 4;
 
@@ -19,7 +19,6 @@ const needs: Array<{ id: NeedId; label: string; help: string; symptom: string }>
   { id: "follow", label: "Gelen talepleri düzenli takip etmek", help: "Yeni talepler, geri dönüşler ve sonraki adımlar", symptom: "Gelen talepleri düzenli takip etmek" },
   { id: "automation", label: "Tekrarlanan işleri otomatikleştirmek", help: "Zaman alan uygun işleri kontrollü hızlandırmak", symptom: "Tekrarlanan işleri otomatikleştirmek" },
   { id: "reactivation", label: "Eski müşterileri yeniden kazanmak", help: "İzinli müşterileri uygun teklif ve hatırlatmalarla canlandırmak", symptom: "Eski müşterileri yeniden kazanmak" },
-  { id: "website", label: "Web sitesini daha etkili hâle getirmek", help: "Hizmeti net anlatan ve iletişime yönlendiren site", symptom: "Web sitesini daha etkili hâle getirmek" },
 ];
 
 const sectorPriorities: Array<{ test: RegExp; ids: NeedId[] }> = [
@@ -53,12 +52,6 @@ const serviceMap: Record<NeedId, Service> = {
     demo: ["Tekrarlanan iş haritası", "Onay gerektiren adımlar", "Hata ve yeniden deneme kaydı"],
     measure: "Kazanılan zaman ve tamamlanan görev",
   },
-  website: {
-    title: "Güven Veren Web Deneyimi",
-    promise: "Ziyaretçinin hizmetinizi hızlıca anlayıp doğru adıma geçmesini sağlar.",
-    demo: ["İlk ekran mesaj taslağı", "Hizmet ve güven bölümleri", "Ücretsiz inceleme akışı"],
-    measure: "Form başlangıcı ve tamamlanma oranı",
-  },
   reactivation: {
     title: "Eski Müşteri Canlandırma",
     promise: "Uygun izinli kayıtlar için kontrollü geri kazanım planı hazırlar.",
@@ -72,7 +65,6 @@ const diagnosisMap: Record<NeedId, { title: string; checks: string[] }> = {
   appointments: { title: "Randevu ve rezervasyon akışı mini teşhisi", checks: ["Talebin randevuya dönüşmesi", "Onay ve hatırlatma adımları", "İptal veya yeniden planlama akışı"] },
   follow: { title: "Müşteri talebi takip mini teşhisi", checks: ["İlk yanıt süresi", "Talebin net sonraki adıma taşınması", "Gerektiğinde insan devri"] },
   automation: { title: "Tekrarlanan iş mini teşhisi", checks: ["Elle tekrarlanan adımlar", "Onay ve hata noktaları", "Ölçülebilecek zaman kaybı"] },
-  website: { title: "Web dönüşüm yolu mini teşhisi", checks: ["İlk ekranın açıklığı", "Ana iletişim düğmesi", "Mobil görünüm ve iletişim adımları"] },
   reactivation: { title: "Eski müşteri takibi mini teşhisi", checks: ["İzinli ve uygun kayıtlar", "Takipsiz kalan gruplar", "Yanıt sonrası net sonraki adım"] },
 };
 
@@ -119,6 +111,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [note, setNote] = useState("");
+  const [customNeed, setCustomNeed] = useState("");
   const [consent, setConsent] = useState(false);
   const [marketingConsent, setMarketingConsent] = useState(false);
   const [websiteField, setWebsiteField] = useState("");
@@ -161,7 +154,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
         body: JSON.stringify({
           business: business.trim(), sector: sector.trim(), website: website.trim(),
           needs: selected, plan, contactName: contactName.trim(), email: email.trim(),
-          phone: phone.trim(), note: note.trim(), consent, marketingConsent, websiteField, attribution,
+          phone: phone.trim(), note: note.trim(), customNeed: customNeed.trim(), consent, marketingConsent, websiteField, attribution,
         }),
       });
       const result = await response.json() as { reference?: string; message?: string };
@@ -219,6 +212,8 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
           </div>
           <p className="selectionLimit" id="discoveryLimit">{selected.length ? `${selected.length} ihtiyaç seçtiniz. İsterseniz diğerlerini de seçebilirsiniz.` : "İşletmenize uyan bütün ihtiyaçları seçebilirsiniz."}</p>
         </fieldset>
+
+        <label className="customNeedField">Listede olmayan bir ihtiyacınız mı var? <span>(isteğe bağlı)</span><textarea value={customNeed} onChange={(event) => setCustomNeed(event.target.value)} placeholder="İhtiyacınızı kendi sözlerinizle kısaca yazın…" rows={3} maxLength={500} /><small>Hasta adı, telefon, teşhis, tedavi detayı veya başka kişilere ait özel bilgi yazmayın.</small></label>
 
         {selected.length > 0 && (
           <section className="instantSuggestions" aria-label="Size uygun hizmet fikirleri">
@@ -281,6 +276,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
             ))}
           </div>
           <p className="selectionLimit" id="formNeedLimit">{selected.length ? `${selected.length} ihtiyaç seçtiniz. İsterseniz diğerlerini de seçebilirsiniz.` : "Size uyan bütün ihtiyaçları seçebilirsiniz."}</p>
+          <label className="customNeedField customNeedReview">Listede olmayan ihtiyacınız <span>(isteğe bağlı)</span><textarea value={customNeed} onChange={(event) => setCustomNeed(event.target.value)} placeholder="Başka bir ihtiyacınızı buraya yazabilirsiniz…" rows={3} maxLength={500} /><small>Özel kişi, hasta veya sağlık bilgisi eklemeyin.</small></label>
           <div className="flowActions"><button className="secondary" type="button" onClick={() => setStep(1)}>← Geri</button><button className="primary finderButton" type="button" disabled={!selected.length} onClick={() => setStep(3)}>Mini teşhisi göster <span>→</span></button></div>
         </div>
       )}
@@ -298,7 +294,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
             })}
           </div>
           <section className="trialPreview diagnosisPromise" aria-label="Mini teşhis güvence bilgisi">
-            <div><span>ÖNCE TEŞHİS</span><h4>Karar vermeniz gerekmez.</h4><p>Önce ölçümü paylaşırız. Yalnız gerçek bir sorun görünürse uygun çözümü ve 7 günlük ücretsiz denemeyi konuşuruz.</p></div>
+            <div><span>ÖNCE TEŞHİS</span><h4>Karar vermeniz gerekmez.</h4><p>Önce ölçümü paylaşırız. Yalnız gerçek bir sorun görünürse uygun çözümü ve çalışma kapsamını konuşuruz.</p></div>
             <ol><li><b>1</b><span>Kaynaklı gözlem</span></li><li><b>2</b><span>Ölçülebilir problem</span></li><li><b>3</b><span>Sizin kararınız</span></li></ol>
           </section>
           <div className="flowActions"><button className="secondary" type="button" onClick={() => setStep(2)}>← Değiştir</button><button className="primary finderButton" type="button" onClick={() => setStep(4)}>Mini teşhis iste <span>→</span></button></div>
