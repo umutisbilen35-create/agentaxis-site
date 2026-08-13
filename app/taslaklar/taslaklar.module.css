@@ -386,6 +386,7 @@
 .lumenOriginalRoot .lumenLiveOverlay .liveModalTop .logo>i{border-color:#fff}
 .lumenOriginalRoot .lumenLiveOverlay .liveModalTop>button{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff}
 .lumenOriginalRoot .lumenLiveOverlay .sectionHeading>p,.lumenOriginalRoot .lumenLiveOverlay .liveFinder>div>p,.lumenOriginalRoot .lumenLiveOverlay .catalogPanel>p{color:#c2c5cf}
+.lumenOriginalRoot .lumenLiveOverlay .liveModalBody>.services .sectionHeading>p{color:#f5f1e9;font-size:clamp(28px,2.4vw,36px);line-height:1.24;font-weight:400;letter-spacing:-1px;text-shadow:0 2px 18px rgba(0,0,0,.5)}
 .lumenOriginalRoot .lumenLiveOverlay .liveModalBody>.process .sectionHeading>p{color:#f3f0e9;font-size:23px;line-height:1.45;font-weight:500;letter-spacing:-.35px;text-shadow:0 2px 18px rgba(0,0,0,.58)}
 .lumenOriginalRoot .lumenLiveOverlay .liveFinder :global(.needAssistant){color:#101827;background:#fff}
 .lumenOriginalRoot .lumenLiveOverlay .serviceGrid article,.lumenOriginalRoot .lumenLiveOverlay .stepGrid article,.lumenOriginalRoot .lumenLiveOverlay .proofCards article,.lumenOriginalRoot .lumenLiveOverlay .catalogGrid article{border-color:rgba(255,255,255,.13);background:linear-gradient(145deg,rgba(20,24,39,.82),rgba(7,9,16,.84));color:#f5f1e9;box-shadow:0 20px 55px rgba(0,0,0,.2);backdrop-filter:blur(10px)}
