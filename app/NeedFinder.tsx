@@ -226,7 +226,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
         )}
 
         <div className="discoveryActions">
-          <span>🔒 Şifre veya müşteri bilgisi istemiyoruz</span>
+          <span>✓ Şifre veya müşteri bilgisi istemiyoruz</span>
           <button className="primary finderButton" type="button" disabled={!sector.trim() || !selected.length} onClick={() => setStep(1)}>Bu teşhislerle forma geç <b>→</b></button>
         </div>
       </div>
@@ -259,7 +259,7 @@ export default function NeedFinder({ initialBusiness = "" }: { initialBusiness?:
             <label>Sektörünüz *<input value={sector} onChange={(event) => setSector(event.target.value)} placeholder="Örn. diş kliniği" maxLength={100} autoComplete="organization-title" required /></label>
           </div>
           <label>Web sitesi veya Google Haritalar bağlantısı <span>(isteğe bağlı)</span><input type="url" value={website} onChange={(event) => setWebsite(event.target.value)} placeholder="https://..." inputMode="url" maxLength={300} autoComplete="url" /></label>
-          <div className="formTrust"><span>🔒 Şifre istemeyiz</span><span>✓ Otomatik ödeme yok</span><span>✓ Kontrol sizde</span></div>
+          <div className="formTrust"><span>✓ Şifre istemeyiz</span><span>✓ Otomatik ödeme yok</span><span>✓ Kontrol sizde</span></div>
           <div className="flowActions"><button className="secondary" type="button" onClick={() => setStep(0)}>← Önerilere dön</button><button className="primary finderButton" type="submit">İhtiyaçlarımı seç <span>→</span></button></div>
         </form>
       )}

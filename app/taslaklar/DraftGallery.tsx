@@ -170,7 +170,7 @@ const capabilityFlows = [
   {
     id: "otomasyon",
     label: "İş otomasyonu",
-    icon: "⚡",
+    icon: "↻",
     title: "Tekrar eden uygun işi kontrollü biçimde hızlandırır",
     flow: ["İşi belirle", "Akışı hazırla", "İnsan onayı", "Çalışma kaydı"],
   },
@@ -308,6 +308,38 @@ function PremiumFinalCta({ onStart }: { onStart?: () => void }) {
   );
 }
 
+const previewFlowSteps = [
+  ["01", "Yeni talep", "Sentetik bir randevu talebi sisteme gelir."],
+  ["02", "İhtiyacı anla", "Uygun sonraki adım onaylı bilgilerle hazırlanır."],
+  ["03", "İnsan onayı", "Mesaj gönderilmeden önce işletme kontrol eder."],
+  ["04", "Takip", "Hatırlatma ve takip planı görünür olur."],
+];
+
+function FullSiteFlowDemo({ onStart }: { onStart: () => void }) {
+  const [active, setActive] = useState(0);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    if (!playing) return;
+    if (active >= previewFlowSteps.length - 1) { setPlaying(false); return; }
+    const timer = window.setTimeout(() => setActive((value) => value + 1), 900);
+    return () => window.clearTimeout(timer);
+  }, [active, playing]);
+
+  return (
+    <section className={styles.fullSiteFlow} aria-label="Sentetik çalışan akış örneği">
+      <div className={styles.fullSiteFlowHead}>
+        <div><small>ÖRNEK / SENTETİK AKIŞ</small><h2>Formdan önce çalışan düzeni görün.</h2><p>Gerçek müşteri verisi kullanılmaz ve hiçbir mesaj gönderilmez.</p></div>
+        <span>CANLI SİTEYE UYGULANMADI</span>
+      </div>
+      <div className={styles.fullSiteFlowGrid}>
+        {previewFlowSteps.map(([no, title, text], index) => <button type="button" key={no} className={active === index ? styles.fullSiteFlowActive : index < active ? styles.fullSiteFlowDone : ""} onClick={() => { setPlaying(false); setActive(index); }} aria-pressed={active === index}><span>{index < active ? "✓" : no}</span><small>{index === 2 ? "ONAY BEKLİYOR" : index === 3 ? "TASLAK HAZIR" : "SENTETİK KAYIT"}</small><strong>{title}</strong><p>{text}</p></button>)}
+      </div>
+      <div className={styles.fullSiteFlowActions}><button type="button" onClick={() => { setActive(0); setPlaying(true); }} disabled={playing}>{playing ? "Akış oynuyor…" : "Örnek akışı oynat"} <span>→</span></button><button type="button" onClick={onStart}>İhtiyacınızı anlatın</button></div>
+    </section>
+  );
+}
+
 export type LivePanelId = "hizmetler" | "surec" | "paketler" | "kanit" | "iletisim";
 
 function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePanelId; onClose: () => void; onRequest: () => void; lumen?: boolean }) {
@@ -329,7 +361,7 @@ function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePa
   );
 }
 
-export function HybridDraft({ live = false, lumen = false, initialPanel = null }: { live?: boolean; lumen?: boolean; initialPanel?: LivePanelId | null }) {
+export function HybridDraft({ live = false, lumen = false, initialPanel = null, previewFlow = false, fullPreview = false, showPreviewBadge = true }: { live?: boolean; lumen?: boolean; initialPanel?: LivePanelId | null; previewFlow?: boolean; fullPreview?: boolean; showPreviewBadge?: boolean }) {
   const heroRef = useRef<HTMLElement>(null);
   const [livePanel, setLivePanel] = useState<LivePanelId | null>(initialPanel);
 
@@ -380,7 +412,8 @@ export function HybridDraft({ live = false, lumen = false, initialPanel = null }
   }
 
   return (
-    <div className={`${styles.draft} ${styles.hybridDraft} ${live ? styles.liveRoot : ""} ${lumen ? styles.lumenOriginalRoot : ""}`}>
+    <div className={`${styles.draft} ${styles.hybridDraft} ${live ? styles.liveRoot : ""} ${lumen ? styles.lumenOriginalRoot : ""} ${fullPreview ? styles.fullPreviewRoot : ""}`}>
+      {fullPreview && showPreviewBadge && <div className={styles.fullPreviewBadge}>TAM SİTE ÖNİZLEMESİ · CANLIYA UYGULANMADI</div>}
       <header className={styles.hybridNav}><Logo /><nav><button type="button" onClick={() => live && setLivePanel("hizmetler")}><i>◇</i> Hizmetler</button><button type="button" onClick={() => live && setLivePanel("surec")}><i>↺</i> Nasıl çalışır?</button><button type="button" onClick={() => live && setLivePanel("paketler")}><i>▦</i> Paketler</button><button type="button" onClick={() => live && setLivePanel("kanit")}><i>✓</i> Kanıt</button><button type="button" onClick={() => live && setLivePanel("iletisim")}><i>✎</i> İhtiyacınızı anlatın</button></nav><button type="button" onClick={() => live && setLivePanel("iletisim")}>Ücretsiz inceleme <b>↗</b></button></header>
       <section className={styles.hybridHero} ref={heroRef} onPointerMove={moveHero} onPointerLeave={resetHero}>
         {lumen && !livePanel && <div className={styles.lumenOriginalBackdrop} aria-hidden="true"><video src="/media/lumen-arc-scroll.mp4" poster="/media/lumen-arc-reference.png" autoPlay muted loop playsInline /><i /></div>}
@@ -407,6 +440,7 @@ export function HybridDraft({ live = false, lumen = false, initialPanel = null }
         <div className={styles.proofCards}><article><span>01</span><strong>Kaynaklı teşhis</strong><p>Problemin nerede olduğunu kanıtıyla gösteririz.</p></article><article><span>02</span><strong>Çalışan sistem</strong><p>Sunum değil, test edilmiş akış kurarız.</p></article><article><span>03</span><strong>Ölçülen değişim</strong><p>Çalışma sonunda yalnız gerçek sonucu raporlarız.</p></article></div>
       </section>
       <Process />
+      {previewFlow && <FullSiteFlowDemo onStart={() => setLivePanel("iletisim")} />}
       <PremiumFinalCta onStart={() => live && setLivePanel("iletisim")} />
       {live && <footer className={styles.premiumFooter}><Logo /><span>© 2026 AgentAxis Labs</span><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.phoneDisplay && <a href={`tel:${siteContact.phoneHref}`}>{siteContact.phoneDisplay}</a>}{siteContact.whatsappHref && <a href={siteContact.whatsappHref} target="_blank" rel="noreferrer">WhatsApp</a>}<a href="/gizlilik">Gizlilik</a><a href="/kullanim-kosullari">Kullanım koşulları</a></footer>}
       {livePanel && <LivePanel panel={livePanel} lumen={lumen} onClose={() => setLivePanel(null)} onRequest={() => setLivePanel("iletisim")} />}
