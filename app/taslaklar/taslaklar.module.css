@@ -408,6 +408,10 @@
 
 /* Tam site önizlemesi: canlı sayfayı değiştirmeden kanonik koyu-altın sistem */
 .fullPreviewRoot{--preview-gold:#d8bf8d;--preview-ink:#f7f4ed;--preview-muted:#adb1bc;position:relative}
+.fullPreviewRoot .livePill{font-size:10px}
+.fullPreviewRoot .livePill>i{background:var(--preview-gold);box-shadow:0 0 14px rgba(216,191,141,.45)}
+.fullPreviewRoot .livePill>b{border:1px solid rgba(216,191,141,.28);background:rgba(216,191,141,.12);color:var(--preview-gold);font-size:10px;box-shadow:none}
+.fullPreviewRoot .valuePanelTop small,.fullPreviewRoot .valuePanelTitle small,.fullPreviewRoot .valueServiceList button small,.fullPreviewRoot .valuePanelTrust span{font-size:10px}
 .fullPreviewRoot .hybridCopy{transform:translateY(-28px)}
 .fullPreviewBadge{position:relative;z-index:40;padding:9px 18px;border-bottom:1px solid rgba(216,191,141,.2);background:#0b0c12;color:#d8bf8d;text-align:center;font:800 9px var(--font-geist-mono);letter-spacing:1px}
 .fullPreviewRoot .logo>i b{border-color:var(--preview-gold)}.fullPreviewRoot .logo>span strong{color:var(--preview-gold)}
@@ -462,4 +466,8 @@
 .fullSiteFlowActions{display:flex;gap:11px;margin-top:20px}.fullSiteFlowActions button{padding:14px 17px;border-radius:13px;font-weight:800;cursor:pointer}.fullSiteFlowActions button:first-child{border:0;background:#f2eee6;color:#11131a}.fullSiteFlowActions button:last-child{border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.055);color:#fff}.fullSiteFlowActions button:disabled{opacity:.65}
 @media(max-width:900px){.fullSiteFlowHead{align-items:flex-start;flex-direction:column}.fullSiteFlowGrid{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.fullPreviewBadge{font-size:9px}.fullPreviewRoot .livePill,.fullPreviewRoot .valuePanelTop small{font-size:9px}.fullPreviewRoot .hybridCopy{transform:translateY(-18px)}.fullSiteFlow{padding:72px 18px}.fullSiteFlowHead h2{font-size:43px;letter-spacing:-2px}.fullSiteFlowGrid{grid-template-columns:1fr}.fullSiteFlowGrid button{min-height:170px}.fullSiteFlowActions{flex-direction:column}}
+
+/* Canlı AgentAxis yüzeylerinde durum renkleri de koyu-altın marka paletini kullanır. */
+.fullPreviewRoot .valuePanelTop>span>i{background:#d8bf8d;box-shadow:0 0 0 5px rgba(216,191,141,.12)}
+.fullPreviewRoot .valuePanelTrust span{border-color:rgba(216,191,141,.2);background:#f2eee6;color:#332b20;box-shadow:0 8px 20px rgba(216,191,141,.08)}
 @media(prefers-reduced-motion:reduce){.fullSiteFlowGrid button{transition:none}.fullSiteFlowGrid button:hover,.fullSiteFlowGrid button.fullSiteFlowActive{transform:none}}

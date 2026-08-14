@@ -28,7 +28,15 @@ type IntakeBody = {
 
 const attributionKeys = new Set(["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]);
 const piiPattern = /[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|(?:\+?\d[\d\s().-]{8,}\d)/;
-const sensitiveHealthPattern = /\b(tanı|tani|teşhis|teshis|hastalık|hastalik|tedavi|ilaç|ilac|röntgen|rontgen|tahlil|reçete|recete|kanser|diyabet|hamile|ameliyat|enfeksiyon|ağrı|agri)\b/i;
+const sensitiveHealthPattern = /(?<![\p{L}\p{N}])(tanı|tani|teşhis|teshis|hastalık|hastalik|tedavi|ilaç|ilac|röntgen|rontgen|tahlil|reçete|recete|kanser|diyabet|hamile|ameliyat|enfeksiyon|ağrı|agri)(?![\p{L}\p{N}])/u;
+
+function turkceKucuk(value: string) {
+  return value.replace(/İ/g, "i").replace(/I/g, "ı").toLowerCase();
+}
+
+function saglikBilgisiIcerir(value: string) {
+  return sensitiveHealthPattern.test(turkceKucuk(value));
+}
 
 function cleanAttribution(value: unknown) {
   const input = value && typeof value === "object" ? value as Record<string, unknown> : {};
@@ -96,15 +104,18 @@ export async function POST(request: Request) {
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json("Geçerli bir e-posta adresi girin.", 422);
     if (website && !/^https?:\/\//i.test(website)) return json("Web bağlantısı http:// veya https:// ile başlamalıdır.", 422);
-    if (note && (sensitiveHealthPattern.test(note) || piiPattern.test(note))) {
+    if (note && (saglikBilgisiIcerir(note) || piiPattern.test(note))) {
       return json("Not alanına hasta, sağlık veya başka kişiye ait iletişim bilgisi yazmayın.", 422);
     }
-    if (customNeed && piiPattern.test(customNeed)) {
-      return json("İhtiyaç alanına başka kişiye ait iletişim bilgisi yazmayın.", 422);
+    if (customNeed && (saglikBilgisiIcerir(customNeed) || piiPattern.test(customNeed))) {
+      return json("İhtiyaç alanına hasta, sağlık veya başka kişiye ait iletişim bilgisi yazmayın.", 422);
     }
     const storedNote = [customNeed ? `Müşterinin yazdığı ihtiyaç: ${customNeed}` : "", note].filter(Boolean).join("\n\n").slice(0, 1000);
 
     const trustedIp = request.headers.get("cf-connecting-ip");
+    if (!trustedIp && process.env.NODE_ENV === "production") {
+      return json("Güvenli istek bilgisi doğrulanamadı. Lütfen yeniden deneyin.", 429);
+    }
     const rateIdentity = trustedIp ? `ip:${trustedIp}` : `idempotency:${idempotencyKey}`;
     const ipHash = await sha256(`agentaxis-intake:${rateIdentity}`);
     const now = new Date();

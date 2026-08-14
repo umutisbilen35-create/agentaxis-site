@@ -29,14 +29,14 @@ test("AgentAxis ana sayfasi guclu giris metniyle sunulur", async () => {
   assert.match(html, /Ücretsiz inceleme/);
   assert.match(html, /Önemli işlemler sizin onayınızda/);
   assert.match(html, /Müşteri kazanma/);
-  assert.match(html, /Premium web sitesi/);
+  assert.match(html, /Randevu ve rezervasyon/);
   assert.doesNotMatch(html, />Demolar</);
   assert.match(html, /Paketler/);
   assert.match(html, /İhtiyacınızı anlatın/);
   assert.match(html, /Önemli işler sizin onayınızda/);
   assert.match(html, /Akıllı İşletme Asistanı/);
-  assert.match(html, /İhtiyacınız olan sistemi birlikte kuruyoruz/);
-  assert.match(html, /7 gün ücretsiz deneyin/);
+  assert.match(html, /Randevu ve hasta takibini tek düzende görün/);
+  assert.doesNotMatch(html, /7 gün ücretsiz deneyin/);
   assert.doesNotMatch(html, /10\s*\.? *gün/i);
   assert.match(html, /Ücretsiz incelemeyi başlat|Ücretsiz mini teşhis/);
   assert.doesNotMatch(html, /Jarvis/i);
@@ -57,7 +57,7 @@ test("ana donusum ve guvenlik unsurlari korunur", async () => {
   assert.match(html, /Otomatik ödeme yok/);
   assert.match(html, /Müşteri takibi/);
   assert.match(html, /İş otomasyonu/);
-  assert.match(html, /Web sitesi/);
+  assert.match(html, /Randevu yönetimi/);
   assert.match(html, /mailto:agentaxislabs@gmail.com/);
   assert.match(html, /Ne yapıldığını görür/);
   assert.doesNotMatch(html, /<strong>3<\/strong>|<strong>0<\/strong>/);

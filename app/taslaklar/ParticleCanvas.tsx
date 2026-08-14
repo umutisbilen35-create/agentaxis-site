@@ -25,7 +25,7 @@ export default function ParticleCanvas({ className }: ParticleCanvasProps) {
     if (!drawingContext) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const colors = ["#3566f5", "#7d70ff", "#ff805c"];
+    const colors = ["#d8bf8d", "#b99a61", "#f7f4ed"];
     let particles: Particle[] = [];
     let frame = 0;
     let width = 0;

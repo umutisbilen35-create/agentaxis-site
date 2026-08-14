@@ -59,12 +59,34 @@ test("başvuru kapısı dış eylem başlatmadan korumaları uygular", async () 
   assert.match(route, /cleanAttribution/);
   assert.match(route, /sensitiveHealthPattern/);
   assert.match(route, /Not alanına hasta, sağlık veya başka kişiye ait iletişim bilgisi yazmayın/);
+  assert.match(route, /customNeed && \(saglikBilgisiIcerir\(customNeed\) \|\| piiPattern\.test\(customNeed\)\)/);
+  assert.match(route, /İhtiyaç alanına hasta, sağlık veya başka kişiye ait iletişim bilgisi yazmayın/);
+  assert.match(route, /!trustedIp && process\.env\.NODE_ENV === "production"/);
   assert.match(route, /idempotency:\$\{idempotencyKey\}/);
   assert.doesNotMatch(route, /ipHash = trustedIp \? .* : "not-available"/);
   assert.match(route, /\.toLowerCase\(\)/);
   assert.doesNotMatch(route, /toLocaleLowerCase/);
   assert.doesNotMatch(route, /const intakeId = Number/);
   assert.doesNotMatch(route, /sendMail|sendMessage|payment|charge/i);
+});
+
+test("sağlık verisi kapısı Türkçe kelime sınırlarını davranışla yakalar", async () => {
+  const route = await readFile(new URL("app/api/intake/route.ts", root), "utf8");
+  const literal = route.match(/const sensitiveHealthPattern = (\/.+\/u);/s)?.[1];
+  assert.ok(literal, "sağlık deseni kaynakta bulunmalı");
+  const pattern = Function(`"use strict"; return (${literal});`)();
+  const turkceKucuk = (value) => value.replace(/İ/g, "i").replace(/I/g, "ı").toLowerCase();
+  assert.match(route, /function turkceKucuk\(value: string\)/);
+  assert.match(route, /sensitiveHealthPattern\.test\(turkceKucuk\(value\)\)/);
+  for (const value of [
+    "hastanın tanı bilgisi", "ilaç hatırlatması", "ağrı şikayeti", "teşhis koyduk",
+    "İlaç takibi istiyoruz", "İLAÇ TAKİBİ", "TEŞHİS", "TEDAVİ", "TAHLİL", "DİYABET", "HAMİLE", "AMELİYAT", "ENFEKSİYON", "AĞRI",
+  ]) {
+    assert.equal(pattern.test(turkceKucuk(value)), true, `${value} reddedilmeli`);
+  }
+  for (const value of ["tanıtım yapmak istiyoruz", "ağrısız deneyim", "ilaçlı ifade değil", "randevu hatırlatma sistemi"]) {
+    assert.equal(pattern.test(turkceKucuk(value)), false, `${value} yanlış pozitif olmamalı`);
+  }
 });
 
 test("aydınlatma metni IP özetini geri döndürülemez diye tanımlamaz", async () => {
