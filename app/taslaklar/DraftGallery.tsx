@@ -401,7 +401,49 @@ function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePa
         <div className={styles.liveModalBody}>
           {panel === "hizmetler" && <Services />}
           {panel === "surec" && <Process />}
-          {panel === "paketler" && <section className={styles.catalogPanel}><small>ESNEK ÇALIŞMA KAPSAMLARI</small><h2>İhtiyacınız kadar sistem kurulur.</h2><p>Bugün yalnız sınırlı sayıda Referans Pilotu açıyoruz. Diğer kapsamlar ilk ölçülmüş vakadan sonra sunulacak.</p><div className={styles.catalogGrid}><article><span>01</span><h3>Referans Pilotu</h3><p>Tek bir önemli soruna odaklanan, üç aylık küçük ve ölçülebilir başlangıç çalışması.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article><article><span>02</span><h3>Başlangıç</h3><p>İlk ölçülmüş vakadan sonra açılacak tek akışlı kurulum ve takip kapsamı.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article><article><span>03</span><h3>Büyüme / Yönetilen</h3><p>Birden fazla bağlantılı akış ile düzenli bakım ve raporlama; ihtiyaca göre hazırlanır.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article></div><div className={styles.catalogTrust}><span>✓ Otomatik ödeme yok</span> <span>✓ Önemli işler sizin onayınızda</span><span>Meta/WhatsApp, CRM–takvim lisansı ve KDV teklifte ayrı gösterilir</span></div></section>}
+          {panel === "paketler" && (
+            <section className={styles.catalogPanel}>
+              <small>İŞLETMENİZE UYGUN HİZMETLER</small>
+              <h2>İhtiyacınız kadar sistem kurulur.</h2>
+              <p>Önce en önemli ihtiyacınızdan başlarız. Kullanmayacağınız özellikler için ödeme yapmazsınız.</p>
+              <div className={styles.catalogGrid}>
+                <article className={styles.catalogFeatured}>
+                  <span>01</span>
+                  <h3>Başlangıç — Randevu Takibi</h3>
+                  <div className={styles.catalogPrice}>
+                    <strong>7.500 TL</strong><small>kurulum</small>
+                    <strong>4.000 TL</strong><small>aylık hizmet</small>
+                  </div>
+                  <ul className={styles.catalogFeatures}>
+                    <li>Randevu taleplerini düzenli takip etme</li>
+                    <li>Teyit ve hatırlatma mesajları</li>
+                    <li>İptal ve gelmeyen müşterileri takip etme</li>
+                    <li>Gerektiğinde görüşmeyi çalışanınıza aktarma</li>
+                    <li>Aylık kontrol, destek ve kısa sonuç raporu</li>
+                  </ul>
+                  <p className={styles.catalogScope}>Tek işletme adresi ve tek WhatsApp numarası için geçerlidir.</p>
+                  <button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button>
+                </article>
+                <article>
+                  <span>02</span>
+                  <h3>Büyüme</h3>
+                  <p>Müşteri takibi ve eski müşterilerle yeniden iletişim gibi ek ihtiyaçlar için hazırlanır.</p>
+                  <button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button>
+                </article>
+                <article>
+                  <span>03</span>
+                  <h3>Özel Sistem</h3>
+                  <p>Birden fazla işletme adresi veya size özel çalışma düzeni için hazırlanır.</p>
+                  <button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button>
+                </article>
+              </div>
+              <div className={styles.catalogTrust}>
+                <span>✓ Otomatik ödeme yok</span>
+                <span>✓ Önemli işler sizin onayınızda</span>
+                <span>WhatsApp mesajları, kullanılan ek hizmetler ve vergiler teklifte ayrı gösterilir</span>
+              </div>
+            </section>
+          )}
           {panel === "kanit" && <section className={styles.modalProof}><small>ŞEFFAF ÇALIŞMA KANITI</small><h2>Kaynağı, çalışan sistemi ve ölçülen sonucu birlikte görürsünüz.</h2><div className={styles.proofCards}><article><span>01</span><strong>Kaynaklı teşhis</strong><p>Problemin nerede olduğunu kanıtıyla gösteririz.</p></article><article><span>02</span><strong>Çalışan sistem</strong><p>Sunum değil, test edilmiş akış kurarız.</p></article><article><span>03</span><strong>Sizin kontrolünüz</strong><p>Önemli dış işlemler açık onayınızla ilerler.</p></article></div></section>}
           {panel === "iletisim" && <section className={styles.liveFinder}><div><small>ÜCRETSİZ MİNİ TEŞHİS</small><h2>İşletmenizi anlatın, doğru başlangıcı birlikte bulalım.</h2><p>Yaklaşık iki dakikada ihtiyacınızı seçin. Otomatik ödeme yok; önemli işlemler sizin onayınızda kalır.</p><div className={styles.contactDirect}><span>Doğrudan iletişim</span><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.phoneDisplay && <a href={`tel:${siteContact.phoneHref}`}>{siteContact.phoneDisplay}</a>}{siteContact.whatsappHref && <a href={siteContact.whatsappHref} target="_blank" rel="noreferrer">WhatsApp’tan yazın ↗</a>}{siteContact.instagramHref && <a href={siteContact.instagramHref} target="_blank" rel="noreferrer">Instagram ↗</a>}{siteContact.linkedinHref && <a href={siteContact.linkedinHref} target="_blank" rel="noreferrer">LinkedIn ↗</a>}{siteContact.youtubeHref && <a href={siteContact.youtubeHref} target="_blank" rel="noreferrer">YouTube ↗</a>}</div></div><NeedFinder /></section>}
         </div>

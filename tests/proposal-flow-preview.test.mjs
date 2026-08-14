@@ -71,6 +71,11 @@ test("canlı marka, modal erişilebilirliği ve paket sınırları doğrulanır"
   assert.match(gallery, /child\.inert = Boolean\(livePanel\)/);
   assert.match(gallery, /event\.key !== "Tab"/);
   assert.match(gallery, /const focusables = Array\.from\(modal\.querySelectorAll<HTMLElement>\(focusableSelector\)\)/);
-  assert.match(gallery, /Referans Pilotu/);
-  assert.match(gallery, /Meta\/WhatsApp, CRM–takvim lisansı ve KDV teklifte ayrı gösterilir/);
+  assert.doesNotMatch(gallery, /Referans Pilotu/);
+  assert.match(gallery, /Başlangıç — Randevu Takibi/);
+  assert.match(gallery, /7\.500 TL/);
+  assert.match(gallery, /4\.000 TL/);
+  assert.match(gallery, /Aylık kontrol, destek ve kısa sonuç raporu/);
+  assert.match(gallery, /Tek işletme adresi ve tek WhatsApp numarası için geçerlidir/);
+  assert.match(gallery, /WhatsApp mesajları, kullanılan ek hizmetler ve vergiler teklifte ayrı gösterilir/);
 });
