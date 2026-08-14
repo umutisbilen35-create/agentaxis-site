@@ -498,7 +498,6 @@ export function HybridDraft({ live = false, lumen = false, initialPanel = null, 
           <h1>Müşteriyi kaçırmayın.<br /><em>Takibi sisteme bırakın.</em></h1>
           <p>Akıllı İşletme Asistanı talebi görür, ihtiyacı düzenler ve doğru sonraki adımı hazırlar. Gönderme ve hesap işlemleri sizin onayınızla ilerler.</p>
           <div className={styles.actions}><button type="button" onClick={() => live && openPanel("iletisim")}>Ücretsiz mini teşhis <span>→</span></button><button type="button" onClick={() => live && openPanel("surec")}>Nasıl çalıştığını gör</button></div>
-          <TrustStrip />
         </div>
         <div className={styles.hybridVisual}>
           <HeroValuePanel onOpenServices={() => live && openPanel("hizmetler")} />

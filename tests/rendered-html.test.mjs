@@ -27,7 +27,7 @@ test("AgentAxis ana sayfasi guclu giris metniyle sunulur", async () => {
   assert.match(html, /Takibi sisteme bırakın/);
   assert.match(html, /Gönderme ve hesap işlemleri sizin onayınızla ilerler/);
   assert.match(html, /Ücretsiz inceleme/);
-  assert.match(html, /Önemli işlemler sizin onayınızda/);
+  assert.doesNotMatch(html, /Önemli işlemler sizin onayınızda/);
   assert.match(html, /Müşteri kazanma/);
   assert.match(html, /Randevu ve rezervasyon/);
   assert.doesNotMatch(html, />Demolar</);
@@ -54,7 +54,7 @@ test("ana donusum ve guvenlik unsurlari korunur", async () => {
   assert.doesNotMatch(html, /role="tab"/);
   assert.doesNotMatch(html, /href="#(?:hizmetler|surec|kanit|iletisim)"/);
   assert.doesNotMatch(html, /ŞEFFAF ÇALIŞMA KANITI/);
-  assert.match(html, /Otomatik ödeme yok/);
+  assert.doesNotMatch(html, /Otomatik ödeme yok/);
   assert.match(html, /Müşteri takibi/);
   assert.match(html, /İş otomasyonu/);
   assert.match(html, /Randevu yönetimi/);
