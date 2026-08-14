@@ -1,0 +1,687 @@
+/*
+  AgentAxis Labs — premium 3D önizleme sahnesi.
+  Kural: canlı sitenin yazıları, bölüm sırası, kutu yerleşimi ve ölçüleri DEĞİŞMEZ.
+  Bu dosya yalnız arka plan, ışık, derinlik, kontrollü hareket ve hover katmanı ekler.
+  Ağır 3D yok: tek 596 KB'lik döngü videosu + CSS transform/parallax.
+  Kanonik marka: gece #03040a, mürekkep #f7f4ed, altın #d8bf8d. Mavi kullanılmaz.
+*/
+
+.stageRoot {
+  --night: #03040a;
+  --ink: #f7f4ed;
+  --gold: #d8bf8d;
+  --gold-soft: rgba(216, 191, 141, 0.14);
+  position: relative;
+  min-height: 100dvh;
+  background: var(--night);
+  color: var(--ink);
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+}
+
+/* ---------- Sahne kabı ---------- */
+
+.stage {
+  --ax-s: 0;
+  --ax-v: 0;
+  --ax-px: 0;
+  --ax-py: 0;
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  background: var(--night);
+  pointer-events: none;
+}
+
+.stageContent {
+  position: relative;
+  z-index: 1;
+}
+
+.room,
+.halo,
+.object,
+.objectFallback,
+.horizon,
+.grid,
+.plates,
+.rake,
+.dust,
+.grain,
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.object,
+.objectFallback {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+}
+
+.plates i {
+  position: absolute;
+  display: block;
+  border: 1px solid rgba(216, 191, 141, 0.3);
+  border-radius: 26px;
+  background: linear-gradient(140deg, rgba(216, 191, 141, 0.09), rgba(216, 191, 141, 0) 62%);
+  box-shadow: inset 0 1px 0 rgba(247, 244, 237, 0.12), 0 0 60px rgba(216, 191, 141, 0.05);
+}
+
+/* Varsayılan: her iki varyantta da kapalı olan katmanlar. */
+.horizon,
+.grid,
+.plates {
+  display: none;
+}
+
+/* ---------------------------------------------------------------
+   A — Sinematik koyu-altın. Heykelsi, akışkan, sakin.
+   Tek ışık kaynağı, yavaş nefes, film dokusu.
+---------------------------------------------------------------- */
+
+.stageA .room {
+  background:
+    radial-gradient(122% 88% at 66% 30%, #10121f 0%, #090b16 36%, #05060e 66%, var(--night) 100%),
+    linear-gradient(180deg, var(--night) 0%, #05060f 48%, var(--night) 100%);
+}
+
+.stageA .halo {
+  background: radial-gradient(
+    40vmax 30vmax at calc(64% + var(--ax-px) * 2.4%) calc(44% + var(--ax-py) * 2% - var(--ax-v) * 7%),
+    rgba(216, 191, 141, 0.26),
+    rgba(216, 191, 141, 0.08) 44%,
+    transparent 70%
+  );
+  filter: blur(22px);
+  animation: axBreath 19s ease-in-out infinite alternate;
+}
+
+.stageA .object {
+  opacity: 0.98;
+  mix-blend-mode: screen;
+  /* Nötr/soğuk kaynak kareyi marka altınına çevirir; ek dosya gerekmez. */
+  filter: sepia(0.62) saturate(2.1) hue-rotate(-12deg) brightness(1.42) contrast(1.04);
+  object-position: center;
+  transform:
+    translate3d(calc(-8% + var(--ax-px) * -14px), calc(5% + var(--ax-v) * -46px), 0)
+    scale(calc(1.16 + var(--ax-v) * 0.06))
+    rotate(calc(var(--ax-s) * 2deg));
+  transition: transform 0.45s cubic-bezier(0.22, 0.75, 0.24, 1);
+  -webkit-mask-image: radial-gradient(48% 62% at 66% 46%, #000 26%, rgba(0, 0, 0, 0.5) 58%, transparent 84%);
+  mask-image: radial-gradient(48% 62% at 66% 46%, #000 26%, rgba(0, 0, 0, 0.5) 58%, transparent 84%);
+  will-change: transform;
+}
+
+/* Video açılmazsa aynı heykelsi kompozisyon CSS ile kurulur. */
+.stageA .objectFallback {
+  background:
+    conic-gradient(
+      from 210deg at 63% 47%,
+      rgba(216, 191, 141, 0) 0deg,
+      rgba(216, 191, 141, 0.42) 62deg,
+      rgba(247, 244, 237, 0.24) 118deg,
+      rgba(216, 191, 141, 0.34) 176deg,
+      rgba(216, 191, 141, 0) 252deg
+    ),
+    radial-gradient(38vmax 38vmax at 63% 47%, rgba(216, 191, 141, 0.16), transparent 62%);
+  filter: blur(26px);
+  opacity: 0.85;
+  -webkit-mask-image: radial-gradient(34vmax 34vmax at 63% 47%, #000 34%, rgba(0, 0, 0, 0.4) 60%, transparent 78%);
+  mask-image: radial-gradient(34vmax 34vmax at 63% 47%, #000 34%, rgba(0, 0, 0, 0.4) 60%, transparent 78%);
+  animation: axBreath 21s ease-in-out infinite alternate;
+}
+
+.stageA .rake {
+  background: linear-gradient(
+    112deg,
+    transparent 24%,
+    rgba(216, 191, 141, 0.1) 43%,
+    rgba(247, 244, 237, 0.05) 50%,
+    rgba(216, 191, 141, 0.08) 57%,
+    transparent 76%
+  );
+  mix-blend-mode: screen;
+  animation: axRake 27s linear infinite;
+}
+
+.stageA .dust {
+  background-image:
+    radial-gradient(1.7px 1.7px at 14% 26%, rgba(216, 191, 141, 0.55), transparent 62%),
+    radial-gradient(1.3px 1.3px at 28% 68%, rgba(247, 244, 237, 0.4), transparent 62%),
+    radial-gradient(1.9px 1.9px at 41% 18%, rgba(216, 191, 141, 0.45), transparent 62%),
+    radial-gradient(1.2px 1.2px at 55% 79%, rgba(216, 191, 141, 0.4), transparent 62%),
+    radial-gradient(1.6px 1.6px at 68% 34%, rgba(247, 244, 237, 0.34), transparent 62%),
+    radial-gradient(1.4px 1.4px at 79% 61%, rgba(216, 191, 141, 0.48), transparent 62%),
+    radial-gradient(1.8px 1.8px at 88% 22%, rgba(216, 191, 141, 0.38), transparent 62%),
+    radial-gradient(1.2px 1.2px at 94% 74%, rgba(247, 244, 237, 0.3), transparent 62%);
+  opacity: 0.5;
+  animation: axDrift 34s ease-in-out infinite alternate;
+}
+
+.stageA .grain {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='axn'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='180' height='180' filter='url(%23axn)' opacity='0.55'/></svg>");
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  animation: axGrain 1.2s steps(3) infinite;
+}
+
+.stageA .vignette {
+  background:
+    radial-gradient(circle at 58% 44%, transparent 38%, rgba(2, 3, 8, 0.4) 76%, rgba(2, 3, 8, 0.8) 100%),
+    linear-gradient(180deg, rgba(2, 3, 8, 0.55) 0%, transparent 20%, transparent 74%, rgba(2, 3, 8, 0.74) 100%);
+}
+
+/* ---------------------------------------------------------------
+   B — Temiz teknoloji / lüks. Katmanlı derinlik, ölçülü parallax.
+   Perspektif zemin, üç derinlik plakası, uzakta yumuşayan ışık.
+---------------------------------------------------------------- */
+
+.stageB .room {
+  background:
+    radial-gradient(108% 76% at 50% 2%, #0e1020 0%, #090b16 42%, #05060f 72%, var(--night) 100%),
+    linear-gradient(180deg, #06070f 0%, var(--night) 62%);
+}
+
+.stageB .halo {
+  background:
+    radial-gradient(
+      34vmax 22vmax at calc(72% + var(--ax-px) * 2.4%) calc(22% + var(--ax-py) * 1.8% - var(--ax-v) * 4%),
+      rgba(216, 191, 141, 0.18),
+      rgba(216, 191, 141, 0.05) 46%,
+      transparent 72%
+    ),
+    radial-gradient(60vmax 26vmax at 50% 58%, rgba(216, 191, 141, 0.1), transparent 66%);
+  filter: blur(18px);
+}
+
+/* Videoyu tam ekran değil, sağ negatif alanda duran net bir 3D modül olarak kullanır. */
+.stageB .object,
+.stageB .objectFallback {
+  inset: 10% 2% auto auto;
+  width: min(40vw, 540px);
+  height: min(50vh, 400px);
+  object-fit: contain;
+  opacity: 0.88;
+  mix-blend-mode: screen;
+  filter: sepia(0.6) saturate(1.95) hue-rotate(-12deg) brightness(1.26) contrast(1.08);
+  object-position: center;
+  transform:
+    translate3d(calc(-6% + var(--ax-px) * -10px), calc(var(--ax-v) * -34px), 0)
+    scale(calc(1.04 + var(--ax-v) * 0.03));
+  transition: transform 0.5s cubic-bezier(0.22, 0.75, 0.24, 1);
+  -webkit-mask-image: radial-gradient(42% 52% at 66% 50%, #000 30%, rgba(0, 0, 0, 0.5) 62%, transparent 86%);
+  mask-image: radial-gradient(42% 52% at 66% 50%, #000 30%, rgba(0, 0, 0, 0.5) 62%, transparent 86%);
+  will-change: transform;
+}
+
+.stageB .objectFallback {
+  background:
+    conic-gradient(
+      from 190deg at 50% 48%,
+      rgba(216, 191, 141, 0) 0deg,
+      rgba(216, 191, 141, 0.55) 70deg,
+      rgba(247, 244, 237, 0.3) 130deg,
+      rgba(216, 191, 141, 0) 236deg
+    );
+  filter: blur(18px);
+}
+
+.stageB .horizon {
+  display: block;
+  inset: auto 0 44% 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(216, 191, 141, 0.62) 32%, rgba(247, 244, 237, 0.68) 52%, rgba(216, 191, 141, 0.6) 70%, transparent);
+  box-shadow: 0 0 52px 14px rgba(216, 191, 141, 0.18);
+  opacity: 0.9;
+  transform: translate3d(0, calc(var(--ax-v) * -22px), 0);
+  transition: transform 0.5s cubic-bezier(0.22, 0.75, 0.24, 1);
+}
+
+/* Perspektif zemin: gerçek 3D transform, WebGL yok. */
+.stageB .grid {
+  display: block;
+  inset: 56% -40% -24% -40%;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(216, 191, 141, 0.36) 0 1px, transparent 1px 78px),
+    repeating-linear-gradient(0deg, rgba(216, 191, 141, 0.28) 0 1px, transparent 1px 78px);
+  transform: perspective(760px) rotateX(74deg) translate3d(calc(var(--ax-px) * -12px), calc(var(--ax-v) * 58px), 0);
+  transform-origin: 50% 0%;
+  opacity: 0.85;
+  transition: transform 0.5s cubic-bezier(0.22, 0.75, 0.24, 1);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, rgba(0, 0, 0, 0.45) 58%, transparent 88%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 18%, rgba(0, 0, 0, 0.45) 58%, transparent 88%);
+  will-change: transform;
+}
+
+.stageB .plates {
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.22, 0.75, 0.24, 1);
+}
+
+.stageB .plateFar {
+  left: 3%;
+  top: 9%;
+  width: 26vw;
+  min-width: 200px;
+  height: 30vh;
+  min-height: 180px;
+  opacity: 0.55;
+  filter: blur(2.5px);
+  transform:
+    translate3d(calc(var(--ax-px) * 4px), calc(var(--ax-v) * -14px), 0)
+    rotate(-3deg);
+  transition: transform 0.55s cubic-bezier(0.22, 0.75, 0.24, 1);
+}
+
+.stageB .plateMid {
+  right: 4%;
+  bottom: 9%;
+  width: 30vw;
+  min-width: 220px;
+  height: 26vh;
+  min-height: 160px;
+  opacity: 0.8;
+  filter: blur(1.2px);
+  transform:
+    translate3d(calc(var(--ax-px) * 9px), calc(var(--ax-v) * -34px), 0)
+    rotate(2.4deg);
+  transition: transform 0.5s cubic-bezier(0.22, 0.75, 0.24, 1);
+}
+
+.stageB .plateNear {
+  right: 33%;
+  bottom: 26%;
+  width: 20vw;
+  min-width: 150px;
+  height: 19vh;
+  min-height: 120px;
+  border-color: rgba(216, 191, 141, 0.44);
+  opacity: 0.95;
+  transform:
+    translate3d(calc(var(--ax-px) * 16px), calc(var(--ax-v) * -62px), 0)
+    rotate(-1.6deg);
+  transition: transform 0.45s cubic-bezier(0.22, 0.75, 0.24, 1);
+}
+
+/* Mimari kılçizgiler: teknoloji/lüks dilinin taşıyıcısı. İçeriğin arkasında kalır. */
+.stageB .rake {
+  background:
+    linear-gradient(90deg, transparent 0 24.94%, rgba(216, 191, 141, 0.13) 24.94% 25%, transparent 25%),
+    linear-gradient(90deg, transparent 0 61.94%, rgba(216, 191, 141, 0.26) 61.94% 62%, transparent 62%),
+    linear-gradient(90deg, transparent 0 86.94%, rgba(216, 191, 141, 0.13) 86.94% 87%, transparent 87%),
+    linear-gradient(180deg, transparent 0 43.9%, rgba(216, 191, 141, 0.12) 43.9% 44%, transparent 44%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 4%, #000 34%, #000 96%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 4%, #000 34%, #000 96%, transparent 100%);
+  transform: translate3d(calc(var(--ax-px) * -6px), calc(var(--ax-v) * -12px), 0);
+  transition: transform 0.5s cubic-bezier(0.22, 0.75, 0.24, 1);
+}
+
+.stageB .dust {
+  background-image:
+    radial-gradient(1.4px 1.4px at 21% 31%, rgba(216, 191, 141, 0.42), transparent 62%),
+    radial-gradient(1.2px 1.2px at 46% 22%, rgba(247, 244, 237, 0.3), transparent 62%),
+    radial-gradient(1.5px 1.5px at 63% 57%, rgba(216, 191, 141, 0.36), transparent 62%),
+    radial-gradient(1.2px 1.2px at 84% 29%, rgba(216, 191, 141, 0.32), transparent 62%);
+  opacity: 0.38;
+  animation: axDrift 42s ease-in-out infinite alternate;
+}
+
+.stageB .grain {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='axnb'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/></filter><rect width='180' height='180' filter='url(%23axnb)' opacity='0.5'/></svg>");
+  opacity: 0.025;
+  mix-blend-mode: overlay;
+}
+
+.stageB .vignette {
+  background:
+    radial-gradient(circle at 50% 42%, transparent 52%, rgba(2, 3, 8, 0.28) 84%, rgba(2, 3, 8, 0.58) 100%),
+    linear-gradient(180deg, rgba(2, 3, 8, 0.4) 0%, transparent 14%, transparent 82%, rgba(2, 3, 8, 0.6) 100%);
+}
+
+/* ---------------------------------------------------------------
+   İçerik geçirgenliği.
+   Yazı, bölüm sırası, kutu yeri ve ölçü DEĞİŞMEZ; yalnız arka plan
+   yarı saydam yapılır ki sabit 3D sahne tek bir dünya gibi süzülsün.
+---------------------------------------------------------------- */
+
+/* Miras alınan hero/panel videoları kapanır: sayfada tek video kalır.
+   IntersectionObserver bunları kendiliğinden duraklatır. */
+.stageRoot .stageContent video {
+  display: none;
+}
+
+/* Sayfa gövdesi şeffaflaşır ki sabit 3D sahne arkadan görünsün. */
+.stageRoot .stageContent > div {
+  background: transparent;
+}
+
+/* Hero ve onun kendi arka plan kutusu şeffaflaşır; okunabilirlik perdesi kalır. */
+.stageRoot .stageContent > div > section:first-of-type {
+  background: transparent;
+}
+
+.stageRoot .stageContent > div > section:first-of-type > div:first-child {
+  background: transparent;
+}
+
+/* Hero okunabilirlik perdesi yalnız masaüstünde yeniden dengelenir:
+   sol taraf yazı için koyu kalır, sağ taraf 3D heykel için açılır.
+   Mobilde bileşenin kendi dikey perdesi aynen korunur. */
+@media (min-width: 901px) {
+  .variantA .stageContent > div > section:first-of-type > div:first-child > i {
+    background:
+      linear-gradient(90deg, rgba(2, 3, 8, 0.96) 0%, rgba(2, 3, 8, 0.88) 34%, rgba(2, 3, 8, 0.26) 62%, rgba(2, 3, 8, 0.06) 100%),
+      linear-gradient(180deg, rgba(2, 3, 8, 0.42), transparent 30%, rgba(2, 3, 8, 0.7));
+    box-shadow: inset 0 -120px 150px rgba(2, 3, 8, 0.6);
+  }
+
+  /* B: perdeyi yalnız yazı bloğunda tutar; derinlik zemini ve plakalar görünür kalır. */
+  .variantB .stageContent > div > section:first-of-type > div:first-child > i {
+    background:
+      linear-gradient(90deg, rgba(2, 3, 8, 0.94) 0%, rgba(2, 3, 8, 0.8) 30%, rgba(2, 3, 8, 0.28) 56%, rgba(2, 3, 8, 0.08) 100%),
+      linear-gradient(180deg, rgba(2, 3, 8, 0.38), transparent 26%, rgba(2, 3, 8, 0.46));
+    box-shadow: none;
+  }
+}
+
+/* Hero altındaki bölümler: aynı ton, hafif saydamlık. */
+.stageRoot .stageContent > div > section:not(:first-of-type) {
+  background-color: rgba(6, 8, 17, 0.9);
+  background-image: linear-gradient(180deg, rgba(11, 13, 26, 0.44), rgba(4, 5, 12, 0.5));
+}
+
+.stageRoot .stageContent > div > footer:last-of-type {
+  background-color: rgba(4, 5, 11, 0.92);
+  background-image: none;
+}
+
+/* Panel açıldığında da aynı sahne arkada durur. */
+.stageRoot .stageContent > div > div[role="dialog"] {
+  background: rgba(3, 4, 10, 0.84);
+  backdrop-filter: blur(20px) saturate(1.06);
+}
+
+/* A: hero ışığı biraz daha sıcak, kartlar biraz daha derin gölgeli. */
+.variantA .stageContent > div > section:not(:first-of-type) {
+  box-shadow: inset 0 1px 0 rgba(216, 191, 141, 0.06);
+}
+
+/* B: bölüm sınırları daha net, ışık daha soğuk ve temiz. */
+.variantB .stageContent > div > section:not(:first-of-type) {
+  background-color: rgba(6, 7, 15, 0.92);
+  background-image: linear-gradient(180deg, rgba(13, 15, 27, 0.4), rgba(4, 5, 12, 0.52));
+  box-shadow: inset 0 1px 0 rgba(216, 191, 141, 0.08);
+}
+
+/* ---------------------------------------------------------------
+   B — kontrollü hover hareketleri.
+   Yalnız hover/focus anında, yerleşimi bozmayan küçük 3D eğim.
+---------------------------------------------------------------- */
+
+.variantB .stageContent > div > section article,
+.variantB .stageContent > div > section > div button {
+  transition:
+    transform 0.32s cubic-bezier(0.2, 0.75, 0.2, 1),
+    box-shadow 0.32s ease,
+    border-color 0.32s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .variantB .stageContent > div > section article:hover {
+    transform: perspective(900px) translate3d(0, -6px, 24px) rotateX(2.4deg);
+    box-shadow: 0 30px 68px rgba(0, 0, 0, 0.46), 0 0 0 1px rgba(216, 191, 141, 0.26);
+    border-color: rgba(216, 191, 141, 0.4);
+  }
+
+  .variantB .stageContent > div > section > div button:not(:disabled):hover {
+    transform: perspective(900px) translate3d(0, -4px, 18px);
+    box-shadow: 0 24px 54px rgba(0, 0, 0, 0.42);
+  }
+
+  /* A: hover daha sakin — yalnız ışık artar, kutular yerinden oynamaz. */
+  .variantA .stageContent > div > section article:hover {
+    border-color: rgba(216, 191, 141, 0.42);
+    box-shadow: 0 26px 62px rgba(0, 0, 0, 0.44), 0 0 30px rgba(216, 191, 141, 0.08);
+  }
+}
+
+/* Klavye erişimi: odak halkası her iki varyantta da altın ve görünür kalır. */
+.stageRoot .stageContent button:focus-visible,
+.stageRoot .stageContent a:focus-visible,
+.stageRoot .stageContent input:focus-visible,
+.stageRoot .stageContent textarea:focus-visible,
+.stageRoot .stageContent [tabindex]:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 4px;
+}
+
+/* ---------------------------------------------------------------
+   Hareket
+---------------------------------------------------------------- */
+
+@keyframes axBreath {
+  from {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes axRake {
+  from {
+    transform: translate3d(-32%, 0, 0);
+  }
+  to {
+    transform: translate3d(32%, 0, 0);
+  }
+}
+
+@keyframes axDrift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-2.5%, -3.5%, 0);
+  }
+}
+
+@keyframes axGrain {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  33% {
+    transform: translate3d(-2%, 1.5%, 0);
+  }
+  66% {
+    transform: translate3d(1.5%, -2%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* ---------------------------------------------------------------
+   Mobil uyum — 8 GB Mac ve telefon için katman sadeleştirmesi
+---------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  /* Mobilde heykel okunabilirliği bozmayan atmosferik bir ışığa iner. */
+  .stageA .object {
+    object-fit: contain;
+    object-position: center;
+    opacity: 0.5;
+    filter: sepia(0.62) saturate(2.1) hue-rotate(-12deg) brightness(1.2) contrast(1.02) blur(2px);
+    transform: translate3d(12%, calc(-20% + var(--ax-v) * -18px), 0) scale(1.35);
+    -webkit-mask-image: radial-gradient(40% 34% at 66% 46%, #000 24%, rgba(0, 0, 0, 0.42) 56%, transparent 82%);
+    mask-image: radial-gradient(40% 34% at 66% 46%, #000 24%, rgba(0, 0, 0, 0.42) 56%, transparent 82%);
+  }
+
+  .stageA .objectFallback {
+    opacity: 0.55;
+  }
+
+  .stageA .halo {
+    filter: blur(18px);
+  }
+
+  .stageA .vignette {
+    background:
+      radial-gradient(circle at 58% 30%, transparent 34%, rgba(2, 3, 8, 0.46) 72%, rgba(2, 3, 8, 0.84) 100%),
+      linear-gradient(180deg, rgba(2, 3, 8, 0.62) 0%, rgba(2, 3, 8, 0.3) 26%, transparent 60%, rgba(2, 3, 8, 0.8) 100%);
+  }
+
+  .stageB .object,
+  .stageB .objectFallback {
+    inset: 3% 3% auto auto;
+    width: 62vw;
+    height: 26vh;
+    filter: blur(11px) saturate(0.8);
+    transform: translate3d(0, calc(var(--ax-v) * -16px), 0);
+  }
+
+  .stageB .grid {
+    inset: 66% -80% -30% -80%;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(216, 191, 141, 0.14) 0 1px, transparent 1px 56px),
+      repeating-linear-gradient(0deg, rgba(216, 191, 141, 0.1) 0 1px, transparent 1px 56px);
+    transform: perspective(620px) rotateX(76deg) translate3d(0, calc(var(--ax-v) * 34px), 0);
+  }
+
+  .stageB .plateFar {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .stageA .dust,
+  .stageB .dust,
+  .stageA .rake,
+  .stageB .rake {
+    display: none;
+  }
+
+  .stageA .grain {
+    opacity: 0.04;
+    animation: none;
+  }
+
+  .stageB .plateNear {
+    left: 8%;
+    width: 46vw;
+  }
+
+  .stageRoot .stageContent > div > section:not(:first-of-type) {
+    background-color: rgba(6, 8, 17, 0.94);
+  }
+
+  .variantB .stageContent > div > section:not(:first-of-type) {
+    background-color: rgba(6, 7, 15, 0.95);
+  }
+}
+
+/* ---------------------------------------------------------------
+   Hareket kısıtlaması — tam statik premium yedek
+---------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .stage *,
+  .stage {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .stageA .object {
+    transform: translate3d(-8%, 5%, 0) scale(1.16);
+  }
+
+  .stageA .objectFallback {
+    animation: none;
+  }
+
+  .stageB .object,
+  .stageB .objectFallback {
+    transform: translate3d(-6%, 0, 0) scale(1.04);
+  }
+
+  .stageB .horizon,
+  .stageB .plateFar,
+  .stageB .plateMid,
+  .stageB .plateNear,
+  .stageB .rake {
+    transform: none;
+  }
+
+  .stageB .grid {
+    transform: perspective(760px) rotateX(74deg);
+  }
+
+  .stageA .grain,
+  .stageB .grain {
+    animation: none;
+  }
+
+  .variantA .stageContent > div > section article:hover,
+  .variantB .stageContent > div > section article:hover,
+  .variantB .stageContent > div > section > div button:not(:disabled):hover {
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Marka ve okunabilirlik onarımı — YALNIZ bu iki önizleme rotasında.
+   Ortak bileşende kalan mavi/mor izler kanonik koyu-altına çevrilir ve
+   koyu zeminde okunamayan iki metin rengi düzeltilir.
+   Canlı site, canlı `/` rotası ve ortak bileşen dosyaları değiştirilmez.
+   Not: bu projede CSS modülü sınıfları hem geliştirmede hem üretim
+   derlemesinde `_ad_hash_satır` biçiminde üretilir; bu yüzden
+   [class*="ad"] eşleşmesi iki ortamda da geçerlidir.
+---------------------------------------------------------------- */
+
+.stageRoot .stageContent [class*="pointerGlow"] {
+  background: radial-gradient(420px circle at var(--pointer-x) var(--pointer-y), rgba(216, 191, 141, 0.12), transparent 72%);
+}
+
+.stageRoot .stageContent > div > header > nav {
+  box-shadow: 0 10px 28px rgba(3, 4, 10, 0.42);
+}
+
+.stageRoot .stageContent [class*="valuePanelTop"],
+.stageRoot .stageContent [class*="capabilityLiveHead"],
+.stageRoot .stageContent [class*="storyScreenTop"] {
+  border-bottom-color: rgba(216, 191, 141, 0.16);
+}
+
+.stageRoot .stageContent [class*="storyIntro"] h2 em {
+  background: none;
+  color: var(--gold);
+  -webkit-text-fill-color: var(--gold);
+}
+
+.stageRoot .stageContent [class*="storyPulse"] > span {
+  background: linear-gradient(145deg, #a78b58, var(--gold));
+  color: #141620;
+  box-shadow: 0 20px 42px rgba(216, 191, 141, 0.18);
+}
+
+.stageRoot .stageContent [class*="storyTimeline"] > i[class*="storyDone"] {
+  background: linear-gradient(90deg, #b99a61, var(--gold));
+}
+
+/* Koyu zemin üzerinde görünmeyen metinler okunur hâle gelir. */
+.stageRoot .stageContent [class*="capabilityFlow"] strong,
+.stageRoot .stageContent [class*="storyMessage"] strong {
+  color: #f3efe6;
+}
+
+/* Panel içindeki mini teşhis etiketi de kanonik altına bağlanır. */
+.stageRoot .stageContent [class*="liveFinder"] > div > small {
+  color: var(--gold);
+  -webkit-text-fill-color: var(--gold);
+}

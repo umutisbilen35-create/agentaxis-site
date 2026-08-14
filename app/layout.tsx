@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { siteContact } from "./siteConfig";
 
 export const metadata: Metadata = {
   title: "AgentAxis Labs | İşletmeler için AI Sistemleri",
@@ -21,7 +22,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         "@type": "Organization",
         name: "AgentAxis Labs",
         url: "https://agentaxislabs.com/",
-        email: "agentaxislabs@gmail.com",
+        email: siteContact.email,
+        telephone: siteContact.phoneHref,
+        sameAs: [siteContact.instagramHref, siteContact.linkedinHref, siteContact.youtubeHref].filter(Boolean),
         description: "Yerel işletmeler için Akıllı İşletme Asistanı destekli müşteri takibi, randevu yönetimi ve iş otomasyonu hizmetleri.",
       },
     ],

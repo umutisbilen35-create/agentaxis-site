@@ -52,5 +52,25 @@ test("tam site önizlemesi ve canlı ana sayfa aynı onaylanan sistemi doğru et
   assert.match(fullLayout, /index:\s*false/);
   assert.match(gallery, /FullSiteFlowDemo/);
   assert.match(gallery, /previewFlow\s*&&/);
+  assert.match(gallery, /showPreviewBadge=\{showPreviewBadge\}/);
+  assert.match(gallery, /showPreviewBadge && <span>CANLI SİTEYE UYGULANMADI<\/span>/);
   assert.match(home, /previewFlow fullPreview showPreviewBadge=\{false\}/);
+});
+
+test("canlı marka, modal erişilebilirliği ve paket sınırları doğrulanır", () => {
+  const gallery = fs.readFileSync(new URL("../app/taslaklar/DraftGallery.tsx", import.meta.url), "utf8");
+  const particles = fs.readFileSync(new URL("../app/taslaklar/ParticleCanvas.tsx", import.meta.url), "utf8");
+  const moduleCss = fs.readFileSync(new URL("../app/taslaklar/taslaklar.module.css", import.meta.url), "utf8");
+  assert.match(particles, /\["#d8bf8d", "#b99a61", "#f7f4ed"\]/);
+  assert.doesNotMatch(particles, /#3566f5|#7d70ff|#ff805c/);
+  assert.match(moduleCss, /\.fullPreviewRoot \.livePill>i\{background:var\(--preview-gold\)/);
+  assert.match(moduleCss, /\.fullPreviewRoot \.livePill>b\{[^}]*background:rgba\(216,191,141,\.12\)[^}]*color:var\(--preview-gold\)/);
+  assert.match(moduleCss, /\.fullPreviewRoot \.valuePanelTop>span>i\{background:#d8bf8d/);
+  assert.match(moduleCss, /\.fullPreviewRoot \.valuePanelTrust span\{[^}]*background:#f2eee6[^}]*color:#332b20/);
+  assert.match(gallery, /tabIndex=\{-1\}/);
+  assert.match(gallery, /child\.inert = Boolean\(livePanel\)/);
+  assert.match(gallery, /event\.key !== "Tab"/);
+  assert.match(gallery, /const focusables = Array\.from\(modal\.querySelectorAll<HTMLElement>\(focusableSelector\)\)/);
+  assert.match(gallery, /Referans Pilotu/);
+  assert.match(gallery, /Meta\/WhatsApp, CRM–takvim lisansı ve KDV teklifte ayrı gösterilir/);
 });

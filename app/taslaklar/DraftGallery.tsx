@@ -87,9 +87,9 @@ function HeroValuePanel({ onOpenServices }: { onOpenServices?: () => void }) {
   );
 }
 
-export function Services({ dark = false }: { dark?: boolean }) {
+export function Services({ dark = false, sectionId }: { dark?: boolean; sectionId?: string }) {
   return (
-    <section className={`${styles.services} ${dark ? styles.servicesDark : ""}`} data-premium-reveal="wait">
+    <section id={sectionId} className={`${styles.services} ${dark ? styles.servicesDark : ""}`} data-premium-reveal="wait">
       <div className={styles.sectionHeading}>
         <div><small>İŞLETMENİZ İÇİN</small><h2>Sizin yerinize çalışan bir düzen.</h2></div>
         <p>Her hizmet, işletmenizde görünür bir soruna ve ölçülebilir bir başlangıç hedefine bağlanır.</p>
@@ -315,7 +315,7 @@ const previewFlowSteps = [
   ["04", "Takip", "Hatırlatma ve takip planı görünür olur."],
 ];
 
-function FullSiteFlowDemo({ onStart }: { onStart: () => void }) {
+function FullSiteFlowDemo({ onStart, showPreviewBadge = true }: { onStart: () => void; showPreviewBadge?: boolean }) {
   const [active, setActive] = useState(0);
   const [playing, setPlaying] = useState(false);
 
@@ -330,7 +330,7 @@ function FullSiteFlowDemo({ onStart }: { onStart: () => void }) {
     <section className={styles.fullSiteFlow} aria-label="Sentetik çalışan akış örneği">
       <div className={styles.fullSiteFlowHead}>
         <div><small>ÖRNEK / SENTETİK AKIŞ</small><h2>Formdan önce çalışan düzeni görün.</h2><p>Gerçek müşteri verisi kullanılmaz ve hiçbir mesaj gönderilmez.</p></div>
-        <span>CANLI SİTEYE UYGULANMADI</span>
+        {showPreviewBadge && <span>CANLI SİTEYE UYGULANMADI</span>}
       </div>
       <div className={styles.fullSiteFlowGrid}>
         {previewFlowSteps.map(([no, title, text], index) => <button type="button" key={no} className={active === index ? styles.fullSiteFlowActive : index < active ? styles.fullSiteFlowDone : ""} onClick={() => { setPlaying(false); setActive(index); }} aria-pressed={active === index}><span>{index < active ? "✓" : no}</span><small>{index === 2 ? "ONAY BEKLİYOR" : index === 3 ? "TASLAK HAZIR" : "SENTETİK KAYIT"}</small><strong>{title}</strong><p>{text}</p></button>)}
@@ -342,19 +342,68 @@ function FullSiteFlowDemo({ onStart }: { onStart: () => void }) {
 
 export type LivePanelId = "hizmetler" | "surec" | "paketler" | "kanit" | "iletisim";
 
+function LumenLoopVideo() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    let visible = true;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const sync = () => {
+      const shouldPlay = visible && document.visibilityState === "visible" && !reduced;
+      if (shouldPlay) void video.play().catch(() => undefined);
+      else video.pause();
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = Boolean(entry?.isIntersecting);
+      sync();
+    }, { threshold: 0.01 });
+    observer.observe(video);
+    document.addEventListener("visibilitychange", sync);
+    sync();
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", sync);
+      video.pause();
+    };
+  }, []);
+
+  return <video ref={videoRef} src="/media/lumen-arc-scroll.mp4" poster="/media/lumen-arc-reference.png" autoPlay muted loop playsInline preload="metadata" />;
+}
+
 function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePanelId; onClose: () => void; onRequest: () => void; lumen?: boolean }) {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const modal = modalRef.current;
+    if (!modal) return;
+    const focusableSelector = 'button:not([disabled]), a[href], input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    Array.from(modal.querySelectorAll<HTMLElement>(focusableSelector))[0]?.focus();
+    const trapFocus = (event: KeyboardEvent) => {
+      const focusables = Array.from(modal.querySelectorAll<HTMLElement>(focusableSelector));
+      if (event.key !== "Tab" || focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener("keydown", trapFocus);
+    return () => document.removeEventListener("keydown", trapFocus);
+  }, []);
+
   return (
     <div className={`${styles.liveOverlay} ${lumen ? styles.lumenLiveOverlay : ""}`} role="dialog" aria-modal="true" aria-label="AgentAxis bilgi paneli">
-      {lumen && <div className={styles.lumenPanelBackdrop} aria-hidden="true"><video src="/media/lumen-arc-scroll.mp4" poster="/media/lumen-arc-reference.png" autoPlay muted loop playsInline /><i /></div>}
-      <button className={styles.liveBackdrop} type="button" onClick={onClose} aria-label="Paneli kapat" />
-      <div className={styles.liveModal}>
+      {lumen && <div className={styles.lumenPanelBackdrop} aria-hidden="true"><LumenLoopVideo /><i /></div>}
+      <button className={styles.liveBackdrop} type="button" onClick={onClose} aria-label="Paneli kapat" tabIndex={-1} />
+      <div className={styles.liveModal} ref={modalRef}>
         <div className={styles.liveModalTop}><Logo /><button type="button" onClick={onClose}>Kapat <span>×</span></button></div>
         <div className={styles.liveModalBody}>
           {panel === "hizmetler" && <Services />}
           {panel === "surec" && <Process />}
-          {panel === "paketler" && <section className={styles.catalogPanel}><small>ESNEK ÇALIŞMA KAPSAMLARI</small><h2>İhtiyacınız kadar sistem kurulur.</h2><p>Önce problemi doğrularız; kullanmayacağınız özellikleri pakete doldurmayız.</p><div className={styles.catalogGrid}><article><span>01</span><h3>Başlangıç</h3><p>Tek bir önemli soruna odaklanan küçük, güvenli ve ölçülebilir sistem.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article><article><span>02</span><h3>Büyüme</h3><p>Müşteri kazanma ve takip gibi birbiriyle bağlantılı birkaç iş akışı.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article><article><span>03</span><h3>Özel sistem</h3><p>İşletmenize özel otomasyon, takip ve randevu düzeninin birleşimi.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article></div><div className={styles.catalogTrust}><span>✓ Otomatik ödeme yok</span> <span>✓ Önemli işler sizin onayınızda</span></div></section>}
+          {panel === "paketler" && <section className={styles.catalogPanel}><small>ESNEK ÇALIŞMA KAPSAMLARI</small><h2>İhtiyacınız kadar sistem kurulur.</h2><p>Bugün yalnız sınırlı sayıda Referans Pilotu açıyoruz. Diğer kapsamlar ilk ölçülmüş vakadan sonra sunulacak.</p><div className={styles.catalogGrid}><article><span>01</span><h3>Referans Pilotu</h3><p>Tek bir önemli soruna odaklanan, üç aylık küçük ve ölçülebilir başlangıç çalışması.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article><article><span>02</span><h3>Başlangıç</h3><p>İlk ölçülmüş vakadan sonra açılacak tek akışlı kurulum ve takip kapsamı.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article><article><span>03</span><h3>Büyüme / Yönetilen</h3><p>Birden fazla bağlantılı akış ile düzenli bakım ve raporlama; ihtiyaca göre hazırlanır.</p><button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button></article></div><div className={styles.catalogTrust}><span>✓ Otomatik ödeme yok</span> <span>✓ Önemli işler sizin onayınızda</span><span>Meta/WhatsApp, CRM–takvim lisansı ve KDV teklifte ayrı gösterilir</span></div></section>}
           {panel === "kanit" && <section className={styles.modalProof}><small>ŞEFFAF ÇALIŞMA KANITI</small><h2>Kaynağı, çalışan sistemi ve ölçülen sonucu birlikte görürsünüz.</h2><div className={styles.proofCards}><article><span>01</span><strong>Kaynaklı teşhis</strong><p>Problemin nerede olduğunu kanıtıyla gösteririz.</p></article><article><span>02</span><strong>Çalışan sistem</strong><p>Sunum değil, test edilmiş akış kurarız.</p></article><article><span>03</span><strong>Sizin kontrolünüz</strong><p>Önemli dış işlemler açık onayınızla ilerler.</p></article></div></section>}
-          {panel === "iletisim" && <section className={styles.liveFinder}><div><small>ÜCRETSİZ MİNİ TEŞHİS</small><h2>İşletmenizi anlatın, doğru başlangıcı birlikte bulalım.</h2><p>Yaklaşık iki dakikada ihtiyacınızı seçin. Otomatik ödeme yok; önemli işlemler sizin onayınızda kalır.</p><div className={styles.contactDirect}><span>Doğrudan iletişim</span><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.phoneDisplay && <a href={`tel:${siteContact.phoneHref}`}>{siteContact.phoneDisplay}</a>}{siteContact.whatsappHref && <a href={siteContact.whatsappHref} target="_blank" rel="noreferrer">WhatsApp’tan yazın ↗</a>}</div></div><NeedFinder /></section>}
+          {panel === "iletisim" && <section className={styles.liveFinder}><div><small>ÜCRETSİZ MİNİ TEŞHİS</small><h2>İşletmenizi anlatın, doğru başlangıcı birlikte bulalım.</h2><p>Yaklaşık iki dakikada ihtiyacınızı seçin. Otomatik ödeme yok; önemli işlemler sizin onayınızda kalır.</p><div className={styles.contactDirect}><span>Doğrudan iletişim</span><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.phoneDisplay && <a href={`tel:${siteContact.phoneHref}`}>{siteContact.phoneDisplay}</a>}{siteContact.whatsappHref && <a href={siteContact.whatsappHref} target="_blank" rel="noreferrer">WhatsApp’tan yazın ↗</a>}{siteContact.instagramHref && <a href={siteContact.instagramHref} target="_blank" rel="noreferrer">Instagram ↗</a>}{siteContact.linkedinHref && <a href={siteContact.linkedinHref} target="_blank" rel="noreferrer">LinkedIn ↗</a>}{siteContact.youtubeHref && <a href={siteContact.youtubeHref} target="_blank" rel="noreferrer">YouTube ↗</a>}</div></div><NeedFinder /></section>}
         </div>
       </div>
     </div>
@@ -363,7 +412,19 @@ function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePa
 
 export function HybridDraft({ live = false, lumen = false, initialPanel = null, previewFlow = false, fullPreview = false, showPreviewBadge = true }: { live?: boolean; lumen?: boolean; initialPanel?: LivePanelId | null; previewFlow?: boolean; fullPreview?: boolean; showPreviewBadge?: boolean }) {
   const heroRef = useRef<HTMLElement>(null);
+  const pageRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
   const [livePanel, setLivePanel] = useState<LivePanelId | null>(initialPanel);
+
+  function openPanel(panel: LivePanelId) {
+    if (!livePanel) previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setLivePanel(panel);
+  }
+
+  function closePanel() {
+    setLivePanel(null);
+    window.setTimeout(() => previousFocusRef.current?.focus(), 0);
+  }
 
   useEffect(() => {
     const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-premium-reveal="wait"]'));
@@ -385,9 +446,20 @@ export function HybridDraft({ live = false, lumen = false, initialPanel = null, 
 
   useEffect(() => {
     if (!livePanel) return;
-    const closeWithEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setLivePanel(null); };
+    const closeWithEscape = (event: KeyboardEvent) => { if (event.key === "Escape") closePanel(); };
     document.addEventListener("keydown", closeWithEscape);
     return () => document.removeEventListener("keydown", closeWithEscape);
+  }, [livePanel]);
+
+  useEffect(() => {
+    const page = pageRef.current;
+    if (!page) return;
+    for (const child of Array.from(page.children)) {
+      if (!(child instanceof HTMLElement) || child.classList.contains(styles.liveOverlay)) continue;
+      child.inert = Boolean(livePanel);
+      if (livePanel) child.setAttribute("aria-hidden", "true");
+      else child.removeAttribute("aria-hidden");
+    }
   }, [livePanel]);
 
   function moveHero(event: ReactPointerEvent<HTMLElement>) {
@@ -412,11 +484,11 @@ export function HybridDraft({ live = false, lumen = false, initialPanel = null, 
   }
 
   return (
-    <div className={`${styles.draft} ${styles.hybridDraft} ${live ? styles.liveRoot : ""} ${lumen ? styles.lumenOriginalRoot : ""} ${fullPreview ? styles.fullPreviewRoot : ""}`}>
+    <div ref={pageRef} className={`${styles.draft} ${styles.hybridDraft} ${live ? styles.liveRoot : ""} ${lumen ? styles.lumenOriginalRoot : ""} ${fullPreview ? styles.fullPreviewRoot : ""}`}>
       {fullPreview && showPreviewBadge && <div className={styles.fullPreviewBadge}>TAM SİTE ÖNİZLEMESİ · CANLIYA UYGULANMADI</div>}
-      <header className={styles.hybridNav}><Logo /><nav><button type="button" onClick={() => live && setLivePanel("hizmetler")}><i>◇</i> Hizmetler</button><button type="button" onClick={() => live && setLivePanel("surec")}><i>↺</i> Nasıl çalışır?</button><button type="button" onClick={() => live && setLivePanel("paketler")}><i>▦</i> Paketler</button><button type="button" onClick={() => live && setLivePanel("kanit")}><i>✓</i> Kanıt</button><button type="button" onClick={() => live && setLivePanel("iletisim")}><i>✎</i> İhtiyacınızı anlatın</button></nav><button type="button" onClick={() => live && setLivePanel("iletisim")}>Ücretsiz inceleme <b>↗</b></button></header>
+      <header className={styles.hybridNav}><Logo /><nav><button type="button" onClick={() => live && openPanel("hizmetler")}><i>◇</i> Hizmetler</button><button type="button" onClick={() => live && openPanel("surec")}><i>↺</i> Nasıl çalışır?</button><button type="button" onClick={() => live && openPanel("paketler")}><i>▦</i> Paketler</button><button type="button" onClick={() => live && openPanel("kanit")}><i>✓</i> Kanıt</button><button type="button" onClick={() => live && openPanel("iletisim")}><i>✎</i> İhtiyacınızı anlatın</button></nav><button type="button" onClick={() => live && openPanel("iletisim")}>Ücretsiz inceleme <b>↗</b></button></header>
       <section className={styles.hybridHero} ref={heroRef} onPointerMove={moveHero} onPointerLeave={resetHero}>
-        {lumen && !livePanel && <div className={styles.lumenOriginalBackdrop} aria-hidden="true"><video src="/media/lumen-arc-scroll.mp4" poster="/media/lumen-arc-reference.png" autoPlay muted loop playsInline /><i /></div>}
+        {lumen && !livePanel && <div className={styles.lumenOriginalBackdrop} aria-hidden="true"><LumenLoopVideo /><i /></div>}
         {!livePanel && <ParticleCanvas className={styles.particleCanvas} />}
         <div className={styles.pointerGlow} aria-hidden="true" />
         <div className={styles.auroraOne} aria-hidden="true" />
@@ -425,25 +497,25 @@ export function HybridDraft({ live = false, lumen = false, initialPanel = null, 
           <div className={styles.livePill}><i /> İŞLETMENİZ İÇİN AKILLI SİSTEMLER <b>KONTROL SİZDE</b></div>
           <h1>Müşteriyi kaçırmayın.<br /><em>Takibi sisteme bırakın.</em></h1>
           <p>Akıllı İşletme Asistanı talebi görür, ihtiyacı düzenler ve doğru sonraki adımı hazırlar. Gönderme ve hesap işlemleri sizin onayınızla ilerler.</p>
-          <div className={styles.actions}><button type="button" onClick={() => live && setLivePanel("iletisim")}>Ücretsiz mini teşhis <span>→</span></button><button type="button" onClick={() => live && setLivePanel("surec")}>Nasıl çalıştığını gör</button></div>
+          <div className={styles.actions}><button type="button" onClick={() => live && openPanel("iletisim")}>Ücretsiz mini teşhis <span>→</span></button><button type="button" onClick={() => live && openPanel("surec")}>Nasıl çalıştığını gör</button></div>
           <TrustStrip />
         </div>
         <div className={styles.hybridVisual}>
-          <HeroValuePanel onOpenServices={() => live && setLivePanel("hizmetler")} />
+          <HeroValuePanel onOpenServices={() => live && openPanel("hizmetler")} />
         </div>
       </section>
       <CapabilityExperience />
       <WorkflowStory />
-      <Services />
+      <Services sectionId="hizmetler" />
       <section className={styles.hybridProof} data-premium-reveal="wait">
         <div><small>ŞEFFAF ÇALIŞMA KANITI</small><h2>Ne yapıldığını görür,<br />önemli işi siz onaylarsınız.</h2></div>
         <div className={styles.proofCards}><article><span>01</span><strong>Kaynaklı teşhis</strong><p>Problemin nerede olduğunu kanıtıyla gösteririz.</p></article><article><span>02</span><strong>Çalışan sistem</strong><p>Sunum değil, test edilmiş akış kurarız.</p></article><article><span>03</span><strong>Ölçülen değişim</strong><p>Çalışma sonunda yalnız gerçek sonucu raporlarız.</p></article></div>
       </section>
       <Process />
-      {previewFlow && <FullSiteFlowDemo onStart={() => setLivePanel("iletisim")} />}
-      <PremiumFinalCta onStart={() => live && setLivePanel("iletisim")} />
-      {live && <footer className={styles.premiumFooter}><Logo /><span>© 2026 AgentAxis Labs</span><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.phoneDisplay && <a href={`tel:${siteContact.phoneHref}`}>{siteContact.phoneDisplay}</a>}{siteContact.whatsappHref && <a href={siteContact.whatsappHref} target="_blank" rel="noreferrer">WhatsApp</a>}<a href="/gizlilik">Gizlilik</a><a href="/kullanim-kosullari">Kullanım koşulları</a></footer>}
-      {livePanel && <LivePanel panel={livePanel} lumen={lumen} onClose={() => setLivePanel(null)} onRequest={() => setLivePanel("iletisim")} />}
+      {previewFlow && <FullSiteFlowDemo onStart={() => openPanel("iletisim")} showPreviewBadge={showPreviewBadge} />}
+      <PremiumFinalCta onStart={() => live && openPanel("iletisim")} />
+      {live && <footer className={styles.premiumFooter}><Logo /><span>© 2026 AgentAxis Labs</span><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.phoneDisplay && <a href={`tel:${siteContact.phoneHref}`}>{siteContact.phoneDisplay}</a>}{siteContact.whatsappHref && <a href={siteContact.whatsappHref} target="_blank" rel="noreferrer">WhatsApp</a>}{siteContact.instagramHref && <a href={siteContact.instagramHref} target="_blank" rel="noreferrer">Instagram</a>}{siteContact.linkedinHref && <a href={siteContact.linkedinHref} target="_blank" rel="noreferrer">LinkedIn</a>}{siteContact.youtubeHref && <a href={siteContact.youtubeHref} target="_blank" rel="noreferrer">YouTube</a>}<a href="/gizlilik">Gizlilik</a><a href="/kullanim-kosullari">Kullanım koşulları</a></footer>}
+      {livePanel && <LivePanel panel={livePanel} lumen={lumen} onClose={closePanel} onRequest={() => openPanel("iletisim")} />}
     </div>
   );
 }
