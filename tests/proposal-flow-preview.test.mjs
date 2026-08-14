@@ -93,6 +93,15 @@ test("canlı marka, modal erişilebilirliği ve paket sınırları doğrulanır"
   assert.match(gallery, /Yalnız izin veren eski müşterilerle yeniden iletişim/);
   assert.match(gallery, /Aylık kontrol, hata düzeltme, destek ve ayrıntılı sonuç raporu/);
   assert.match(gallery, /İhtiyaca göre küçük iyileştirmeler/);
+  assert.match(gallery, /catalogTier}>ÖZEL SİSTEM<\/strong>/);
+  assert.match(gallery, /catalogSubtitle}>İşletmenize Özel Çalışma Düzeni<\/h3>/);
+  assert.match(gallery, /Başlangıç ve Gelişmiş paketlerindeki hizmetler/);
+  assert.match(gallery, /Birden fazla şube veya WhatsApp numarası/);
+  assert.match(gallery, /Kullandığınız programların birbirine bağlanması/);
+  assert.match(gallery, /İşletmenize özel takip ve otomasyonlar/);
+  assert.match(gallery, /Özel raporlama, düzenli kontrol ve destek/);
+  assert.match(gallery, /Kapsam ve fiyat, ihtiyacınız incelendikten sonra belirlenir/);
+  assert.equal((gallery.match(/<button type="button" onClick=\{onRequest\}>İhtiyacınızı anlatın →<\/button>/g) || []).length, 3);
   assert.doesNotMatch(gallery, /birbirine bağlı 2-3 çalışma akışı/i);
   assert.match(gallery, /Tek işletme adresi ve tek WhatsApp numarası için geçerlidir/);
   assert.match(gallery, /WhatsApp mesajları, kullanılan ek hizmetler ve vergiler teklifte ayrı gösterilir/);

@@ -450,9 +450,18 @@ function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePa
                   <button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button>
                 </article>
                 <article>
-                  <span>03</span>
-                  <h3>Özel Sistem</h3>
-                  <p>Birden fazla işletme adresi veya size özel çalışma düzeni için hazırlanır.</p>
+                  <div className={styles.catalogHeading}>
+                    <strong className={styles.catalogTier}>ÖZEL SİSTEM</strong>
+                    <h3 className={styles.catalogSubtitle}>İşletmenize Özel Çalışma Düzeni</h3>
+                  </div>
+                  <ul className={styles.catalogFeatures}>
+                    <li>Başlangıç ve Gelişmiş paketlerindeki hizmetler</li>
+                    <li>Birden fazla şube veya WhatsApp numarası</li>
+                    <li>Kullandığınız programların birbirine bağlanması</li>
+                    <li>İşletmenize özel takip ve otomasyonlar</li>
+                    <li>Özel raporlama, düzenli kontrol ve destek</li>
+                  </ul>
+                  <p className={styles.catalogScope}>Kapsam ve fiyat, ihtiyacınız incelendikten sonra belirlenir.</p>
                   <button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button>
                 </article>
               </div>
