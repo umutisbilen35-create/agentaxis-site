@@ -429,7 +429,10 @@ function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePa
                 <article>
                   <div className={styles.catalogHeading}>
                     <strong className={styles.catalogTier}>GELİŞMİŞ</strong>
-                    <h3 className={styles.catalogSubtitle}>Randevu ve Müşteri Takibi</h3>
+                    <h3 className={`${styles.catalogSubtitle} ${styles.catalogSubtitleStack}`}>
+                      <span>Randevu ve Müşteri</span>
+                      <span>Takibi</span>
+                    </h3>
                   </div>
                   <div className={styles.catalogPrice}>
                     <strong>12.000 TL</strong><small>tek seferlik ücret</small>

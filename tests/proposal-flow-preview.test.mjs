@@ -78,12 +78,15 @@ test("canlı marka, modal erişilebilirliği ve paket sınırları doğrulanır"
   assert.match(gallery, /4\.000 TL/);
   assert.match(gallery, /Aylık kontrol, destek ve kısa sonuç raporu/);
   assert.match(gallery, /catalogTier}>GELİŞMİŞ<\/strong>/);
-  assert.match(gallery, /catalogSubtitle}>Randevu ve Müşteri Takibi<\/h3>/);
+  assert.match(gallery, /catalogSubtitleStack/);
+  assert.match(gallery, /<span>Randevu ve Müşteri<\/span>\s*<span>Takibi<\/span>/);
   assert.match(gallery, /12\.000 TL/);
   assert.match(gallery, /7\.000 TL/);
   assert.equal((gallery.match(/tek seferlik ücret/g) || []).length, 2);
   assert.match(moduleCss, /\.catalogHeading\{[^}]*gap:17px;[^}]*padding-left:14px/);
   assert.match(moduleCss, /\.catalogGrid \.catalogSubtitle\{[^}]*font-size:22px;[^}]*font-weight:700/);
+  assert.match(moduleCss, /\.catalogSubtitleStack\{[^}]*width:max-content;[^}]*max-width:100%/);
+  assert.match(moduleCss, /\.catalogSubtitleStack span:last-child\{text-align:center\}/);
   assert.match(gallery, /Başlangıç paketindeki tüm hizmetler/);
   assert.match(gallery, /Yeni müşteri taleplerini tek yerde takip etme/);
   assert.match(gallery, /Yanıtsız kalan talepleri yeniden takip etme/);
