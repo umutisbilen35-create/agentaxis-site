@@ -82,6 +82,7 @@ test("canlı marka, modal erişilebilirliği ve paket sınırları doğrulanır"
   assert.match(gallery, /12\.000 TL/);
   assert.match(gallery, /7\.000 TL/);
   assert.equal((gallery.match(/tek seferlik ücret/g) || []).length, 2);
+  assert.match(moduleCss, /\.catalogHeading\{[^}]*gap:17px;[^}]*padding-left:14px/);
   assert.match(moduleCss, /\.catalogGrid \.catalogSubtitle\{[^}]*font-size:22px;[^}]*font-weight:700/);
   assert.match(gallery, /Başlangıç paketindeki tüm hizmetler/);
   assert.match(gallery, /Yeni müşteri taleplerini tek yerde takip etme/);
