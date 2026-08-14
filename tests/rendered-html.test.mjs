@@ -41,7 +41,7 @@ test("AgentAxis ana sayfasi guclu giris metniyle sunulur", async () => {
   assert.match(html, /Ücretsiz incelemeyi başlat|Ücretsiz mini teşhis/);
   assert.doesNotMatch(html, /Jarvis/i);
   assert.doesNotMatch(html, /pilot|kesin sonuç sözü|sonuç garantisi/i);
-  assert.match(html, /ŞEFFAF ÇALIŞMA KANITI/);
+  assert.doesNotMatch(html, /ŞEFFAF ÇALIŞMA KANITI/);
   assert.doesNotMatch(html, /Henüz büyük sonuçlar uydurmuyoruz|büyük sonuçlar uydurmuyoruz/i);
   assert.match(html, /href="\/gizlilik"/);
   assert.match(html, /href="\/kullanim-kosullari"/);
@@ -53,13 +53,13 @@ test("ana donusum ve guvenlik unsurlari korunur", async () => {
   const html = await response.text();
   assert.doesNotMatch(html, /role="tab"/);
   assert.doesNotMatch(html, /href="#(?:hizmetler|surec|kanit|iletisim)"/);
-  assert.match(html, /ŞEFFAF ÇALIŞMA KANITI/);
+  assert.doesNotMatch(html, /ŞEFFAF ÇALIŞMA KANITI/);
   assert.match(html, /Otomatik ödeme yok/);
   assert.match(html, /Müşteri takibi/);
   assert.match(html, /İş otomasyonu/);
   assert.match(html, /Randevu yönetimi/);
   assert.match(html, /mailto:agentaxislabs@gmail.com/);
-  assert.match(html, /Ne yapıldığını görür/);
+  assert.doesNotMatch(html, /Ne yapıldığını görür/);
   assert.doesNotMatch(html, /<strong>3<\/strong>|<strong>0<\/strong>/);
 });
 

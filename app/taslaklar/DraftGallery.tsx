@@ -410,11 +410,11 @@ function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePa
   );
 }
 
-export function HybridDraft({ live = false, lumen = false, initialPanel = null, previewFlow = false, fullPreview = false, showPreviewBadge = true }: { live?: boolean; lumen?: boolean; initialPanel?: LivePanelId | null; previewFlow?: boolean; fullPreview?: boolean; showPreviewBadge?: boolean }) {
+export function HybridDraft({ live = false, lumen = false, initialPanel = null, previewFlow = false, fullPreview = false, showPreviewBadge = true, showProof = false }: { live?: boolean; lumen?: boolean; initialPanel?: LivePanelId | null; previewFlow?: boolean; fullPreview?: boolean; showPreviewBadge?: boolean; showProof?: boolean }) {
   const heroRef = useRef<HTMLElement>(null);
   const pageRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
-  const [livePanel, setLivePanel] = useState<LivePanelId | null>(initialPanel);
+  const [livePanel, setLivePanel] = useState<LivePanelId | null>(initialPanel === "kanit" && !showProof ? null : initialPanel);
 
   function openPanel(panel: LivePanelId) {
     if (!livePanel) previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -486,7 +486,7 @@ export function HybridDraft({ live = false, lumen = false, initialPanel = null, 
   return (
     <div ref={pageRef} className={`${styles.draft} ${styles.hybridDraft} ${live ? styles.liveRoot : ""} ${lumen ? styles.lumenOriginalRoot : ""} ${fullPreview ? styles.fullPreviewRoot : ""}`}>
       {fullPreview && showPreviewBadge && <div className={styles.fullPreviewBadge}>TAM SİTE ÖNİZLEMESİ · CANLIYA UYGULANMADI</div>}
-      <header className={styles.hybridNav}><Logo /><nav><button type="button" onClick={() => live && openPanel("hizmetler")}><i>◇</i> Hizmetler</button><button type="button" onClick={() => live && openPanel("surec")}><i>↺</i> Nasıl çalışır?</button><button type="button" onClick={() => live && openPanel("paketler")}><i>▦</i> Paketler</button><button type="button" onClick={() => live && openPanel("kanit")}><i>✓</i> Kanıt</button><button type="button" onClick={() => live && openPanel("iletisim")}><i>✎</i> İhtiyacınızı anlatın</button></nav><button type="button" onClick={() => live && openPanel("iletisim")}>Ücretsiz inceleme <b>↗</b></button></header>
+      <header className={styles.hybridNav}><Logo /><nav><button type="button" onClick={() => live && openPanel("hizmetler")}><i>◇</i> Hizmetler</button><button type="button" onClick={() => live && openPanel("surec")}><i>↺</i> Nasıl çalışır?</button><button type="button" onClick={() => live && openPanel("paketler")}><i>▦</i> Paketler</button>{showProof && <button type="button" onClick={() => live && openPanel("kanit")}><i>✓</i> Kanıt</button>}<button type="button" onClick={() => live && openPanel("iletisim")}><i>✎</i> İhtiyacınızı anlatın</button></nav><button type="button" onClick={() => live && openPanel("iletisim")}>Ücretsiz inceleme <b>↗</b></button></header>
       <section className={styles.hybridHero} ref={heroRef} onPointerMove={moveHero} onPointerLeave={resetHero}>
         {lumen && !livePanel && <div className={styles.lumenOriginalBackdrop} aria-hidden="true"><LumenLoopVideo /><i /></div>}
         {!livePanel && <ParticleCanvas className={styles.particleCanvas} />}
@@ -507,10 +507,10 @@ export function HybridDraft({ live = false, lumen = false, initialPanel = null, 
       <CapabilityExperience />
       <WorkflowStory />
       <Services sectionId="hizmetler" />
-      <section className={styles.hybridProof} data-premium-reveal="wait">
+      {showProof && <section className={styles.hybridProof} data-premium-reveal="wait">
         <div><small>ŞEFFAF ÇALIŞMA KANITI</small><h2>Ne yapıldığını görür,<br />önemli işi siz onaylarsınız.</h2></div>
         <div className={styles.proofCards}><article><span>01</span><strong>Kaynaklı teşhis</strong><p>Problemin nerede olduğunu kanıtıyla gösteririz.</p></article><article><span>02</span><strong>Çalışan sistem</strong><p>Sunum değil, test edilmiş akış kurarız.</p></article><article><span>03</span><strong>Ölçülen değişim</strong><p>Çalışma sonunda yalnız gerçek sonucu raporlarız.</p></article></div>
-      </section>
+      </section>}
       <Process />
       {previewFlow && <FullSiteFlowDemo onStart={() => openPanel("iletisim")} showPreviewBadge={showPreviewBadge} />}
       <PremiumFinalCta onStart={() => live && openPanel("iletisim")} />
