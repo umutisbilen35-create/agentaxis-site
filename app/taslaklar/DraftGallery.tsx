@@ -408,8 +408,10 @@ function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePa
               <p>Önce en önemli ihtiyacınızdan başlarız. Kullanmayacağınız özellikler için ödeme yapmazsınız.</p>
               <div className={styles.catalogGrid}>
                 <article className={styles.catalogFeatured}>
-                  <span>01</span>
-                  <h3>Başlangıç — Randevu Takibi</h3>
+                  <div className={styles.catalogHeading}>
+                    <strong className={styles.catalogTier}>BAŞLANGIÇ</strong>
+                    <h3 className={styles.catalogSubtitle}>Randevu Takibi</h3>
+                  </div>
                   <div className={styles.catalogPrice}>
                     <strong>7.500 TL</strong><small>kurulum</small>
                     <strong>4.000 TL</strong><small>aylık hizmet</small>
@@ -425,8 +427,10 @@ function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePa
                   <button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button>
                 </article>
                 <article>
-                  <span>02</span>
-                  <h3>Büyüme — Müşteri Takibi</h3>
+                  <div className={styles.catalogHeading}>
+                    <strong className={styles.catalogTier}>GELİŞMİŞ</strong>
+                    <h3 className={styles.catalogSubtitle}>Randevu ve Müşteri Takibi</h3>
+                  </div>
                   <div className={styles.catalogPrice}>
                     <strong>12.000 TL</strong><small>kurulum</small>
                     <strong>7.000 TL</strong><small>aylık hizmet</small>

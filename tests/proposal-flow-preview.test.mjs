@@ -72,11 +72,13 @@ test("canlı marka, modal erişilebilirliği ve paket sınırları doğrulanır"
   assert.match(gallery, /event\.key !== "Tab"/);
   assert.match(gallery, /const focusables = Array\.from\(modal\.querySelectorAll<HTMLElement>\(focusableSelector\)\)/);
   assert.doesNotMatch(gallery, /Referans Pilotu/);
-  assert.match(gallery, /Başlangıç — Randevu Takibi/);
+  assert.match(gallery, /catalogTier}>BAŞLANGIÇ<\/strong>/);
+  assert.match(gallery, /catalogSubtitle}>Randevu Takibi<\/h3>/);
   assert.match(gallery, /7\.500 TL/);
   assert.match(gallery, /4\.000 TL/);
   assert.match(gallery, /Aylık kontrol, destek ve kısa sonuç raporu/);
-  assert.match(gallery, /Büyüme — Müşteri Takibi/);
+  assert.match(gallery, /catalogTier}>GELİŞMİŞ<\/strong>/);
+  assert.match(gallery, /catalogSubtitle}>Randevu ve Müşteri Takibi<\/h3>/);
   assert.match(gallery, /12\.000 TL/);
   assert.match(gallery, /7\.000 TL/);
   assert.match(gallery, /Başlangıç paketindeki tüm hizmetler/);
