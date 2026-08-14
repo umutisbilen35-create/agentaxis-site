@@ -8,12 +8,11 @@ export type StageVariant = "a" | "b";
 /**
  * Yalnız önizleme rotalarında kullanılan 3D sahne katmanı.
  * İçeriğe hiç dokunmaz: dekoratiftir, aria-hidden'dır ve tıklama almaz.
- * Ağır 3D kütüphanesi yoktur; tek hafif döngü videosu + CSS katmanları kullanılır.
+ * Ağır 3D kütüphanesi yoktur; rotaya özel hafif görsel + CSS katmanları kullanılır.
  */
 export default function Premium3DStage({ variant }: { variant: StageVariant }) {
   const stageRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoFailed, setVideoFailed] = useState(false);
+  const [assetFailed, setAssetFailed] = useState(false);
 
   // Kaydırma ve imleç değerlerini yalnız sahne elemanına CSS değişkeni olarak yazar.
   useEffect(() => {
@@ -89,99 +88,55 @@ export default function Premium3DStage({ variant }: { variant: StageVariant }) {
     };
   }, []);
 
-  // Video yalnız görünürken ve hareket kısıtlaması yokken oynar.
+  // Bu rotalarda miras alınan hero/panel videosu CSS ile gizlidir ama tarayıcı
+  // yine de yaklaşık 6 MB (video + poster) indirir. Görünmeyen kaynak boşaltılır;
+  // ortak bileşen dosyası değiştirilmeden yalnız bu önizlemede iptal edilir.
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video || videoFailed) return;
+    const root = stageRef.current?.parentElement;
+    if (!root) return;
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    // Video hiç açılmazsa CSS yedeğine geçilir.
-    // Sayfa arka plandayken tarayıcı videoyu yüklemez; bu bir hata değildir,
-    // bu yüzden sayaç yalnız sayfa görünürken çalışır.
-    let failTimer = 0;
-
-    function clearFailTimer() {
-      if (failTimer) {
-        window.clearTimeout(failTimer);
-        failTimer = 0;
+    const releaseHiddenVideos = () => {
+      for (const video of Array.from(root.querySelectorAll("video"))) {
+        if (video.dataset.axPreviewReleased === "1") continue;
+        video.dataset.axPreviewReleased = "1";
+        video.pause();
+        video.removeAttribute("autoplay");
+        video.removeAttribute("poster");
+        video.removeAttribute("src");
+        video.load();
       }
-    }
-
-    function armFailTimer() {
-      clearFailTimer();
-      if (document.visibilityState !== "visible") return;
-      failTimer = window.setTimeout(() => {
-        const element = videoRef.current;
-        if (element && element.readyState === 0 && document.visibilityState === "visible") {
-          setVideoFailed(true);
-        }
-      }, 8000);
-    }
-
-    function sync() {
-      const element = videoRef.current;
-      if (!element) return;
-      if (reducedMotion.matches || document.visibilityState !== "visible") {
-        clearFailTimer();
-        element.pause();
-        return;
-      }
-      armFailTimer();
-      void element.play().catch(() => undefined);
-    }
-
-    function onLoadedData() {
-      const element = videoRef.current;
-      if (!element) return;
-      clearFailTimer();
-      if (reducedMotion.matches) {
-        // Hareket kısıtlıysa sabit ve dolu bir kare gösterilir.
-        try {
-          element.currentTime = Math.min(1, element.duration || 1);
-        } catch {
-          /* tarayıcı izin vermezse ilk kare kalır */
-        }
-        element.pause();
-      }
-    }
-
-    video.addEventListener("loadeddata", onLoadedData);
-    document.addEventListener("visibilitychange", sync);
-    reducedMotion.addEventListener("change", sync);
-    sync();
-
-    return () => {
-      clearFailTimer();
-      video.removeEventListener("loadeddata", onLoadedData);
-      document.removeEventListener("visibilitychange", sync);
-      reducedMotion.removeEventListener("change", sync);
-      video.pause();
     };
-  }, [videoFailed]);
+
+    releaseHiddenVideos();
+    const observer = new MutationObserver(releaseHiddenVideos);
+    observer.observe(root, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
 
   const variantClass = variant === "a" ? styles.stageA : styles.stageB;
+  const assetSrc =
+    variant === "a"
+      ? "/media/agentaxis-premium-3d-a-v2.jpg"
+      : "/media/agentaxis-premium-3d-b-v2.jpg";
 
   return (
     <div ref={stageRef} className={`${styles.stage} ${variantClass}`} aria-hidden="true">
       <div className={styles.room} />
       <div className={styles.halo} />
-      {videoFailed ? (
-        <div className={styles.objectFallback} />
-      ) : (
-        <video
-          ref={videoRef}
-          className={styles.object}
-          src="/media/lumen-arc-rotation-loop.mp4"
-          poster="/media/lumen-arc-loop-poster.jpg"
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          tabIndex={-1}
-          onError={() => setVideoFailed(true)}
-        />
-      )}
+      <div className={styles.objectShell}>
+        {assetFailed ? (
+          <div className={styles.objectFallback} />
+        ) : (
+          <img
+            className={styles.object}
+            src={assetSrc}
+            alt=""
+            decoding="async"
+            draggable={false}
+            onError={() => setAssetFailed(true)}
+          />
+        )}
+      </div>
       <div className={styles.horizon} />
       <div className={styles.grid} />
       <div className={styles.plates}>

@@ -45,18 +45,16 @@ test("önizleme rotaları indekslenmez", () => {
 
 test("sahne dekoratiftir: klavye ve fare erişimini engellemez", () => {
   assert.match(stage, /aria-hidden="true"/);
-  assert.match(stage, /tabIndex=\{-1\}/);
+  assert.match(stage, /draggable=\{false\}/);
+  assert.doesNotMatch(stage, /<(button|a|input|textarea|select)\b/);
   assert.match(css, /\.stage \{[\s\S]*?pointer-events: none;/);
   assert.match(css, /focus-visible[\s\S]{0,220}outline: 3px solid var\(--gold\)/);
 });
 
-test("video hatası, görünürlük ve hareket kısıtlaması ele alınır", () => {
-  assert.match(stage, /onError=\{\(\) => setVideoFailed\(true\)\}/);
-  assert.match(stage, /videoFailed \? \([\s\S]{0,140}styles\.objectFallback/);
+test("görsel hatası ve hareket kısıtlaması ele alınır", () => {
+  assert.match(stage, /onError=\{\(\) => setAssetFailed\(true\)\}/);
+  assert.match(stage, /assetFailed \? \([\s\S]{0,140}styles\.objectFallback/);
   assert.match(stage, /matchMedia\("\(prefers-reduced-motion: reduce\)"\)/);
-  assert.match(stage, /document\.visibilityState !== "visible"/);
-  assert.match(stage, /element\.pause\(\)/);
-  assert.match(stage, /readyState === 0/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(css, /animation: none !important/);
 });
@@ -70,7 +68,7 @@ test("kanonik koyu-altın marka paleti korunur, mavi yoktur", () => {
   assert.doesNotMatch(stage, /#275ff3|#2c63f5|blue/i);
 });
 
-test("hafif 3D: ağır kütüphane yok, tek yerel döngü videosu var", () => {
+test("hafif 3D: ağır kütüphane yok, iki farklı sıkıştırılmış görsel var", () => {
   const packageJson = JSON.parse(read("../package.json"));
   const dependencyNames = Object.keys({ ...packageJson.dependencies, ...packageJson.devDependencies });
   for (const name of dependencyNames) {
@@ -80,11 +78,20 @@ test("hafif 3D: ağır kütüphane yok, tek yerel döngü videosu var", () => {
     assert.doesNotMatch(source, /^import[^\n]*(three|babylon|webgl|gltf)/im);
     assert.doesNotMatch(source, /getContext\(\s*["'](webgl|webgl2|webgpu)/i);
   }
-  assert.match(stage, /src="\/media\/lumen-arc-rotation-loop\.mp4"/);
-  assert.ok(fs.existsSync(new URL("../public/media/lumen-arc-rotation-loop.mp4", import.meta.url)));
+  assert.match(stage, /\/media\/agentaxis-premium-3d-a-v2\.jpg/);
+  assert.match(stage, /\/media\/agentaxis-premium-3d-b-v2\.jpg/);
+  assert.doesNotMatch(stage, /lumen-arc-rotation-loop|<video/);
+  for (const asset of [
+    "../public/media/agentaxis-premium-3d-a-v2.jpg",
+    "../public/media/agentaxis-premium-3d-b-v2.jpg",
+  ]) {
+    const file = new URL(asset, import.meta.url);
+    assert.ok(fs.existsSync(file), `3D görseli eksik: ${asset}`);
+    assert.ok(fs.statSync(file).size < 350_000, `3D görseli gereğinden ağır: ${asset}`);
+  }
   assert.match(css, /\.stageRoot \.stageContent video \{\s*display: none;/);
-  // Sayfada tek video kalır: sahne bir video, miras alınanlar kapalı.
-  assert.equal(stage.match(/<video/g).length, 1);
+  // Miras alınan hero videoları bu rotalarda kapalı; yeni sahne yalnız hafif görsel kullanır.
+  assert.equal(stage.match(/<img/g).length, 1);
 });
 
 /** Bir CSS seçicisini içeren tam kuralları (seçici + gövde) döndürür. */
@@ -113,17 +120,33 @@ test("yerleşim değil, yalnız arka plan ve hover katmanı değişir", () => {
   assert.match(css, /@media \(hover: hover\) and \(pointer: fine\)/);
 });
 
-test("statik poster ilk boyamayı ve hareketsiz yedeği garantiler", () => {
-  assert.match(stage, /poster="\/media\/lumen-arc-loop-poster\.jpg"/);
-  const poster = new URL("../public/media/lumen-arc-loop-poster.jpg", import.meta.url);
-  assert.ok(fs.existsSync(poster));
-  assert.ok(fs.statSync(poster).size < 120_000, "poster hafif kalmalı");
+test("iki rota gerçekten farklı yeni 3D varlıklar kullanır", () => {
+  assert.match(stage, /variant === "a"[\s\S]{0,160}agentaxis-premium-3d-a-v2\.jpg[\s\S]{0,160}agentaxis-premium-3d-b-v2\.jpg/);
+  assert.match(css, /@keyframes axSceneFloat/);
+  assert.match(css, /\.objectShell[\s\S]{0,180}animation: axSceneFloat/);
 });
 
-test("video yükleme sayacı yalnız sayfa görünürken çalışır", () => {
-  assert.match(stage, /armFailTimer/);
-  assert.match(stage, /if \(document\.visibilityState !== "visible"\) return;/);
-  assert.match(stage, /clearFailTimer/);
+test("miras alınan gizli hero videosu bu rotalarda serbest bırakılır", () => {
+  // Yalnız CSS ile gizlemek yetmiyordu: tarayıcı 5 MB videoyu ve 1 MB posteri yine indiriyordu.
+  assert.match(stage, /releaseHiddenVideos/);
+  assert.match(stage, /video\.removeAttribute\("src"\)/);
+  assert.match(stage, /video\.removeAttribute\("poster"\)/);
+  assert.match(stage, /video\.pause\(\)/);
+  // Panel açılıp kapandığında yeniden bağlanan video da yakalanır.
+  assert.match(stage, /new MutationObserver\(releaseHiddenVideos\)/);
+  assert.match(stage, /observer\.disconnect\(\)/);
+});
+
+test("A geniş masaüstünde heykel panelin arkasında kaybolmaz", () => {
+  assert.match(
+    css,
+    /@media \(min-width: 901px\) \{[\s\S]{0,400}\.stageA \.object \{[\s\S]{0,220}translate3d\(calc\(-10%/,
+  );
+  // Hareket kısıtlamasında da aynı çerçeveleme korunur.
+  assert.match(
+    css,
+    /@media \(prefers-reduced-motion: reduce\) and \(min-width: 901px\)[\s\S]{0,140}translate3d\(-10%, -1%, 0\) scale\(1\.26\)/,
+  );
 });
 
 test("önizlemede mavi/mor kalıntılar kanonik altına çevrilir", () => {

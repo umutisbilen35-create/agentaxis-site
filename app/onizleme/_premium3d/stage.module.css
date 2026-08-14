@@ -2,7 +2,7 @@
   AgentAxis Labs — premium 3D önizleme sahnesi.
   Kural: canlı sitenin yazıları, bölüm sırası, kutu yerleşimi ve ölçüleri DEĞİŞMEZ.
   Bu dosya yalnız arka plan, ışık, derinlik, kontrollü hareket ve hover katmanı ekler.
-  Ağır 3D yok: tek 596 KB'lik döngü videosu + CSS transform/parallax.
+  Ağır 3D yok: iki hafif, rotaya özel görsel + CSS transform/parallax.
   Kanonik marka: gece #03040a, mürekkep #f7f4ed, altın #d8bf8d. Mavi kullanılmaz.
 */
 
@@ -40,6 +40,7 @@
 
 .room,
 .halo,
+.objectShell,
 .object,
 .objectFallback,
 .horizon,
@@ -52,6 +53,12 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+
+.objectShell {
+  overflow: hidden;
+  animation: axSceneFloat 18s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
 .object,
@@ -102,17 +109,11 @@
 
 .stageA .object {
   opacity: 0.98;
-  mix-blend-mode: screen;
-  /* Nötr/soğuk kaynak kareyi marka altınına çevirir; ek dosya gerekmez. */
-  filter: sepia(0.62) saturate(2.1) hue-rotate(-12deg) brightness(1.42) contrast(1.04);
-  object-position: center;
+  object-position: 54% center;
   transform:
-    translate3d(calc(-8% + var(--ax-px) * -14px), calc(5% + var(--ax-v) * -46px), 0)
-    scale(calc(1.16 + var(--ax-v) * 0.06))
-    rotate(calc(var(--ax-s) * 2deg));
+    translate3d(calc(var(--ax-px) * -15px), calc(var(--ax-v) * -34px), 0)
+    scale(calc(1.035 + var(--ax-v) * 0.025));
   transition: transform 0.45s cubic-bezier(0.22, 0.75, 0.24, 1);
-  -webkit-mask-image: radial-gradient(48% 62% at 66% 46%, #000 26%, rgba(0, 0, 0, 0.5) 58%, transparent 84%);
-  mask-image: radial-gradient(48% 62% at 66% 46%, #000 26%, rgba(0, 0, 0, 0.5) 58%, transparent 84%);
   will-change: transform;
 }
 
@@ -199,22 +200,13 @@
 }
 
 /* Videoyu tam ekran değil, sağ negatif alanda duran net bir 3D modül olarak kullanır. */
-.stageB .object,
-.stageB .objectFallback {
-  inset: 10% 2% auto auto;
-  width: min(40vw, 540px);
-  height: min(50vh, 400px);
-  object-fit: contain;
-  opacity: 0.88;
-  mix-blend-mode: screen;
-  filter: sepia(0.6) saturate(1.95) hue-rotate(-12deg) brightness(1.26) contrast(1.08);
-  object-position: center;
+.stageB .object {
+  opacity: 0.98;
+  object-position: 56% center;
   transform:
-    translate3d(calc(-6% + var(--ax-px) * -10px), calc(var(--ax-v) * -34px), 0)
-    scale(calc(1.04 + var(--ax-v) * 0.03));
+    translate3d(calc(var(--ax-px) * -12px), calc(var(--ax-v) * -28px), 0)
+    scale(calc(1.04 + var(--ax-v) * 0.02));
   transition: transform 0.5s cubic-bezier(0.22, 0.75, 0.24, 1);
-  -webkit-mask-image: radial-gradient(42% 52% at 66% 50%, #000 30%, rgba(0, 0, 0, 0.5) 62%, transparent 86%);
-  mask-image: radial-gradient(42% 52% at 66% 50%, #000 30%, rgba(0, 0, 0, 0.5) 62%, transparent 86%);
   will-change: transform;
 }
 
@@ -372,6 +364,15 @@
    sol taraf yazı için koyu kalır, sağ taraf 3D heykel için açılır.
    Mobilde bileşenin kendi dikey perdesi aynen korunur. */
 @media (min-width: 901px) {
+  /* Geniş masaüstünde değer paneli sağ yarıyı kapladığı için heykel panelin
+     tam altında kalıyordu. Sahne biraz büyütülüp sola çekilir: altın ilmek
+     yazı ile panel arasındaki açık banda gelir, kütle panelin arkasında kalır. */
+  .stageA .object {
+    transform:
+      translate3d(calc(-10% + var(--ax-px) * -15px), calc(-1% + var(--ax-v) * -34px), 0)
+      scale(calc(1.26 + var(--ax-v) * 0.025));
+  }
+
   .variantA .stageContent > div > section:first-of-type > div:first-child > i {
     background:
       linear-gradient(90deg, rgba(2, 3, 8, 0.96) 0%, rgba(2, 3, 8, 0.88) 34%, rgba(2, 3, 8, 0.26) 62%, rgba(2, 3, 8, 0.06) 100%),
@@ -507,24 +508,29 @@
   }
 }
 
+@keyframes axSceneFloat {
+  from {
+    transform: scale(1.01) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.035) translate3d(0, -0.8%, 0);
+  }
+}
+
 /* ---------------------------------------------------------------
    Mobil uyum — 8 GB Mac ve telefon için katman sadeleştirmesi
 ---------------------------------------------------------------- */
 
 @media (max-width: 900px) {
-  /* Mobilde heykel okunabilirliği bozmayan atmosferik bir ışığa iner. */
+  /* Dar önizlemede de yeni 3D sahne açıkça görünür kalır. */
   .stageA .object {
-    object-fit: contain;
-    object-position: center;
-    opacity: 0.5;
-    filter: sepia(0.62) saturate(2.1) hue-rotate(-12deg) brightness(1.2) contrast(1.02) blur(2px);
-    transform: translate3d(12%, calc(-20% + var(--ax-v) * -18px), 0) scale(1.35);
-    -webkit-mask-image: radial-gradient(40% 34% at 66% 46%, #000 24%, rgba(0, 0, 0, 0.42) 56%, transparent 82%);
-    mask-image: radial-gradient(40% 34% at 66% 46%, #000 24%, rgba(0, 0, 0, 0.42) 56%, transparent 82%);
+    object-position: 63% center;
+    opacity: 0.96;
+    transform: translate3d(calc(var(--ax-px) * -10px), calc(var(--ax-v) * -18px), 0) scale(1.04);
   }
 
   .stageA .objectFallback {
-    opacity: 0.55;
+    opacity: 0.86;
   }
 
   .stageA .halo {
@@ -533,24 +539,22 @@
 
   .stageA .vignette {
     background:
-      radial-gradient(circle at 58% 30%, transparent 34%, rgba(2, 3, 8, 0.46) 72%, rgba(2, 3, 8, 0.84) 100%),
-      linear-gradient(180deg, rgba(2, 3, 8, 0.62) 0%, rgba(2, 3, 8, 0.3) 26%, transparent 60%, rgba(2, 3, 8, 0.8) 100%);
+      radial-gradient(circle at 70% 34%, transparent 28%, rgba(2, 3, 8, 0.25) 66%, rgba(2, 3, 8, 0.78) 100%),
+      linear-gradient(90deg, rgba(2, 3, 8, 0.9) 0%, rgba(2, 3, 8, 0.7) 48%, rgba(2, 3, 8, 0.08) 78%, rgba(2, 3, 8, 0.2) 100%),
+      linear-gradient(180deg, rgba(2, 3, 8, 0.42) 0%, transparent 58%, rgba(2, 3, 8, 0.8) 100%);
   }
 
-  .stageB .object,
-  .stageB .objectFallback {
-    inset: 3% 3% auto auto;
-    width: 62vw;
-    height: 26vh;
-    filter: blur(11px) saturate(0.8);
-    transform: translate3d(0, calc(var(--ax-v) * -16px), 0);
+  .stageB .object {
+    object-position: 63% center;
+    opacity: 0.96;
+    transform: translate3d(calc(var(--ax-px) * -8px), calc(var(--ax-v) * -16px), 0) scale(1.04);
   }
 
   .stageB .grid {
-    inset: 66% -80% -30% -80%;
+    inset: 57% -80% -30% -80%;
     background-image:
-      repeating-linear-gradient(90deg, rgba(216, 191, 141, 0.14) 0 1px, transparent 1px 56px),
-      repeating-linear-gradient(0deg, rgba(216, 191, 141, 0.1) 0 1px, transparent 1px 56px);
+      repeating-linear-gradient(90deg, rgba(216, 191, 141, 0.28) 0 1px, transparent 1px 56px),
+      repeating-linear-gradient(0deg, rgba(216, 191, 141, 0.2) 0 1px, transparent 1px 56px);
     transform: perspective(620px) rotateX(76deg) translate3d(0, calc(var(--ax-v) * 34px), 0);
   }
 
@@ -560,6 +564,19 @@
 }
 
 @media (max-width: 560px) {
+  /* Gerçek küçük telefonda heykel tekrar sakinleşir; metnin önüne geçmez. */
+  .stageA .object {
+    object-position: 72% center;
+    opacity: 0.72;
+    transform: translate3d(0, calc(var(--ax-v) * -12px), 0) scale(1.06);
+  }
+
+  .stageB .object {
+    object-position: 70% center;
+    opacity: 0.74;
+    transform: translate3d(0, calc(var(--ax-v) * -12px), 0) scale(1.06);
+  }
+
   .stageA .dust,
   .stageB .dust,
   .stageA .rake,
@@ -598,7 +615,7 @@
   }
 
   .stageA .object {
-    transform: translate3d(-8%, 5%, 0) scale(1.16);
+    transform: scale(1.035);
   }
 
   .stageA .objectFallback {
@@ -607,7 +624,7 @@
 
   .stageB .object,
   .stageB .objectFallback {
-    transform: translate3d(-6%, 0, 0) scale(1.04);
+    transform: scale(1.04);
   }
 
   .stageB .horizon,
@@ -631,6 +648,13 @@
   .variantB .stageContent > div > section article:hover,
   .variantB .stageContent > div > section > div button:not(:disabled):hover {
     transform: none;
+  }
+}
+
+/* Hareket dursa da masaüstü çerçevelemesi aynı kalır: yalnız hareket kaybolur. */
+@media (prefers-reduced-motion: reduce) and (min-width: 901px) {
+  .stageA .object {
+    transform: translate3d(-10%, -1%, 0) scale(1.26);
   }
 }
 
