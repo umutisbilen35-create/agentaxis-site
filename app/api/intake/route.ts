@@ -2,6 +2,26 @@ const allowedNeeds = new Set(["visibility", "appointments", "follow", "automatio
 const allowedPlans = new Set(["teshis"]);
 const MAX_INTAKE_BODY_BYTES = 16_384;
 
+async function readBodyWithinLimit(request: Request) {
+  if (!request.body) return "";
+
+  const reader = request.body.getReader();
+  const decoder = new TextDecoder();
+  let totalBytes = 0;
+  let body = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) return body + decoder.decode();
+    totalBytes += value.byteLength;
+    if (totalBytes > MAX_INTAKE_BODY_BYTES) {
+      await reader.cancel();
+      return null;
+    }
+    body += decoder.decode(value, { stream: true });
+  }
+}
+
 const diagnosisChecks: Record<string, string[]> = {
   visibility: ["ai_search_visibility", "source_citation", "incorrect_brand_info"],
   appointments: ["booking_creation", "confirmation_reminder", "reschedule_flow"],
@@ -93,10 +113,8 @@ export async function POST(request: Request) {
       return json("Talep alınamadı.", 403);
     }
 
-    const rawBody = await request.text();
-    if (new TextEncoder().encode(rawBody).byteLength > MAX_INTAKE_BODY_BYTES) {
-      return json("Talep alınamadı.", 413);
-    }
+    const rawBody = await readBodyWithinLimit(request);
+    if (rawBody === null) return json("Talep alınamadı.", 413);
     const body = JSON.parse(rawBody) as IntakeBody;
     if (clean(body.websiteField, 100)) return json("Talep alınamadı.", 400);
 

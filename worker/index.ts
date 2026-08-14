@@ -31,7 +31,7 @@ const contentSecurityPolicy = [
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   "media-src 'self'",
-  "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com",
+  "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com",
   "worker-src 'self' blob:",
   "manifest-src 'self'",
 ].join("; ");

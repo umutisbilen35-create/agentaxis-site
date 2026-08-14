@@ -36,18 +36,19 @@ test("özel demo ve API yanıtları ayrıca korunur", () => {
   assert.match(worker, /headers\.set\("Cache-Control", "no-store"\)/);
 });
 
-test("Next uyumluluk katmanı aynı global başlıkları taşır", () => {
-  assert.match(nextConfig, /source: "\/:path\*"/);
-  assert.match(nextConfig, /Content-Security-Policy/);
-  assert.match(nextConfig, /Strict-Transport-Security/);
-  assert.match(nextConfig, /Permissions-Policy/);
+test("global başlıkların tek doğruluk kaynağı Sites worker katmanıdır", () => {
+  assert.doesNotMatch(nextConfig, /source: "\/:path\*"/);
+  assert.doesNotMatch(nextConfig, /Content-Security-Policy/);
+  assert.match(worker, /https:\/\/www\.googletagmanager\.com/);
 });
 
 test("başvuru API'si büyük ve yabancı kökenli istekleri reddeder", () => {
   assert.match(intake, /MAX_INTAKE_BODY_BYTES = 16_384/);
   assert.match(intake, /contentLength > MAX_INTAKE_BODY_BYTES/);
   assert.match(intake, /requestOrigin !== new URL\(request\.url\)\.origin/);
-  assert.match(intake, /TextEncoder\(\)\.encode\(rawBody\)\.byteLength > MAX_INTAKE_BODY_BYTES/);
+  assert.match(intake, /request\.body\.getReader\(\)/);
+  assert.match(intake, /totalBytes > MAX_INTAKE_BODY_BYTES/);
+  assert.doesNotMatch(intake, /request\.text\(\)/);
 });
 
 test("nanoid güvenli alt sürüme sabitlenir", () => {
