@@ -413,7 +413,7 @@ function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePa
                     <h3 className={styles.catalogSubtitle}>Randevu Takibi</h3>
                   </div>
                   <div className={styles.catalogPrice}>
-                    <strong>7.500 TL</strong><small>kurulum</small>
+                    <strong>7.500 TL</strong><small>tek seferlik ücret</small>
                     <strong>4.000 TL</strong><small>aylık hizmet</small>
                   </div>
                   <ul className={styles.catalogFeatures}>
@@ -432,7 +432,7 @@ function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePa
                     <h3 className={styles.catalogSubtitle}>Randevu ve Müşteri Takibi</h3>
                   </div>
                   <div className={styles.catalogPrice}>
-                    <strong>12.000 TL</strong><small>kurulum</small>
+                    <strong>12.000 TL</strong><small>tek seferlik ücret</small>
                     <strong>7.000 TL</strong><small>aylık hizmet</small>
                   </div>
                   <ul className={styles.catalogFeatures}>
