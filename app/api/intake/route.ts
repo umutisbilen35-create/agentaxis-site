@@ -1,5 +1,6 @@
 const allowedNeeds = new Set(["visibility", "appointments", "follow", "automation", "reactivation"]);
 const allowedPlans = new Set(["teshis"]);
+const MAX_INTAKE_BODY_BYTES = 16_384;
 
 const diagnosisChecks: Record<string, string[]> = {
   visibility: ["ai_search_visibility", "source_citation", "incorrect_brand_info"],
@@ -82,7 +83,21 @@ export async function POST(request: Request) {
   try {
     const { env } = await import("cloudflare:workers");
     const db = env.DB as unknown as IntakeDb;
-    const body = await request.json() as IntakeBody;
+    const contentLength = Number(request.headers.get("content-length") ?? "0");
+    if (Number.isFinite(contentLength) && contentLength > MAX_INTAKE_BODY_BYTES) {
+      return json("Talep alınamadı.", 413);
+    }
+
+    const requestOrigin = request.headers.get("origin");
+    if (requestOrigin && requestOrigin !== new URL(request.url).origin) {
+      return json("Talep alınamadı.", 403);
+    }
+
+    const rawBody = await request.text();
+    if (new TextEncoder().encode(rawBody).byteLength > MAX_INTAKE_BODY_BYTES) {
+      return json("Talep alınamadı.", 413);
+    }
+    const body = JSON.parse(rawBody) as IntakeBody;
     if (clean(body.websiteField, 100)) return json("Talep alınamadı.", 400);
 
     const business = clean(body.business, 120);
