@@ -76,6 +76,16 @@ test("canlı marka, modal erişilebilirliği ve paket sınırları doğrulanır"
   assert.match(gallery, /7\.500 TL/);
   assert.match(gallery, /4\.000 TL/);
   assert.match(gallery, /Aylık kontrol, destek ve kısa sonuç raporu/);
+  assert.match(gallery, /Büyüme — Müşteri Takibi/);
+  assert.match(gallery, /12\.000 TL/);
+  assert.match(gallery, /7\.000 TL/);
+  assert.match(gallery, /Başlangıç paketindeki tüm hizmetler/);
+  assert.match(gallery, /Yeni müşteri taleplerini tek yerde takip etme/);
+  assert.match(gallery, /Yanıtsız kalan talepleri yeniden takip etme/);
+  assert.match(gallery, /Yalnız izin veren eski müşterilerle yeniden iletişim/);
+  assert.match(gallery, /Aylık kontrol, hata düzeltme, destek ve ayrıntılı sonuç raporu/);
+  assert.match(gallery, /İhtiyaca göre küçük iyileştirmeler/);
+  assert.doesNotMatch(gallery, /birbirine bağlı 2-3 çalışma akışı/i);
   assert.match(gallery, /Tek işletme adresi ve tek WhatsApp numarası için geçerlidir/);
   assert.match(gallery, /WhatsApp mesajları, kullanılan ek hizmetler ve vergiler teklifte ayrı gösterilir/);
 });

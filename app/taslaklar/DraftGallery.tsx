@@ -426,8 +426,20 @@ function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePa
                 </article>
                 <article>
                   <span>02</span>
-                  <h3>Büyüme</h3>
-                  <p>Müşteri takibi ve eski müşterilerle yeniden iletişim gibi ek ihtiyaçlar için hazırlanır.</p>
+                  <h3>Büyüme — Müşteri Takibi</h3>
+                  <div className={styles.catalogPrice}>
+                    <strong>12.000 TL</strong><small>kurulum</small>
+                    <strong>7.000 TL</strong><small>aylık hizmet</small>
+                  </div>
+                  <ul className={styles.catalogFeatures}>
+                    <li>Başlangıç paketindeki tüm hizmetler</li>
+                    <li>Yeni müşteri taleplerini tek yerde takip etme</li>
+                    <li>Yanıtsız kalan talepleri yeniden takip etme</li>
+                    <li>Yalnız izin veren eski müşterilerle yeniden iletişim</li>
+                    <li>Aylık kontrol, hata düzeltme, destek ve ayrıntılı sonuç raporu</li>
+                    <li>İhtiyaca göre küçük iyileştirmeler</li>
+                  </ul>
+                  <p className={styles.catalogScope}>Tek işletme adresi ve tek WhatsApp numarası için geçerlidir.</p>
                   <button type="button" onClick={onRequest}>İhtiyacınızı anlatın →</button>
                 </article>
                 <article>
