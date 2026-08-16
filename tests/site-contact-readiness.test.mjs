@@ -8,12 +8,14 @@ const config = fs.readFileSync(path.join(root, "app/siteConfig.ts"), "utf8");
 const site = fs.readFileSync(path.join(root, "app/taslaklar/DraftGallery.tsx"), "utf8");
 const layout = fs.readFileSync(path.join(root, "app/layout.tsx"), "utf8");
 
-test("doğrulanmış telefon ve Instagram görünür, eksik kanallar gizli kalır", () => {
+test("doğrulanmış telefon, Instagram ve LinkedIn görünür; eksik kanallar gizli kalır", () => {
   assert.match(config, /phoneDisplay:\s*"0531 423 75 77"/);
   assert.match(config, /phoneHref:\s*"\+905314237577"/);
   assert.match(config, /whatsappHref:\s*""/);
   assert.match(config, /instagramHref:\s*"https:\/\/www\.instagram\.com\/agentaxislabs\/"/);
-  assert.match(config, /linkedinHref:\s*""/);
+  assert.match(config, /instagramDisplay:\s*"@agentaxislabs"/);
+  assert.match(config, /linkedinDisplay:\s*"Umut İşbilen"/);
+  assert.match(config, /linkedinHref:\s*"https:\/\/www\.linkedin\.com\/in\/umut-i%C5%9Fbilen-3a2960428\/"/);
   assert.match(config, /youtubeHref:\s*""/);
   assert.match(site, /siteContact\.phoneDisplay &&/);
   assert.match(site, /siteContact\.whatsappHref &&/);
@@ -25,8 +27,8 @@ test("doğrulanmış telefon ve Instagram görünür, eksik kanallar gizli kalı
 });
 
 test("iletişim kanalları güvenli yeni sekme davranışı kullanır", () => {
-  assert.match(site, /Instagram ↗<\/a>/);
-  assert.match(site, /LinkedIn ↗<\/a>/);
+  assert.match(site, /Instagram · \{siteContact\.instagramDisplay\} ↗<\/a>/);
+  assert.match(site, /LinkedIn · \{siteContact\.linkedinDisplay\} ↗<\/a>/);
   assert.match(site, /YouTube ↗<\/a>/);
   assert.doesNotMatch(config, /https?:\/\/example\.com/);
 });
