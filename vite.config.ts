@@ -3,14 +3,13 @@ import { defineConfig } from "vite";
 import hostingConfig from "./.openai/hosting.json" with { type: "json" };
 import { sites } from "./build/sites-vite-plugin.ts";
 
-const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
-  "00000000-0000-4000-8000-000000000000";
-
 const { d1, r2 } = hostingConfig;
 
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 
+// Bindings for the independent Cloudflare account (agentaxislabs@gmail.com),
+// which now owns deploys for this site instead of OpenAI Sites.
 const localBindingConfig = {
   main: "./worker/index.ts",
   compatibility_flags: ["nodejs_compat"],
@@ -18,19 +17,14 @@ const localBindingConfig = {
     ? [
         {
           binding: d1,
-          database_name: "site-creator-d1",
-          database_id: SITE_CREATOR_PLACEHOLDER_DATABASE_ID,
+          database_name: "agentaxis-d1",
+          database_id: "a0faade9-5d5f-41ec-bcd5-7b4e6f85023c",
         },
       ]
     : [],
-  r2_buckets: r2
-    ? [
-        {
-          binding: r2,
-          bucket_name: "site-creator-r2",
-        },
-      ]
-    : [],
+  // R2 bucket not yet created on the independent account (needs a payment
+  // method added first) — add back once it exists.
+  r2_buckets: [],
 };
 
 export default defineConfig(async () => {
