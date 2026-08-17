@@ -18,8 +18,7 @@ test("özel ilk temas demosu arama motorlarına kapalıdır", () => {
 });
 
 test("ilk temas metni sorun varsaymaz ve fiyat göstermez", () => {
-  assert.match(shared, /Kamuya açık bilgilerinizden yola çıkarak/);
-  assert.match(shared, /kliniğinize özel kısa bir örnek hazırladık/);
+  assert.match(shared, /kliniğinize uygulanabilecek kısa bir örnek hazırladık/);
   assert.match(shared, /Bu bir sorun iddiası değildir/);
   assert.match(shared, /Fiyat ve kapsam görüşmeden sonra hazırlanır/);
   assert.doesNotMatch(shared, /5\.000 TL|3\.000 TL|Aylık yönetim|Harici gider/);
@@ -32,8 +31,8 @@ test("doğrulanmış analiz ve üç hizmet birlikte gösterilir", () => {
   assert.match(data, /Randevu iletişimi/);
   assert.match(data, /Hasta takibi/);
   assert.match(data, /Eski hastalarla yeniden iletişim/);
-  assert.match(shared, /AgentAxis Labs hizmetlerini inceleyin/);
-  assert.match(shared, /https:\/\/agentaxislabs\.com\/#hizmetler/);
+  assert.match(shared, /15 dakikalık kısa görüşme/);
+  assert.match(shared, /https:\/\/agentaxislabs\.com\//);
 });
 
 test("demo ağ çağrısı yapmaz ve hasta kişisel verisi içermez", () => {
@@ -46,7 +45,7 @@ test("demo ağ çağrısı yapmaz ve hasta kişisel verisi içermez", () => {
 test("güvenlik sınırları ve müşteri adı doğrudur", () => {
   assert.match(shared, /tıbbi karar vermez/);
   assert.match(shared, /Bu bir sorun iddiası değildir/);
-  assert.match(shared, /Görüşme talebi henüz gönderilmedi/);
+  assert.match(shared, /AgentAxis Labs sitesine yönlendiriliyorsunuz/);
   assert.doesNotMatch(shared, />Jarvis</);
 });
 
@@ -71,4 +70,26 @@ test("canlı Doğa Dent sayfası aynı ortak premium tasarımı ve aynı veriyi 
   assert.match(component, /demoData/);
   assert.match(data, /Doğa Dent Çorlu/);
   assert.match(data, /https:\/\/www\.dogadentcorlu\.com\/iletisim/);
+});
+
+test("veri yoksa (sade demo) analiz bölümü koşullu render edilir, uydurma rakam yazılmaz", () => {
+  assert.match(shared, /metrics\?:/);
+  assert.match(shared, /signals\?:/);
+  assert.match(shared, /hasAnalysis/);
+  assert.match(shared, /data\.metrics && data\.metrics\.length > 0/);
+  assert.match(shared, /data\.signals && data\.signals\.length > 0/);
+});
+
+test("sade örnek (Gülşah Duran) gerçek veri olmadan metrics/signals içermez", () => {
+  const sadeRoute = "gulsah-duran-malkara-335e762f81d5b213258c6bb094dc2618";
+  const sadeData = fs.readFileSync(path.join(root, `app/inceleme/${sadeRoute}/demoData.ts`), "utf8");
+  assert.doesNotMatch(sadeData, /metrics:/);
+  assert.doesNotMatch(sadeData, /signals:/);
+  assert.match(sadeData, /labelPrefix:\s*"DİŞ HEKİMİ"/);
+  assert.match(sadeData, /clinicLabel:\s*"GÜLŞAH DURAN"/);
+});
+
+test("üst rozette isim (clinicLabel) ayrı renkte vurgulanır", () => {
+  assert.match(shared, /clinicNameStrong/);
+  assert.match(shared, /data\.labelPrefix &&/);
 });
