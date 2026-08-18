@@ -22,9 +22,14 @@ const localBindingConfig = {
         },
       ]
     : [],
-  // R2 bucket not yet created on the independent account (needs a payment
-  // method added first) — add back once it exists.
-  r2_buckets: [],
+  r2_buckets: r2
+    ? [
+        {
+          binding: r2,
+          bucket_name: "agentaxis-media",
+        },
+      ]
+    : [],
 };
 
 export default defineConfig(async () => {
