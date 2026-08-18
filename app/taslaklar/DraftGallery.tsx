@@ -369,7 +369,7 @@ function LumenLoopVideo() {
     };
   }, []);
 
-  return <video ref={videoRef} src="/media/lumen-arc-rotation-loop.mp4" poster="/media/lumen-arc-loop-poster.jpg" autoPlay muted loop playsInline preload="metadata" />;
+  return <video ref={videoRef} src="/media/lumen-arc-scroll.mp4" poster="/media/lumen-arc-reference.png" autoPlay muted loop playsInline preload="metadata" />;
 }
 
 function LivePanel({ panel, onClose, onRequest, lumen = false }: { panel: LivePanelId; onClose: () => void; onRequest: () => void; lumen?: boolean }) {
